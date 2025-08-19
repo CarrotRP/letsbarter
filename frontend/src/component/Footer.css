@@ -1,0 +1,30 @@
+footer{
+    padding: 10px 0;
+    background-color: var(--darken-background);
+}
+.top .logo-desc h1{
+    text-box: trim-both cap text;
+}
+.top{
+    padding: 50px 150px 100px;
+    display: grid;
+    grid-template-columns: repeat(4, 225px);
+    gap: 0 100px;
+    list-style: none;
+}
+.top h4{
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.top img{
+    margin-top: 20px;
+    width: 38px;
+}
+a{
+    text-decoration: none;
+    font-weight: 300;
+    line-height: 40px;
+    color: var(--text-secondary)
+}
