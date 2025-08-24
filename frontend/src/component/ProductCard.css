@@ -1,0 +1,20 @@
+.card img{
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+    object-fit:cover;
+}
+#product-card-name{
+    font-size: 18px;
+    font-weight: 600;
+}
+#product-card-condition{
+    font-size: 14px;
+}
+#product-card-looking{
+    font-size: 17px;
+    color: var(--primary);
+}
+#product-card-for{
+    color: var(--secondary);
+}

@@ -22,9 +22,11 @@ footer{
     margin-top: 20px;
     width: 38px;
 }
-a{
-    text-decoration: none;
+.top a{
     font-weight: 300;
     line-height: 40px;
     color: var(--text-secondary)
+}
+a{
+    text-decoration: none;
 }

@@ -1,0 +1,61 @@
+.auth-page{
+    display: flex;
+    overflow: hidden;
+}
+.left-panel{
+    background-color: var(--primary);
+    color: var(--white);
+    display: grid;
+    place-content: center;
+    gap: 40px;
+    width: 55%;
+    height: 100vh;
+}
+.right-panel{
+    display: grid;
+    grid-template-rows: 45px 1fr 30px;
+    grid-template-columns: 450px;
+    width: 100%;
+    padding: 50px 150px;
+    justify-content: center;
+    align-items: center;
+}
+.form-input{
+    margin-top: 50px;
+}
+.right-panel input{
+    background-color: var(--darken-background);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    width: 100%;
+}
+.right-panel h1{
+    justify-self: center;
+}
+/* submit btn and google signin */
+.right-panel button{
+    font-weight: 600;
+    font-size: 16px;
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 12px;
+}
+.submit-btn{
+    margin: 20px 0 10px;
+    color: var(--white);
+    background-color: var(--secondary);
+    border: none;
+}
+.sign-with-google{
+    border: 1px solid var(--darken-background);
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+.right-panel a{
+    justify-self: center;
+    color: var(--text-secondary);
+}

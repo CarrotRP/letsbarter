@@ -1,0 +1,10 @@
+.homepage{
+    padding: 150px;
+}
+.products, .categories{
+    display: grid;
+    grid-template-columns: repeat(4, 250px);
+    grid-auto-flow: row;
+    justify-content: space-between;
+    gap: 50px;
+}

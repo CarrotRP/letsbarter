@@ -1,0 +1,64 @@
+.definition{
+    height: 100vh;
+    padding: 0px 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+.definition h1, .definition p, .benefit h1, .benefit h3, .benefit p{
+    color: var(--text-primary);
+}
+.definition h1{
+    font-size: 64px;
+    font-weight: bold;
+    text-box: trim-both cap alphabetic;
+}
+.definition p{
+    font-size: 18px;
+    width: 480px;
+    margin: 35px 0 50px;
+}
+.definition a{
+    border: none;
+    border-radius: 10px;
+    background-color: var(--secondary);
+    color: var(--white);
+    font-size: 16px;
+    width: 300px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+.shapeBg{
+    position: absolute;
+    top: 0px;
+    right: 0;
+    z-index: -2;
+}
+.barterIll{
+    position: absolute;
+    top: 20%;
+    right: 5%;
+    z-index: -1;
+}
+/* benefit section */
+.benefit{
+    height: 75vh;
+    padding: 0px 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 75px;
+}
+.benefit h1{
+    font-size: 50px;
+}
+.bens{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+.ben-info{
+    width: 300px;
+    text-align: center;
+}
