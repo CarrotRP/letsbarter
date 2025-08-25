@@ -1,0 +1,63 @@
+.report{
+    border: 1px solid rgba(163, 68, 7, 0.45);
+    padding: 20px;
+    width: 400px;
+    border-radius: 20px;
+}
+.report h1{
+    color: var(--text-primary);
+    justify-self: center;
+    font-size: 24px;
+    font-weight: 600;
+}
+.report img{
+    width: 20px;
+    height: 20px;
+}
+.report span{
+    display: grid;
+    grid-template-columns: 1fr 20px;
+    align-items: center;
+}
+.report ul{
+    list-style: none;
+}
+.report ul input{
+    appearance: none;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    width: 16px;
+    height: 16px;
+}
+.report ul input:checked{
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    padding: 5px;
+    background: radial-gradient(circle,rgba(242, 152, 68, 1) 50%, rgba(255, 255, 255, 1) 50%);
+}
+.report ul input:hover, .report ul label:hover + .report ul input{
+    border: 1px solid var(--secondary);
+    
+}
+.report{
+    display: flex;
+    flex-direction: column;
+}
+.report ul{
+    margin: 15px 0;
+}
+.report li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.report-submit{
+    border: none;
+    border-radius: 20px;
+    background-color: var(--secondary);
+    color: var(--white);
+    padding:8px 10px;
+    width: 150px;
+    margin:0 auto;
+    align-self: center;
+}

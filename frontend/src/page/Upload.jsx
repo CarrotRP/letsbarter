@@ -36,7 +36,7 @@ export default function Upload() {
                         <input type="text" id='name' placeholder='Name' onChange={e => setName(e.target.value)} />
                         <label htmlFor="name">{name == '' ? "" : "Name"}</label>
                     </span>
-                    <span style={{ position: 'relative' }}>
+                    <span style={{ position: 'relative', height: '95px'}}>
                         <label htmlFor="description" style={{ color: description == '' ? '#a9a9a9' : 'var(--text-secondary)' }}>Description</label>
                         <textarea name="description" id="description" onChange={e => setDescription(e.target.value)}></textarea>
                     </span>
@@ -58,7 +58,7 @@ export default function Upload() {
                         <label htmlFor="condition" className='condition'>{condition == '' ? "" : "Item Condition"}</label>
                         <p style={{position: 'absolute', top: '10px', right: '10px', fontSize: '14px', fontWeight: 'bold'}}>/ 10</p>
                     </span>
-                    <span style={{ position: 'relative' }}>
+                    <span style={{ position: 'relative', height: '95px'}}>
                         <label htmlFor="looking" style={{ color: 'var(--primary)' }}>Looking for (Category or specific)</label>
                         <textarea name="looking" id="looking" onChange={e => setLooking(e.target.value)} style={{color: 'var(--secondary)'}}></textarea>
                     </span>

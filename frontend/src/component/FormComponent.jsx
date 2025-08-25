@@ -3,7 +3,7 @@ export default function FormComponent(props) {
 
     return (
         <>
-            <label htmlFor={htmlFor} style={{ marginTop: '25px', marginBottom: '5px', display: 'block' }}>{label}</label>
+            <label htmlFor={htmlFor} style={{ marginTop: '15px', marginBottom: '5px', display: 'block' }}>{label}</label>
             <input type={type} placeholder={placeholder} />
         </>
     );
