@@ -1,0 +1,14 @@
+.trade-page{
+    padding: 150px;
+}
+.trade-page-content{
+    display: grid;
+    grid-template-columns: 300px 1fr;
+}
+.trade-navi{
+    padding: 20px 0;
+}
+.trade-navi p{
+    margin: 15px 0;
+    cursor: pointer;
+}

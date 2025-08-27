@@ -1,0 +1,46 @@
+.profile-page {
+    padding: 150px;
+}
+
+.profile-page-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 50px;
+}
+
+.profile-display {
+    background-color: rgba(141, 161, 114, 0.55);
+    padding: 10px 20px;
+    border-radius: 10px;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-display span img{
+    width: 19px;
+    height: 19px;
+}
+/* filter to change icon color, in this case to white */
+.nav:nth-child(-n + 3) img, .nav:nth-child(5) img{
+    filter: invert(98%) sepia(100%) saturate(0%) hue-rotate(8deg) brightness(104%) contrast(102%);;
+}
+
+.nav{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0;
+    padding: 10px;
+    cursor: pointer;
+}
+.nav p{
+    color: var(--white);
+    font-weight: 300;
+}
+.inventory{
+    display: grid;
+    grid-template-columns: repeat(4, 240px);
+    justify-content: space-between;
+    gap: 50px 0;
+}

@@ -1,0 +1,54 @@
+.trade-card{
+    background-color: var(--darken-background);
+    border-radius: 10px;
+    padding: 20px;
+    width: 1080px;
+    height: 260px;
+    display: flex;
+    position: relative;
+    gap: 95px;
+    margin-bottom: 25px;
+}
+.left-side{
+    display: flex;
+}
+.left-side img{
+    width: 60px;
+    height: 60px;
+    border: 1px solid var(--text-secondary);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.trade-detail .item-count{
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600
+}
+.decision{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: inherit;
+    text-decoration: underline;
+}
+.respond, .decline, .cancel{
+    display: inline;
+    cursor: pointer;
+}
+.overlay{
+    position: absolute;
+    background-color: rgba(0,0,0,0.3);
+    bottom: 0;
+    width: 1080px;
+    height: 100%; 
+    border-radius: 10px;
+}
+.overlay p{
+    font-size: 20px; font-weight: 600; 
+    color: var(--white);
+    position: absolute; 
+    bottom: 0;
+    right: 0;
+    padding: 20px;
+    text-box: trim-both cap alphabetic;
+}

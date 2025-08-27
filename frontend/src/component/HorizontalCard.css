@@ -1,0 +1,11 @@
+.horizontal-card{
+    margin: 5px 0;
+    display: flex;
+    gap: 10px;
+}
+.horizontal-card-detail{
+    width: 200px;
+}
+.horizontal-card h3{
+    font-size: 20px;
+}

@@ -43,7 +43,7 @@
 }
 /* benefit section */
 .benefit{
-    height: 75vh;
+    height: 60vh;
     padding: 0px 150px;
     display: flex;
     flex-direction: column;
@@ -61,4 +61,32 @@
 .ben-info{
     width: 300px;
     text-align: center;
+}
+/* how section */
+.how-head{
+    font-size: 50px;
+    color: var(--white);
+    background-color: rgba(141, 161, 114, 0.5);
+    padding: 80px;
+    text-align: center;
+}
+.how{
+    padding: 50px 150px;
+}
+.how img{
+    width: 150px;
+}
+.how h2, .how p{
+    color: var(--text-primary);
+    width: 300px;
+    margin: 15px 0;
+}
+.step1, .step2, .step3{
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin: 150px 0;
+}
+.step2{
+    justify-self: end;
 }

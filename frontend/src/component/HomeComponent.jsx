@@ -9,6 +9,7 @@ export default function HomeComponent(props) {
         { id: 2, pname: 'Sum Old PC', condition: '8', lookfor: 'Books . Foods . Soap' },
         { id: 3, pname: 'Steel Water Bottle', condition: '6', lookfor: 'Books . Pen . Education' },
         { id: 4, pname: 'Steel Water Bottle', condition: '6', lookfor: 'Books . Pen . Education' },
+        { id: 5, pname: 'Steel Water Bottle', condition: '6', lookfor: 'Books . Pen . Education' },
     ]
 
     return (

@@ -1,3 +1,5 @@
+import DetailInput from '../component/DetailInput';
+import AreaInput from '../component/AreaInput';
 import './Upload.css';
 import { useState } from 'react';
 
@@ -32,36 +34,13 @@ export default function Upload() {
                 </div>
                 <div className="item-infos">
                     <h3>Detail</h3>
-                    <span style={{ position: 'relative' }}>
-                        <input type="text" id='name' placeholder='Name' onChange={e => setName(e.target.value)} />
-                        <label htmlFor="name">{name == '' ? "" : "Name"}</label>
-                    </span>
-                    <span style={{ position: 'relative' }}>
-                        <label htmlFor="description" style={{ color: description == '' ? '#a9a9a9' : 'var(--text-secondary)' }}>Description</label>
-                        <textarea name="description" id="description" onChange={e => setDescription(e.target.value)}></textarea>
-                    </span>
-                    <span style={{ position: 'relative' }}>
-                        <input type="text" id='brand' placeholder='Brand' onChange={e => setBrand(e.target.value)} />
-                        <label htmlFor="brand">{brand == '' ? "" : "Brand"}</label>
-                    </span>
-                    <span style={{ position: 'relative' }}>
-                        <input type="number" id='ogPrice' placeholder='Origin price' onChange={e => setOgPrice(e.target.value)} />
-                        <label htmlFor="ogPrice">{ogPrice == '' ? "" : "Original price"}</label>
-                        <p style={{position: 'absolute', top: '10px', right: '10px', fontSize: '14px', fontWeight: 'bold'}}>$</p>
-                    </span>
-                    <span style={{ position: 'relative' }}>
-                        <input type="date" id='boughtOn' placeholder='Bought on' onChange={e => setBoughtOn(e.target.value)} />
-                        <label htmlFor="boughtOn">Bought on</label>
-                    </span>
-                    <span style={{ position: 'relative' }}>
-                        <input type="number" id='condition' placeholder='Item Condition' onChange={e => setCondition(e.target.value)} min={1} max={10} />
-                        <label htmlFor="condition" className='condition'>{condition == '' ? "" : "Item Condition"}</label>
-                        <p style={{position: 'absolute', top: '10px', right: '10px', fontSize: '14px', fontWeight: 'bold'}}>/ 10</p>
-                    </span>
-                    <span style={{ position: 'relative' }}>
-                        <label htmlFor="looking" style={{ color: 'var(--primary)' }}>Looking for (Category or specific)</label>
-                        <textarea name="looking" id="looking" onChange={e => setLooking(e.target.value)} style={{color: 'var(--secondary)'}}></textarea>
-                    </span>
+                    <DetailInput type="text" data='name' placeholder='Name' setter={setName} getter={name}/>
+                    <AreaInput data="description" label="Description" setter={setDescription} getter={description}/>
+                    <DetailInput type="text" data='brand' placeholder='Brand' setter={setBrand} getter={brand}/>
+                    <DetailInput type="number" data='price' placeholder='Original Price' setter={setOgPrice} getter={ogPrice} p="$"/>
+                    <DetailInput type="date" data='boughtOn' placeholder='Bought on' setter={setBoughtOn} getter={boughtOn}/>
+                    <DetailInput type="number" data='condition' placeholder='Condition' setter={setCondition} getter={condition} p="/ 10"/>
+                    <AreaInput data="looking" label="Looking for (Category or specific)" setter={setLooking} color1='var(--primary)' color2='var(--secondary)'/>
                     <button id='submit-btn'>Upload</button>
                 </div>
             </div>

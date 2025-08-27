@@ -3,8 +3,8 @@
 }
 .products, .categories{
     display: grid;
-    grid-template-columns: repeat(4, 250px);
+    grid-template-columns: repeat(5, 240px);
     grid-auto-flow: row;
     justify-content: space-between;
-    gap: 50px;
+    /* gap: 50px; */
 }
