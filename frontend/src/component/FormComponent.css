@@ -1,0 +1,10 @@
+.form-input{
+    margin-top: 30px;
+}
+.form-input input{
+    background-color: var(--darken-background);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    width: 100%;
+}

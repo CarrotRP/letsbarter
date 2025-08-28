@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import placeholder from '../assets/placeholder.jpg';
 import placeholder2 from '../assets/placeholder2.png';
 import placeholder3 from '../assets/placeholder3.png';
+import { Link } from "react-router";
 import './Detail.css';
 
 export default function Detail() {
@@ -34,13 +35,13 @@ export default function Detail() {
                         <p>Bought on</p>
                         <p>02/June/2019</p>
                     </div>
-                    <div className="user">
+                    <Link to={`/user/1`} className="user" style={{color: 'var(--text-secondary)'}}>
                         <img src="/favicon.png" style={{ width: '40px' }} alt="user-image" />
                         <span>
                             <p style={{ fontWeight: 500 }}>Bob Krackin</p>
                             <p style={{ fontSize: '13px', fontWeight: 300 }}>College Student</p>
                         </span>
-                    </div>
+                    </Link>
                     <button>Offer Trade</button>
                 </section>
             </section>

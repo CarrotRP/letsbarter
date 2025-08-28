@@ -38,9 +38,51 @@
     color: var(--white);
     font-weight: 300;
 }
+/* inventory tab */
 .inventory{
     display: grid;
     grid-template-columns: repeat(4, 240px);
     justify-content: space-between;
     gap: 50px 0;
+}
+/* personal tab */
+.personal{
+    display: flex;
+    flex-direction: column;
+}
+.photo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.photo p{
+    cursor: pointer;
+}
+.form-input{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-flow: column;
+    gap: 0 100px;
+}
+.update{
+    border: none;
+    background-color: var(--secondary);
+    color: var(--white);
+    border-radius: 10px;
+    width: 180px;
+    padding: 10px 20px;
+    margin: 50px auto 0;
+}
+.setting-sect{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    gap: 10px 0;
+}
+.setting-sect h1{
+    font-size: 32px;
+}
+.setting-sect p{
+    font-size: 24px;
 }

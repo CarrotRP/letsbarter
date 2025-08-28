@@ -1,0 +1,15 @@
+.review-card{
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    width: 780px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    position: relative;
+}
+.review-card img{
+    width: 100px
+}
+.whonwhat{
+    width: 520px;
+}
