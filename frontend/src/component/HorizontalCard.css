@@ -3,6 +3,12 @@
     display: flex;
     gap: 10px;
 }
+.horizontal-card .item-img{
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+}
 .horizontal-card-detail{
     width: 200px;
 }

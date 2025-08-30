@@ -14,6 +14,7 @@ import Upload from "./page/Upload"
 import Trade from "./page/Trade"
 import OtherProfile from './page/OtherProfile'
 import Report from "./component/Report"
+import TradePopup from "./component/TradePopup"
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
           <Route path="/search" element={<Search />}></Route>
         </Route>
         {/* temp path for debug */}
-        <Route path="/test" element={<Report />}></Route>
+        <Route path="/test" element={<TradePopup />}></Route>
       </Routes>
     </Router>
   )
