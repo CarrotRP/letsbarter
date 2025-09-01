@@ -60,7 +60,7 @@ export default function Profile() {
                                     <img src="/favicon.png" alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%' }} />
                                     <p>Change Photo</p>
                                 </div>
-                                <div className="form-input">
+                                <div className="profile-form-input">
                                     <FormComponent htmlFor="name" label="Full Name" type="text" value="Potato" />
                                     <FormComponent htmlFor="occupation" label="Occupation" type="text" value="University Student" />
                                     <FormComponent htmlFor="email" label="Email Address" type="email" value='potato@gmail.com' />

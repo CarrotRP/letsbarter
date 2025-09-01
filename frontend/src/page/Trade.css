@@ -1,9 +1,10 @@
 .trade-page{
-    padding: 150px;
+    padding: 120px;
 }
 .trade-page-content{
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 200px 1fr;
+    justify-content: space-between;
 }
 .trade-navi{
     padding: 20px 0;

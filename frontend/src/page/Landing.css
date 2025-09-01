@@ -1,6 +1,6 @@
 .definition{
     height: 100vh;
-    padding: 0px 150px;
+    padding: 0px 120px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -31,20 +31,22 @@
 }
 .shapeBg{
     position: absolute;
-    top: 0px;
+    width:700px; /*on laptop*/
+    top: -10px;
     right: 0;
     z-index: -2;
 }
 .barterIll{
     position: absolute;
-    top: 20%;
+    width: 30%; /*on laptop*/
+    top: 20%; /*on laptop 25%*/
     right: 5%;
     z-index: -1;
 }
 /* benefit section */
 .benefit{
     height: 60vh;
-    padding: 0px 150px;
+    padding: 0px 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -65,28 +67,64 @@
 /* how section */
 .how-head{
     font-size: 50px;
-    color: var(--white);
+    color: var(--text-primary);
     background-color: rgba(141, 161, 114, 0.5);
     padding: 80px;
     text-align: center;
 }
 .how{
-    padding: 50px 150px;
-}
-.how img{
-    width: 150px;
+    padding: 50px 120px;
+    position: relative;
 }
 .how h2, .how p{
     color: var(--text-primary);
-    width: 300px;
-    margin: 15px 0;
+    width: 280px;
+    margin: 10px 0;
 }
 .step1, .step2, .step3{
     display: flex;
     align-items: center;
-    gap: 40px;
-    margin: 150px 0;
+    gap: 20px;
+    margin: 100px 0;
+    position: relative;
 }
 .step2{
     justify-self: end;
+    gap: 0px;
+}
+.step4{
+    position: relative;
+    justify-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10%;
+}
+.step4 h2{
+    margin: 0;
+    text-align: center;
+}
+.bgPath2{
+    position: absolute;
+    z-index: -1;
+    bottom: -100px;
+    left: -10px;
+}
+.arrow1{
+    position: absolute;
+    right: 20%;
+    top: 40%;
+    width: 525px;
+}
+.arrow2{
+    position: absolute;
+    left: -130%;
+    top: 70%;
+    width: 525px;
+}
+.arrow3{
+    position: absolute;
+    width: 525px;
+    right: 35%;
+    top: 125%;
 }

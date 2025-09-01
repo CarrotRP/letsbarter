@@ -1,7 +1,7 @@
 .review-card{
     border: 2px solid var(--secondary);
     border-radius: 10px;
-    width: 780px;
+    width: 600px;
     display: flex;
     align-items: center;
     padding: 10px 15px;
@@ -11,5 +11,5 @@
     width: 100px
 }
 .whonwhat{
-    width: 520px;
+    width: 400px;
 }

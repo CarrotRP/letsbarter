@@ -21,10 +21,10 @@ export default function Header() {
     return (
         <header>
             <Link to="/"><TextLogo /></Link>
-            <form onSubmit={handleSearch}>
-                <input type="text" id='search' placeholder='Search' onChange={(e) => setValue(e.target.value)} />
+            {/* <form onSubmit={handleSearch}>
+                <input type="text" id='search' placeholder='Search' onChange={(e) => setValue(e.target.value)} /> */}
                 {/* <input type="submit" value="Search" /> */}
-            </form>
+            {/* </form> */}
             <span className="right-head">
                 {/* TODO: implement login function, check to whether add these 3 below */}
                 <Link to='/add' style={{height: '27px'}}><img src={create} alt="" style={{width: '27px'}}/></Link>

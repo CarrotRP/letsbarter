@@ -23,7 +23,7 @@ export default function Detail() {
                     <h1>Steel Water Bottle</h1>
                     <p><b style={{ color: 'var(--primary)' }}>Looking for</b></p>
                     <p style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--secondary)' }}>Food . Education . Books . Nvidia Geforce 5090</p>
-                    <p style={{ margin: '35px 0 10px' }}>Steel water bottle for drinking and storing water, duh!</p>
+                    <p style={{ margin: '15px 0 10px' }}>Steel water bottle for drinking and storing water, duh!</p>
                     <hr style={{ border: '1px solid rgba(163, 68, 7, 0.3)' }} />
                     <div className="other-info">
                         <p>Orignal price</p>

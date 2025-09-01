@@ -4,11 +4,11 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 150px;
+    padding: 30px 120px;
 }
 header .auth{
     border-radius: 5px;
-    padding: 3px 10px;
+    padding: 1px 15px;
     font-weight: 600;
     cursor: pointer;
     font-size: 15px;
@@ -25,7 +25,7 @@ header #search{
     display: flex;
     justify-content: space-around;
     align-items: center;
-    gap: 10px;
+    gap: 30px;
 }
 #trade{
     background-color: var(--secondary);

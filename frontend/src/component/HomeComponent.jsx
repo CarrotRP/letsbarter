@@ -14,7 +14,7 @@ export default function HomeComponent(props) {
 
     return (
         <section>
-            <h1 style={{ color: 'var(--text-primary)', fontSize: '32px', margin: '10px 0' }}>{props.sectionName}</h1>
+            <h1 style={{ color: 'var(--text-primary)', fontSize: '36px', margin: '10px 0' }}>{props.sectionName}</h1>
             <section className="products">
                 {products.map((v, _) => {
                     return (

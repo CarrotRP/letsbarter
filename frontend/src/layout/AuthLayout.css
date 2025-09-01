@@ -8,15 +8,15 @@
     display: grid;
     place-content: center;
     gap: 40px;
-    width: 55%;
+    width: 40%;
     height: 100vh;
 }
 .right-panel{
     display: grid;
     grid-template-rows: 45px 1fr 30px;
     grid-template-columns: 450px;
-    width: 100%;
-    padding: 50px 150px;
+    width: 60%;
+    padding: 50px 120px;
     justify-content: center;
     align-items: center;
 }
