@@ -4,7 +4,20 @@
     padding: 20px 30px;
     width: 450px;
     height: 450px;
-    position: relative;
+    position: absolute;
+    top: 95px;
+    right: 220px;
+    background-color: white;
+    opacity: 0;
+    transition: top 500ms, opacity 500ms;
+    pointer-events: none;
+    z-index: 1;
+}
+.chat-active{
+    top: 120px;
+    right: 220px;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .chat span {

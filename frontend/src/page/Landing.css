@@ -73,7 +73,7 @@
     text-align: center;
 }
 .how{
-    padding: 50px 120px;
+    padding: 50px 240px;
     position: relative;
 }
 .how h2, .how p{
@@ -112,19 +112,19 @@
 }
 .arrow1{
     position: absolute;
-    right: 20%;
+    right: 25%; /*old 20%*/
     top: 40%;
     width: 525px;
 }
 .arrow2{
     position: absolute;
-    left: -130%;
-    top: 70%;
+    left: -140%; /*old -130%*/
+    top: 60%; /*old 70%*/
     width: 525px;
 }
 .arrow3{
     position: absolute;
     width: 525px;
     right: 35%;
-    top: 125%;
+    top: 150%; /*old 125%*/
 }

@@ -4,11 +4,16 @@ import location from '../assets/location.png';
 import inventory from '../assets/inventory.png'
 import ProductCard from '../component/ProductCard';
 import './OtherProfile.css';
-import { useState } from 'react';
+import { useOutletContext } from 'react-router';
+import { useState, useEffect, useRef } from 'react';
 import ReviewCard from '../component/ReviewCard';
+import Report from '../component/Report';
 
 export default function OtherProfile() {
     const [currentPage, setCurrentPage] = useState('inventory');
+    const chatRef = useOutletContext();
+    const reportBgRef = useRef();
+    const reportRef = useRef();
 
     const selectedTxtStyle = {
         fontSize: '32px',
@@ -17,6 +22,38 @@ export default function OtherProfile() {
     const unselectedImgStyle = {
         width: '24px'
     }
+
+    const handleMessageClick = (e) => {
+        e.stopPropagation();
+        chatRef.current.classList.toggle('chat-active');
+    }
+    const handleReportClick = (e) => {
+        e.stopPropagation();
+        document.body.style.overflow = 'hidden';
+        reportBgRef.current.style.display = 'block';
+        reportRef.current.style.display = 'block';
+    }
+    const handleReportClose = () => {
+        document.body.style.overflow = null;
+        reportBgRef.current.style.display = 'none';
+        reportRef.current.style.display = 'none';
+    }
+
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (reportRef && !reportRef.current.contains(e.target)) {
+                document.body.style.overflow = null;
+                reportBgRef.current.style.display = 'none';
+                reportRef.current.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('click', handleOutsideClick);
+
+        return () => {
+            document.removeEventListener('click', handleOutsideClick)
+        }
+    }, []);
 
     return (
         <main className="other-profile">
@@ -31,12 +68,12 @@ export default function OtherProfile() {
                     </span>
                 </span>
                 <span className="buttons">
-                    <button><img src={message} alt="" />Message</button>
-                    <button><img src={flag} alt="" />Report</button>
+                    <button onClick={handleMessageClick}><img src={message} alt="" />Message</button>
+                    <button onClick={handleReportClick}><img src={flag} alt="" />Report</button>
                     <button>Review</button>
                 </span>
             </div>
-            <section className="other-profile-nav" style={{ display: 'flex', alignItems: 'center', gap: '50px', color: 'var(--text-primary)'}}>
+            <section className="other-profile-nav" style={{ display: 'flex', alignItems: 'center', gap: '50px', color: 'var(--text-primary)' }}>
                 <span className='other-inventory-nav' onClick={() => setCurrentPage('inventory')} style={currentPage == 'inventory' ? selectedTxtStyle : null}>
                     <img src={inventory} alt="" style={currentPage == 'inventory' ? null : unselectedImgStyle} />
                     <p>Inventory</p>
@@ -54,12 +91,13 @@ export default function OtherProfile() {
                     </div> :
                     <div className="reviews">
                         {[...new Array(4)].map(_ => {
-                            return(
-                                <ReviewCard/>
+                            return (
+                                <ReviewCard />
                             );
                         })}
                     </div>}
             </section>
+            <Report reportBgRef={reportBgRef} reportRef={reportRef} handleReportClose={handleReportClose}/>
         </main>
     );
 }

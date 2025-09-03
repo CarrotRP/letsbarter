@@ -1,13 +1,14 @@
 .popup-bg{
     background-color: rgba(0, 0, 0, 0.5);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
+    display: none;
 }
 .trade-popup{
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -18,6 +19,7 @@
     background-color: white;
     padding: 30px;
     border-radius: 10px;
+    display: none;
 }
 .trade-popup h1{
     color: var(--text-primary);

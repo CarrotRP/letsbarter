@@ -1,5 +1,5 @@
 .profile-page {
-    padding: 150px;
+    padding: 130px 120px;
 }
 
 .profile-page-content {
@@ -74,6 +74,7 @@
     padding: 10px 20px;
     margin: 50px auto 0;
 }
+/* setting tab */
 .setting-sect{
     display: flex;
     flex-direction: column;

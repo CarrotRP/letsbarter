@@ -31,6 +31,7 @@
     width: 100%;
     padding: 10px 15px;
     border-radius: 12px;
+    cursor: pointer;
 }
 .submit-btn{
     margin: 20px 0 10px;
@@ -49,4 +50,7 @@
 .right-panel a{
     justify-self: center;
     color: var(--text-secondary);
+}
+.form-input{
+    position: relative;
 }

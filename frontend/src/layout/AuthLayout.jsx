@@ -34,8 +34,8 @@ export default function AuthLayout() {
                     <button className="sign-with-google"><img src={googleIcon} alt="" className="googleIcon" style={{ width: '24px' }} />Sign in with Google</button>
                 </section>
                 {location.pathname == "/login" ?
-                    <a href="/signup">Don't have an account? <b>Sign Up</b></a> :
-                    <a href="/login">Have an account? <b>Sign In</b></a>
+                    <Link to="/signup">Don't have an account? <b>Sign Up</b></Link> :
+                    <Link to="/login">Have an account? <b>Sign In</b></Link>
                 }
             </section>
         </main>
