@@ -1,13 +1,40 @@
+import TradePopup from "../component/TradePopup";
 import HomeComponent from "../component/HomeComponent";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
+import { useEffect, useRef } from "react";
 import placeholder from '../assets/placeholder.jpg';
 import placeholder2 from '../assets/placeholder2.png';
 import placeholder3 from '../assets/placeholder3.png';
-import { Link } from "react-router";
 import './Detail.css';
 
 export default function Detail() {
     const { id } = useParams();
+    const tradePopupRef = useRef();
+    const tradePopupContentRef = useRef();
+
+    const handleOfferClick = (e) => {
+        e.stopPropagation();
+        tradePopupRef.current.style.display = 'block'
+        tradePopupContentRef.current.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+        useEffect(() => {
+        //handle click outside
+        const handleOutsideClick = (e) => {
+            if(tradePopupContentRef && !tradePopupContentRef.current.contains(e.target)){
+                document.body.style.overflow = null;
+                tradePopupContentRef.current.style.display = 'none';
+                tradePopupRef.current.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('click', handleOutsideClick);
+
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        }
+    }, []);
 
     return (
         <main className="detail-page">
@@ -35,18 +62,19 @@ export default function Detail() {
                         <p>Bought on</p>
                         <p>02/June/2019</p>
                     </div>
-                    <Link to={`/user/1`} className="user" style={{color: 'var(--text-secondary)'}}>
+                    <Link to={`/user/1`} className="user" style={{ color: 'var(--text-secondary)' }}>
                         <img src="/favicon.png" style={{ width: '40px' }} alt="user-image" />
                         <span>
                             <p style={{ fontWeight: 500 }}>Bob Krackin</p>
                             <p style={{ fontSize: '13px', fontWeight: 300 }}>College Student</p>
                         </span>
                     </Link>
-                    <button>Offer Trade</button>
+                    <button onClick={handleOfferClick}>Offer Trade</button>
                 </section>
             </section>
             <HomeComponent sectionName="Other items in Bob's inventory" />
             <HomeComponent sectionName="You might also like" />
+            <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer'/>
         </main>
     );
 }

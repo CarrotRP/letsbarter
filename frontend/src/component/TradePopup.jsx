@@ -1,37 +1,53 @@
 import HorizontalCard from "./HorizontalCard";
 import ProductCard from "./ProductCard";
-import './TradePopup.css'
 import { useState } from "react";
+import close from '../assets/close.png'
 import tradeIcon from '../assets/trade.png';
+import './TradePopup.css'
 
 export default function TradePopup(props) {
-    const { tradePopupRef, tradePopupContentRef } = props;
-    const [currentPage, setCurrentPage] = useState('your');
+    const { tradePopupRef, tradePopupContentRef, tradeType, setTradeType, currentTradePage, setCurrentTradePage} = props;
 
     const unselectedStyle = {
         backgroundColor: '#d7d7d7',
         fontWeight: 300
+    }
+    const handleClose = () => {
+        document.body.style.overflow = null;
+        tradePopupContentRef.current.style.display = 'none';
+        tradePopupRef.current.style.display = 'none';
+        setTradeType('incoming');
+        setCurrentTradePage('your');
     }
 
     return (
         <>
             <div className="popup-bg" ref={tradePopupRef}></div>
             <div className="trade-popup" ref={tradePopupContentRef}>
-                <h1>Offer Trade</h1>
+                <span className="popup-head">
+                    <h1>{tradeType == 'offer' ? 'Offer Trade' : 'Respond to Trade'}</h1>
+                    <img src={close} alt="" onClick={handleClose} />
+                </span>
                 <div className="trade-popup-content">
                     <section className="item-selection">
                         <span className="user-inventory-nav">
-                            <h3 onClick={() => setCurrentPage('your')} style={currentPage == 'your' ? null : unselectedStyle}>Your Inventory</h3>
-                            <h3 onClick={() => setCurrentPage('their')} style={currentPage == 'their' ? null : unselectedStyle}>Their Inventory</h3>
+                            <h3 onClick={() => setCurrentTradePage('your')} style={currentTradePage == 'your' ? null : unselectedStyle}>Your Inventory</h3>
+                            <h3 onClick={() => setCurrentTradePage('their')} style={currentTradePage == 'their' ? null : unselectedStyle}>Their Inventory</h3>
                         </span>
-                        <div className="user-inventory">
+                        <div className="user-inventory" style={{ position: 'relative', overflow: 'hidden' }}>
+                            {tradeType == 'offer' ? <></> :
+                                <div className="bg-overlay">
+                                    <h2>Change Offer to adjust items</h2>
+                                </div>}
                             <input type="text" placeholder="Search" />
                             <div className="item-display">
-                                {currentPage == 'your' ?
+                                {currentTradePage == 'your' ?
                                     <>
                                         {[...new Array(6)].map(_ => {
                                             return (
-                                                <ProductCard pname={'Bottle wo er'} condition={6} lookfor="concain . book . idk" imgSize='150' fontSize1='16' fontSize2='14' fontSize3='13' />
+                                                <div style={{ cursor: 'pointer' }}>
+                                                    <ProductCard pname={'Bottle wo er'} condition={6} lookfor="concain . book . idk" imgSize='150' fontSize1='16' fontSize2='14' fontSize3='13' />
+                                                </div>
                                             );
                                         })}
                                     </> :
@@ -76,8 +92,17 @@ export default function TradePopup(props) {
                                 })}
                             </div>
                         </div>
-                        <button className="do-offer">Make Offer</button>
-                        <p style={{ fontWeight: 300, textAlign: 'center' }}>Cancel</p>
+                        {tradeType == 'offer' ?
+                            <button className="do-offer">Make Offer</button>
+                            :
+                            <span style={{ display: 'flex', gap: '30px', justifyContent: 'center', margin: '0 auto' }}>
+                                <button className="accept-trade respond-btn">Accept Trade</button>
+                                <button className="decline-trade respond-btn">Decline Trade</button>
+                            </span>
+                        }
+                        {tradeType == 'offer' ?
+                            <p className='other-option'>Cancel</p>
+                            : <p className="other-option" onClick={() => setTradeType('offer')}>Change Offer</p>}
                     </section>
                 </div>
             </div>

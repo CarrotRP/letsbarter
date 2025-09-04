@@ -18,7 +18,15 @@ To help lower middle class people such as college students, small business owner
 - bcrypt
 
 ### TODO:
-not yet
+- [ ] account login/signup
+- [ ] logout
+- [ ] delete item
+- [ ] add item
+- [ ] chatting
+- [ ] trading system
+- [ ] update profile
+- [ ] item search
+- [ ] estimate value in trade
 
 ## Screenshots
 not yet
