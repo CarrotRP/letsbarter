@@ -1,12 +1,13 @@
-import { Link, Outlet } from "react-router";
-import { useLocation } from "react-router-dom";
+import { useNavigate, Link, Outlet, useLocation } from "react-router";
 import SidePanel from "../component/SidePanel";
 import TextLogo from "../component/TextLogo";
 import "./AuthLayout.css";
 import googleIcon from "../assets/google.png";
+import { useEffect } from "react";
 
 export default function AuthLayout() {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const headTextStyle = {
         fontSize: '48px',
@@ -14,6 +15,38 @@ export default function AuthLayout() {
         justifySelf: 'center',
         letterSpacing: '-1px'
     };
+
+    useEffect(() => {
+        fetch('http://localhost:3000/user/check-auth', {
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.authenticated){
+                navigate(data.redirect);
+                console.log(data)
+            }
+        })
+    }, []);
+
+    const handleGoogleClick = () => {
+        const width = 500, height = 500;
+
+        const popup = window.open(
+            'http://localhost:3000/user/oauth', //url
+            'Google Login', //popup window name
+            `width=${width},height=${height}`
+        );
+
+        window.addEventListener('message', (e) => {
+            if (e.origin !== 'http://localhost:3000' && e.origin !== 'http://localhost:5173') return; //security check
+            if (e.data.type === 'google-auth-success') {
+                console.log('user profile', e.data.user);
+            }
+            navigate(e.data.redirect);
+            dispatch({type: 'SET_USER', payload: e.data.user});
+        });
+    }
 
     return (
         <main className="auth-page">
@@ -28,10 +61,7 @@ export default function AuthLayout() {
                         {location.pathname == '/login' ? "Welcome Back" : "Create an Account"}
                     </p>
                     <Outlet />
-                    <button className="submit-btn">
-                        {location.pathname == '/login' ? "Login" : "Sign Up"}
-                    </button>
-                    <button className="sign-with-google"><img src={googleIcon} alt="" className="googleIcon" style={{ width: '24px' }} />Sign in with Google</button>
+                    <button className="sign-with-google" onClick={handleGoogleClick}><img src={googleIcon} alt="" className="googleIcon" style={{ width: '24px' }} />Sign in with Google</button>
                 </section>
                 {location.pathname == "/login" ?
                     <Link to="/signup">Don't have an account? <b>Sign Up</b></Link> :

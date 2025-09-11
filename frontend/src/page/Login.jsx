@@ -2,21 +2,45 @@ import eyeIcon from "../assets/eye.svg";
 import eyeCloseIcon from '../assets/eye-slash.svg';
 import './Login.css';
 import FormComponent from "../component/FormComponent";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router";
+import { UserContext } from "../context/UserContext";
 
 export default function Login() {
     const [isVisible, setIsVisible] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const {user, dispatch} = useContext(UserContext);
 
     const handleEyeClick = () => {
         setIsVisible(!isVisible);
     }
 
+    const handleLoginClick = () => {
+        if(email && password){
+            fetch('http://localhost:3000/user/login', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({username: email, password})
+            }).then(res => res.json())
+            .then(data => {
+                dispatch({type: 'SET_USER', payload: data.user});
+                navigate(data.redirect);    
+                console.log(data)
+            });
+        }
+    }
+
     return (
         <>
             <section className="form-input">
-                <FormComponent htmlFor="email" label="Email" type="email" placeholder="Enter your email"/>
-                <FormComponent htmlFor="password" label="Password" type={isVisible ? 'text' : 'password'} placeholder="Enter your password"/>
-                <img onClick={handleEyeClick} src={isVisible ? eyeIcon : eyeCloseIcon} alt="" className="eyeIcon" style={{ cursor: 'pointer', width: '20px', position: 'absolute', bottom: '10px', right: '10px'}} />
+                <FormComponent htmlFor="email" label="Email" type="email" placeholder="Enter your email" value={email} setter={setEmail}/>
+                <FormComponent htmlFor="password" label="Password" type={isVisible ? 'text' : 'password'} placeholder="Enter your password" value={password} setter={setPassword}/>
+                <img onClick={handleEyeClick} src={isVisible ? eyeIcon : eyeCloseIcon} alt="" className="eyeIcon" style={{ cursor: 'pointer', width: '20px', position: 'absolute', bottom: '10px', right: '10px' }} />
             </section>
             <span className="options">
                 <span className="remember">
@@ -25,6 +49,7 @@ export default function Login() {
                 </span>
                 <a href="" style={{ fontSize: '14px' }}>Forgot Password</a>
             </span>
+            <button className="submit-btn" onClick={handleLoginClick}>Login</button>
         </>
     );
 }
