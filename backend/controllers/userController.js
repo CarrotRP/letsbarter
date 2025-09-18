@@ -40,6 +40,19 @@ const user_google_login = (req, res) => {
       </script>
     `);
 }
+const get_user = (req, res) => {
+    const id = req.params.id;
+    
+    User.findById(id).then(result => res.json(result));
+}
+
+const user_update = (req, res) => {
+    const id = req.params.id;
+    const {username, occupation, email, password} = req.body;
+    User.findByIdAndUpdate(id, {username, occupation, email, password}, {new: true})
+    .then(result => res.json(result))
+    .catch(err => console.log(err));
+}
 
 const user_logout = (req, res) => {
     req.logout((err) => {
@@ -52,5 +65,7 @@ module.exports = {
     user_signup,
     user_login,
     user_google_login,
+    user_update,
+    get_user,
     user_logout
 }

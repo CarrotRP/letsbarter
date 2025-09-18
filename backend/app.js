@@ -7,12 +7,14 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const User = require('./models/userModel');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 
 // routes
 const userRoutes = require('./routes/users');
+const itemRoutes = require('./routes/items');
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -24,6 +26,7 @@ mongoose.connect(process.env.DB_URL)
     .catch(err => console.log(err));
 
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(session({
     secret: process.env.secret,
@@ -102,3 +105,4 @@ app.get('/', (req, res) => {
     res.json('hello bruh')
 })
 app.use('/user', userRoutes);
+app.use('/item', itemRoutes);

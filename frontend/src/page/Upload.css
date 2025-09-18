@@ -37,6 +37,7 @@ input[type='file']{
     height: 150px;
     border: 2px solid rgba(163, 68, 7, 0.1);
     border-radius: 20px;
+    object-fit: cover;
 }
 .item-images .images{
     display: flex;
@@ -95,6 +96,7 @@ input[type='file']{
     padding: 10px;
     width: 300px;
     align-self: center;
+    cursor: pointer;
 }
 #condition, #ogPrice{
     padding-right: 25px;

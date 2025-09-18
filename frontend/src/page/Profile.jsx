@@ -14,6 +14,8 @@ export default function Profile() {
     const [username, setUsername] = useState('');
     const [occupation, setOccupation] = useState('');
     const [email, setEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [conPassword, setConPassword] = useState('')
     const navigate = useNavigate();
 
     const selectedStyle = {
@@ -21,13 +23,13 @@ export default function Profile() {
         borderRadius: '10px',
     }
 
+    //fix on refresh, even if theres user still navigate
     useEffect(() => {
         if(user){
             setUsername(user.username || '');
             setOccupation(user.occupation || '');
             setEmail(user.email || '');
         } else{
-            console.log('noone')
             navigate('/');
         }
     }, [user]);
@@ -41,6 +43,22 @@ export default function Profile() {
             navigate(data.redirect);
             dispatch({type: 'LOGOUT_USER'});
         })
+    }
+
+    const handleUserUpdate = () => {
+        console.log(user._id);
+        fetch(`http://localhost:3000/user/${user._id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({username, occupation, email, password: newPassword})
+        }).then(res => res.json())
+        .then(data => {
+            console.log(data)
+            dispatch({type: 'SET_USER', payload: data})
+        });
     }
 
     return (
@@ -91,11 +109,11 @@ export default function Profile() {
                                     <FormComponent htmlFor="name" label="Full Name" type="text" value={username} setter={setUsername}/>
                                     <FormComponent htmlFor="occupation" label="Occupation" type="text" value={occupation} setter={setOccupation}/>
                                     <FormComponent htmlFor="email" label="Email Address" type="email" value={email} setter={setEmail}/>
-                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password" />
-                                    <FormComponent htmlFor="newPassword" label="New Password" type="password" />
-                                    <FormComponent htmlFor="confirmPassword" label="Confirm Password" type="password" />
+                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password"/>
+                                    <FormComponent htmlFor="newPassword" label="New Password" type="password" value={newPassword} setter={setNewPassword}/>
+                                    <FormComponent htmlFor="confirmPassword" label="Confirm Password" type="password" value={conPassword} setter={setConPassword}/>
                                 </div>
-                                <button className='update'>Update</button>
+                                <button className='update' onClick={handleUserUpdate}>Update</button>
                             </div> :
                             <div className="setting">
                                 <section className="setting-sect">

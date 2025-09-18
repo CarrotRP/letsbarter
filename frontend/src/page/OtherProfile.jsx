@@ -4,16 +4,18 @@ import location from '../assets/location.png';
 import inventory from '../assets/inventory.png'
 import ProductCard from '../component/ProductCard';
 import './OtherProfile.css';
-import { useOutletContext } from 'react-router';
+import { useOutletContext, useParams } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 import ReviewCard from '../component/ReviewCard';
 import Report from '../component/Report';
 
 export default function OtherProfile() {
+    const { id } = useParams();
     const [currentPage, setCurrentPage] = useState('inventory');
     const chatRef = useOutletContext();
     const reportBgRef = useRef();
     const reportRef = useRef();
+    const [otherUser, setOtherUser] = useState();
 
     const selectedTxtStyle = {
         fontSize: '32px',
@@ -40,6 +42,12 @@ export default function OtherProfile() {
     }
 
     useEffect(() => {
+        fetch(`http://localhost:3000/user/${id}`)
+        .then(res => res.json())
+        .then(data => {
+            setOtherUser(data);
+            console.log(data)});
+
         const handleOutsideClick = (e) => {
             if (reportRef && !reportRef.current.contains(e.target)) {
                 document.body.style.overflow = null;
@@ -60,8 +68,8 @@ export default function OtherProfile() {
             <div className='other-detail'>
                 <img src="/favicon.png" style={{ width: '120px', height: '120px' }} alt="user-image" />
                 <span>
-                    <h1>Bob Krackin</h1>
-                    <p style={{ fontSize: '20px', fontWeight: 300 }}>University Student</p>
+                    <h1>{otherUser?.username}</h1>
+                    <p style={{ fontSize: '20px', fontWeight: 300 }}>{otherUser?.occupation}</p>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <img src={location} alt="" style={{ width: '14px' }} />
                         <p style={{ fontSize: '20px', fontWeight: 300 }}>Phnom Penh</p>
