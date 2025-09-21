@@ -27,6 +27,7 @@ const user_login = (req, res) => {
     res.json({ redirect: '/', user: req.user });
 }
 const user_google_login = (req, res) => {
+    console.log('hello');
     res.send(`
       <script>
         const user = ${JSON.stringify(req.user)};

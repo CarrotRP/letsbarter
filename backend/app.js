@@ -15,6 +15,7 @@ const app = express();
 // routes
 const userRoutes = require('./routes/users');
 const itemRoutes = require('./routes/items');
+const categoryRoutes = require('./routes/categories');
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -59,6 +60,8 @@ passport.use(new GoogleStrategy({
     // 1. Find existing user
     User.findOne({ email})
         .then(user => {
+            console.log('hello error?')
+            console.log(user)
             if (user) {
                 // Found existing user
                 return done(null, user);
@@ -106,3 +109,4 @@ app.get('/', (req, res) => {
 })
 app.use('/user', userRoutes);
 app.use('/item', itemRoutes);
+app.use('/category', categoryRoutes);

@@ -13,6 +13,8 @@ export default function Detail() {
     const tradePopupContentRef = useRef();
     const [itemDetail, setItemDetail] = useState();
     const [currentTradePage, setCurrentTradePage] = useState('your');
+    const [image, setImage] = useState([]);
+    const [currentImg, setCurrentImg] = useState(0);
 
     const handleOfferClick = (e) => {
         e.stopPropagation();
@@ -21,13 +23,19 @@ export default function Detail() {
         document.body.style.overflow = 'hidden';
     }
 
+    const handleImgClick = (e) => {
+        setCurrentImg(e.target.id);
+    }
+
     useEffect(() => {
         //fetch item detail
         fetch(`http://localhost:3000/item/${id}`).then(res => res.json())
             .then(data => {
                 setItemDetail(data);
+                setImage([data.main_img]);
+                setImage(prev => [...prev, ...data.imgs])
                 console.log(data)
-            }); 
+            });
 
         //handle click outside
         const handleOutsideClick = (e) => {
@@ -52,13 +60,12 @@ export default function Detail() {
     return (
         <main className="detail-page">
             <section className="product-detail">
-                <aside>
-                    <img src={placeholder} alt="" />
-                    <img src={placeholder} alt="" />
-                    <img src={placeholder} alt="" />
-                    <img src={placeholder} alt="" />
+                <aside onClick={handleImgClick}>
+                    {image.map((v, i) => {
+                    return <img key={i} id={i} src={`http://localhost:3000/${v}`} alt="" style={{cursor: 'pointer', border: i == currentImg ? '3.5px solid var(--secondary)' : ''}}/>
+                    })}
                 </aside>
-                <img id="main-img" src={`http://localhost:3000/${itemDetail?.main_img}`} alt="" />
+                <img id="main-img" src={`http://localhost:3000/${image[currentImg]}`} alt="" />
                 <section className="product-info">
                     <h1>{itemDetail?.name}</h1>
                     <p><b style={{ color: 'var(--primary)' }}>Looking for</b></p>

@@ -27,11 +27,14 @@ const itemSchema = new Schema({
     },
     imgs: {
         type: [String],
-        // required: true
+        required: true
     },
     main_img: {
         type: String,
-        // required: true
+        required: true
+    },
+    brand: {
+        type: String
     },
     owner_id: {
         type: Schema.Types.ObjectId,

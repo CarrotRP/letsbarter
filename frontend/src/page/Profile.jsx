@@ -10,12 +10,14 @@ import { useNavigate, Link, useOutletContext } from 'react-router';
 
 export default function Profile() {
     const [currentPage, setCurrentPage] = useState('inventory');
-    const {user, dispatch} = useOutletContext();
+    const { user, dispatch, isLoading } = useOutletContext();
     const [username, setUsername] = useState('');
     const [occupation, setOccupation] = useState('');
     const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [conPassword, setConPassword] = useState('')
+
+    const [item, setItem] = useState([]);
     const navigate = useNavigate();
 
     const selectedStyle = {
@@ -25,24 +27,35 @@ export default function Profile() {
 
     //fix on refresh, even if theres user still navigate
     useEffect(() => {
-        if(user){
+        if(isLoading) return;
+
+        if (user) {
             setUsername(user.username || '');
             setOccupation(user.occupation || '');
             setEmail(user.email || '');
-        } else{
+
+            //fetch user items
+            fetch(`http://localhost:3000/item/user-item/${user?._id}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    setItem(data);
+                });
+        } else {
             navigate('/');
         }
-    }, [user]);
+
+    }, [user, isLoading]);
 
     const handleLogout = () => {
         fetch('http://localhost:3000/user/logout', {
             credentials: 'include',
             method: 'POST'
         }).then(res => res.json())
-        .then(data => {
-            navigate(data.redirect);
-            dispatch({type: 'LOGOUT_USER'});
-        })
+            .then(data => {
+                navigate(data.redirect);
+                dispatch({ type: 'LOGOUT_USER' });
+            })
     }
 
     const handleUserUpdate = () => {
@@ -53,12 +66,12 @@ export default function Profile() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({username, occupation, email, password: newPassword})
+            body: JSON.stringify({ username, occupation, email, password: newPassword })
         }).then(res => res.json())
-        .then(data => {
-            console.log(data)
-            dispatch({type: 'SET_USER', payload: data})
-        });
+            .then(data => {
+                console.log(data)
+                dispatch({ type: 'SET_USER', payload: data })
+            });
     }
 
     return (
@@ -72,7 +85,7 @@ export default function Profile() {
                             <p style={{ fontSize: '20px', fontWeight: 300 }}>{user?.occupation}</p>
                         </span>
                     </div>
-                    <span className='nav inventory-nav' onClick={() => {setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email)}} style={currentPage == 'inventory' ? selectedStyle : null}>
+                    <span className='nav inventory-nav' onClick={() => { setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email) }} style={currentPage == 'inventory' ? selectedStyle : null}>
                         <img src={inventory} alt="" />
                         <p style={{ fontWeight: currentPage == 'inventory' ? 'bold' : '' }}>Inventory</p>
                     </span>
@@ -80,7 +93,7 @@ export default function Profile() {
                         <img src={userIcon} alt="" />
                         <p style={{ fontWeight: currentPage == 'personal' ? 'bold' : '' }}>Personal Info</p>
                     </span>
-                    <span className='nav setting-nav' onClick={() => {setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email)}} style={currentPage == 'setting' ? selectedStyle : null}>
+                    <span className='nav setting-nav' onClick={() => { setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email) }} style={currentPage == 'setting' ? selectedStyle : null}>
                         <img src={setting} alt="" />
                         <p style={{ fontWeight: currentPage == 'setting' ? 'bold' : '' }}>Setting</p>
                     </span>
@@ -92,10 +105,10 @@ export default function Profile() {
                 <section className="profile-page-right">
                     {currentPage == 'inventory' ?
                         <div className="inventory">
-                            {[...new Array(8)].map(_ => {
+                            {item.map(v => {
                                 return (
-                                    <Link to={`/product/${1}`} style={{ color: 'var(--text-secondary)' }}>
-                                        <ProductCard pname={'Bottle wo er'} condition={6} lookfor="concain . book . idk" />
+                                    <Link to={`/product/${v?._id}`} style={{ color: 'var(--text-secondary)' }}>
+                                        <ProductCard pname={v?.name} condition={v?.item_condition} lookfor={v?.looking_for} mainImg={v?.main_img}/>
                                     </Link>
                                 );
                             })}
@@ -106,12 +119,12 @@ export default function Profile() {
                                     <p>Change Photo</p>
                                 </div>
                                 <div className="profile-form-input">
-                                    <FormComponent htmlFor="name" label="Full Name" type="text" value={username} setter={setUsername}/>
-                                    <FormComponent htmlFor="occupation" label="Occupation" type="text" value={occupation} setter={setOccupation}/>
-                                    <FormComponent htmlFor="email" label="Email Address" type="email" value={email} setter={setEmail}/>
-                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password"/>
-                                    <FormComponent htmlFor="newPassword" label="New Password" type="password" value={newPassword} setter={setNewPassword}/>
-                                    <FormComponent htmlFor="confirmPassword" label="Confirm Password" type="password" value={conPassword} setter={setConPassword}/>
+                                    <FormComponent htmlFor="name" label="Full Name" type="text" value={username} setter={setUsername} />
+                                    <FormComponent htmlFor="occupation" label="Occupation" type="text" value={occupation} setter={setOccupation} />
+                                    <FormComponent htmlFor="email" label="Email Address" type="email" value={email} setter={setEmail} />
+                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password" />
+                                    <FormComponent htmlFor="newPassword" label="New Password" type="password" value={newPassword} setter={setNewPassword} />
+                                    <FormComponent htmlFor="confirmPassword" label="Confirm Password" type="password" value={conPassword} setter={setConPassword} />
                                 </div>
                                 <button className='update' onClick={handleUserUpdate}>Update</button>
                             </div> :

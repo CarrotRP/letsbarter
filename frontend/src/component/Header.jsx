@@ -45,10 +45,10 @@ export default function Header(props) {
     return (
         <header>
             <Link to="/"><TextLogo /></Link>
-            {/* <form onSubmit={handleSearch}>
-                <input type="text" id='search' placeholder='Search' onChange={(e) => setValue(e.target.value)} /> */}
-            {/* <input type="submit" value="Search" /> */}
-            {/* </form> */}
+            <form onSubmit={handleSearch}>
+                <input type="text" id='search' placeholder='Search' onChange={(e) => setValue(e.target.value)} />
+            <input type="submit" value="Search" />
+            </form>
             <span className="right-head">
                 {/* TODO: implement login function, check to whether add these 3 below */}
                 {user ?

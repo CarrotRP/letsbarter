@@ -1,10 +1,15 @@
 .homepage{
     padding: 120px;
 }
-.products, .categories{
+.products{
     display: grid;
     grid-template-columns: repeat(5, 240px);
     grid-auto-flow: row;
     justify-content: space-between;
     /* gap: 50px; */
+}
+.categories{
+    display: flex;
+    overflow-x: scroll;
+    gap: 20px;
 }

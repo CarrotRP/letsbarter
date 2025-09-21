@@ -1,13 +1,18 @@
 import DetailInput from '../component/DetailInput';
 import AreaInput from '../component/AreaInput';
 import './Upload.css';
-import { useState } from 'react';
-import { useOutletContext } from 'react-router';
+import { useState, useEffect } from 'react';
+import { useOutletContext, useNavigate } from 'react-router';
+import Dropdown from '../component/Dropdown';
 
 export default function Upload() {
     const { user } = useOutletContext();
+    const navigate = useNavigate();
+
+    //form detail
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const [category, setCategory] = useState("");
     const [brand, setBrand] = useState("");
     const [ogPrice, setOgPrice] = useState("");
     const [boughtOn, setBoughtOn] = useState("");
@@ -17,6 +22,19 @@ export default function Upload() {
     //images
     const [mainImg, setMainImg] = useState(null);
     const [images, setImages] = useState([]);
+
+    //category list
+    const [categoryList, setCategoryList] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/category/')
+        .then(res => res.json())
+        .then(data => {
+            setCategoryList(data);
+            setCategory(data[0]._id)
+            console.log(data)
+        });
+    }, []);
 
     const handleUploadClick = () => {
         const formData = new FormData();
@@ -31,7 +49,9 @@ export default function Upload() {
 
         // Append other fields
         formData.append("name", name);
+        formData.append("category", category);
         formData.append("description", description);
+        formData.append("brand", brand)
         formData.append("original_price", ogPrice);
         formData.append("bought_on", boughtOn);
         formData.append("item_condition", condition);
@@ -44,17 +64,25 @@ export default function Upload() {
             body: formData, // <--- send FormData directly
             // DO NOT set Content-Type, browser will handle multipart/form-data
         })
-            .then(res => res.json())
-            .then(data => console.log(data))
+            .then(res => {
+                if(res.ok){
+                    return res.json();
+                } else{
+                    throw new Error('error happened')
+                }
+            })
+            .then(data => {
+                navigate('/');
+                console.log(data)
+            })
             .catch(err => console.error(err));
     };
-
 
     //select and preview img (main img)
     const handleMainImgChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setMainImg(URL.createObjectURL(file));
+            setMainImg({ file, preview: URL.createObjectURL(file), isMain: true });
 
             setImages(prev => prev.filter(img => !img.isMain));
             setImages(prev => [...prev, { file, preview: URL.createObjectURL(file), isMain: true }]);
@@ -97,20 +125,19 @@ export default function Upload() {
         // If it's the main image, also clear mainImg and mainImgFile
         if (imgToRemove.isMain) {
             setMainImg(null);
-            setMainImgFile(null);
         }
     };
 
     return (
         <main className="upload">
-            <h1>Item upload</h1>
+            <h1 onClick={() => {console.log(category)}}>Item upload</h1>
             <div className="item-inputs">
                 <div className="item-images">
                     <h3>Main Image</h3>
                     {/* main image will display here */}
                     {mainImg &&
                         <div style={{ position: 'relative', width: '150px' }}>
-                            <img src={mainImg} alt="" />
+                            <img src={mainImg.preview} alt="" />
                             <button
                                 type="button"
                                 style={{
@@ -163,6 +190,7 @@ export default function Upload() {
                 <div className="item-infos">
                     <h3>Detail</h3>
                     <DetailInput type="text" data='name' placeholder='Name' setter={setName} getter={name} />
+                    <Dropdown getter={category} setter={setCategory} categoryList={categoryList}></Dropdown>
                     <AreaInput data="description" label="Description" setter={setDescription} getter={description} />
                     <DetailInput type="text" data='brand' placeholder='Brand' setter={setBrand} getter={brand} />
                     <DetailInput type="number" data='price' placeholder='Original Price' setter={setOgPrice} getter={ogPrice} p="$" />

@@ -4,7 +4,7 @@ import location from '../assets/location.png';
 import inventory from '../assets/inventory.png'
 import ProductCard from '../component/ProductCard';
 import './OtherProfile.css';
-import { useOutletContext, useParams } from 'react-router';
+import { Link, useOutletContext, useParams } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 import ReviewCard from '../component/ReviewCard';
 import Report from '../component/Report';
@@ -16,6 +16,7 @@ export default function OtherProfile() {
     const reportBgRef = useRef();
     const reportRef = useRef();
     const [otherUser, setOtherUser] = useState();
+    const [item, setItem] = useState([]);
 
     const selectedTxtStyle = {
         fontSize: '32px',
@@ -42,11 +43,20 @@ export default function OtherProfile() {
     }
 
     useEffect(() => {
+        //fetch other user data
         fetch(`http://localhost:3000/user/${id}`)
-        .then(res => res.json())
-        .then(data => {
-            setOtherUser(data);
-            console.log(data)});
+            .then(res => res.json())
+            .then(data => {
+                setOtherUser(data);
+                console.log(data)
+            });
+
+        fetch(`http://localhost:3000/item/user-item/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setItem(data);
+            })
 
         const handleOutsideClick = (e) => {
             if (reportRef && !reportRef.current.contains(e.target)) {
@@ -91,9 +101,11 @@ export default function OtherProfile() {
             <section className="other-content">
                 {currentPage == 'inventory' ?
                     <div className="other-inventory">
-                        {[...new Array(8)].map(_ => {
+                        {item.map(v => {
                             return (
-                                <ProductCard pname={'Bottle wo er'} condition={6} lookfor="concain . book . idk" />
+                                <Link  to={`/product/${v._id}`} style={{color: 'var(--text-secondary)'}} key={v.id}>
+                                    <ProductCard pname={v.name} condition={v.condition} lookfor={v.looking_for} mainImg={v.main_img} />
+                                </Link>
                             );
                         })}
                     </div> :
@@ -105,7 +117,7 @@ export default function OtherProfile() {
                         })}
                     </div>}
             </section>
-            <Report reportBgRef={reportBgRef} reportRef={reportRef} handleReportClose={handleReportClose}/>
+            <Report reportBgRef={reportBgRef} reportRef={reportRef} handleReportClose={handleReportClose} />
         </main>
     );
 }

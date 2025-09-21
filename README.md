@@ -21,11 +21,12 @@ To help lower middle class people such as college students, small business owner
 - [x] account login/signup
 - [x] logout
 - [x] update profile
-- [ ] add item
+- [x] add item
+- [x] category
 - [ ] delete item
+- [ ] item search
 - [ ] chatting
 - [ ] trading system
-- [ ] item search
 - [ ] estimate value in trade
 
 ## Screenshots

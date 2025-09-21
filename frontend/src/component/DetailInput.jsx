@@ -6,7 +6,6 @@ export default function DetailInput(props) {
             <input type={type} id={data} placeholder={placeholder} getter={getter} onChange={e => setter(e.target.value)} />
             <label htmlFor={data}>{type == 'date' ? placeholder : getter == '' ? "" : placeholder}</label>
             {p ? <p style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '14px', fontWeight: 'bold' }}>{p}</p> : <></>}
-
         </span>
     );
 }

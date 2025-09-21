@@ -14,12 +14,13 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 router.get('/', itemController.get_all_items);
-router.get('/:id', itemController.get_one_item);
+router.get('/category', itemController.get_by_category);
 router.get('/user-item/:id', itemController.get_item_for_owner)
 router.post('/upload', upload.fields([
     {name: 'main_img', maxCount: 1},
     {name: 'images', maxCount: 5}
 ]), itemController.upload_item);
+router.get('/:id', itemController.get_one_item);
 // router.patch('/:id')
 // router.delete('/:id')
 

@@ -15,6 +15,7 @@ import Trade from "./page/Trade"
 import OtherProfile from './page/OtherProfile'
 import Report from "./component/Report"
 import TradePopup from "./component/TradePopup"
+import Query from "./page/Query"
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/trade" element={<Trade/>}></Route>
           <Route path="/user/:id" element={<OtherProfile/>}></Route>
           <Route path="/search" element={<Search />}></Route>
+          <Route path="/item" element={<Query/>}></Route>
         </Route>
         {/* temp path for debug */}
         <Route path="/test" element={<TradePopup />}></Route>
