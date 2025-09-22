@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router"
 import Login from "./page/Login"
 import Signup from "./page/Signup"
@@ -9,11 +8,9 @@ import Home from "./page/Home"
 import Detail from "./page/Detail"
 import Profile from "./page/Profile"
 import Search from "./page/Search"
-import Chat from "./component/Chat"
 import Upload from "./page/Upload"
 import Trade from "./page/Trade"
 import OtherProfile from './page/OtherProfile'
-import Report from "./component/Report"
 import TradePopup from "./component/TradePopup"
 import Query from "./page/Query"
 
@@ -34,6 +31,7 @@ function App() {
           <Route path="/product/:id" element={<Detail />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/add" element={<Upload/>}></Route>
+          <Route path="/edit/:id" element={<Upload/>}></Route>
           <Route path="/trade" element={<Trade/>}></Route>
           <Route path="/user/:id" element={<OtherProfile/>}></Route>
           <Route path="/search" element={<Search />}></Route>

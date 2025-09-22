@@ -1,14 +1,13 @@
 import TradePopup from "../component/TradePopup";
 import HomeComponent from "../component/HomeComponent";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useOutletContext, useNavigate } from "react-router";
 import { useEffect, useRef, useState } from "react";
-import placeholder from '../assets/placeholder.jpg';
-import placeholder2 from '../assets/placeholder2.png';
-import placeholder3 from '../assets/placeholder3.png';
 import './Detail.css';
 
 export default function Detail() {
     const { id } = useParams();
+    const { user } = useOutletContext();
+    const navigate = useNavigate();
     const tradePopupRef = useRef();
     const tradePopupContentRef = useRef();
     const [itemDetail, setItemDetail] = useState();
@@ -23,11 +22,23 @@ export default function Detail() {
         document.body.style.overflow = 'hidden';
     }
 
+    const handleItemDelete = () => {
+        fetch(`http://localhost:3000/item/${itemDetail?._id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        }).then(res => res.json())
+        .then(data => {
+            console.log(data)
+            navigate(-1);
+        })
+    }
+
     const handleImgClick = (e) => {
         setCurrentImg(e.target.id);
     }
 
     useEffect(() => {
+        console.log(user);
         //fetch item detail
         fetch(`http://localhost:3000/item/${id}`).then(res => res.json())
             .then(data => {
@@ -55,14 +66,14 @@ export default function Detail() {
         }
 
 
-    }, []);
+    }, [user]);
 
     return (
         <main className="detail-page">
             <section className="product-detail">
                 <aside onClick={handleImgClick}>
                     {image.map((v, i) => {
-                    return <img key={i} id={i} src={`http://localhost:3000/${v}`} alt="" style={{cursor: 'pointer', border: i == currentImg ? '3.5px solid var(--secondary)' : ''}}/>
+                        return <img key={i} id={i} src={`http://localhost:3000/${v}`} alt="" style={{ cursor: 'pointer', border: i == currentImg ? '3.5px solid var(--secondary)' : '' }} />
                     })}
                 </aside>
                 <img id="main-img" src={`http://localhost:3000/${image[currentImg]}`} alt="" />
@@ -82,19 +93,27 @@ export default function Detail() {
                         <p>Bought on</p>
                         <p>{`${new Date(itemDetail?.bought_on).getDate().toString().padStart(2, '0')}/${new Date(itemDetail?.bought_on).toLocaleString('en-GB', { month: 'long' })}/${new Date(itemDetail?.bought_on).getFullYear()}`}</p>
                     </div>
-                    <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
-                        <img src="/favicon.png" style={{ width: '40px' }} alt="user-image" />
-                        <span>
-                            <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
-                            <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>
-                        </span>
-                    </Link>
-                    <button onClick={handleOfferClick}>Offer Trade</button>
+
+                    {user?._id ?
+                        <span style={{display: 'flex', gap: '20px'}}>
+                            <button onClick={() => navigate(`/edit/${itemDetail?._id}`)} style={{}}>Edit</button>
+                            <button onClick={handleItemDelete} style={{backgroundColor: 'transparent', border: '1px solid var(--text-primary)', color: 'var(--text-primary)'}}>Delete</button>
+                        </span> :
+                        <>
+                            <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
+                                <img src="/favicon.png" style={{ width: '40px' }} alt="user-image" />
+                                <span>
+                                    <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
+                                    <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>
+                                </span>
+                            </Link>
+                            <button onClick={handleOfferClick}>Offer Trade</button>
+                        </>}
                 </section>
             </section>
             <HomeComponent sectionName="Other items in Bob's inventory" />
             <HomeComponent sectionName="You might also like" />
-            <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage}/>
+            <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} />
         </main>
     );
 }

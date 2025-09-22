@@ -63,4 +63,5 @@ aside img{
     font-size: 16px;
     font-weight: 500;
     width: 100%;
+    cursor: pointer;
 }

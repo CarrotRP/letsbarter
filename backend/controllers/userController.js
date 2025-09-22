@@ -47,10 +47,14 @@ const get_user = (req, res) => {
     User.findById(id).then(result => res.json(result));
 }
 
-const user_update = (req, res) => {
+const user_update = async (req, res) => {
     const id = req.params.id;
     const {username, occupation, email, password} = req.body;
-    User.findByIdAndUpdate(id, {username, occupation, email, password}, {new: true})
+
+    const saltRounds = 10;
+    const hashedPw = await bcrypt.hash(password, saltRounds);
+
+    User.findByIdAndUpdate(id, {username, occupation, email, password: hashedPw}, {new: true})
     .then(result => res.json(result))
     .catch(err => console.log(err));
 }

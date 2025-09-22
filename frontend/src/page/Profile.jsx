@@ -122,7 +122,7 @@ export default function Profile() {
                                     <FormComponent htmlFor="name" label="Full Name" type="text" value={username} setter={setUsername} />
                                     <FormComponent htmlFor="occupation" label="Occupation" type="text" value={occupation} setter={setOccupation} />
                                     <FormComponent htmlFor="email" label="Email Address" type="email" value={email} setter={setEmail} />
-                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password" />
+                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password" disable={true}/>
                                     <FormComponent htmlFor="newPassword" label="New Password" type="password" value={newPassword} setter={setNewPassword} />
                                     <FormComponent htmlFor="confirmPassword" label="Confirm Password" type="password" value={conPassword} setter={setConPassword} />
                                 </div>

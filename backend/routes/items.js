@@ -21,7 +21,10 @@ router.post('/upload', upload.fields([
     {name: 'images', maxCount: 5}
 ]), itemController.upload_item);
 router.get('/:id', itemController.get_one_item);
-// router.patch('/:id')
-// router.delete('/:id')
+router.patch('/:id', upload.fields([
+    {name: 'main_img', maxCount: 1},
+    {name: 'images', maxCount: 5}
+]), itemController.update_item);
+router.delete('/:id', itemController.delete_item);
 
 module.exports = router;

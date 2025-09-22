@@ -2,10 +2,11 @@ import DetailInput from '../component/DetailInput';
 import AreaInput from '../component/AreaInput';
 import './Upload.css';
 import { useState, useEffect } from 'react';
-import { useOutletContext, useNavigate } from 'react-router';
+import { useOutletContext, useNavigate, useParams } from 'react-router';
 import Dropdown from '../component/Dropdown';
 
 export default function Upload() {
+    const { id } = useParams();
     const { user } = useOutletContext();
     const navigate = useNavigate();
 
@@ -27,16 +28,45 @@ export default function Upload() {
     const [categoryList, setCategoryList] = useState([]);
 
     useEffect(() => {
+        //getting category
         fetch('http://localhost:3000/category/')
-        .then(res => res.json())
-        .then(data => {
-            setCategoryList(data);
-            setCategory(data[0]._id)
-            console.log(data)
-        });
-    }, []);
+            .then(res => res.json())
+            .then(data => {
+                setCategoryList(data);
+                setCategory(data[0]._id);
+            });
+
+        //on edit, get current item detail
+        console.log(id);
+        if (id) {
+            fetch(`http://localhost:3000/item/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    setName(data?.name);
+                    setDescription(data.description);
+                    setCategory(data.category_id);
+                    setOgPrice(data.original_price);
+                    setBoughtOn(data.bought_on.split('T')[0]);
+                    setCondition(data.item_condition);
+                    setLooking(data.looking_for);
+                    setBrand(data.brand);
+
+                    if(data.main_img){
+                        setMainImg({ file: null, preview: `http://localhost:3000/${data.main_img}`, isMain: true });
+                    }
+
+                    if(data.imgs){
+                        setImages([{ file: null, preview: `http://localhost:3000/${data.main_img}`, isMain: true }, ...data.imgs.map(path => ({
+                            file: null,
+                            preview: `http://localhost:3000/${path}`
+                        }))])
+                    }
+                });
+        }
+    }, [id]);
 
     const handleUploadClick = () => {
+        var url, method;
         const formData = new FormData();
 
         // Append main image
@@ -46,6 +76,10 @@ export default function Upload() {
         images.filter(img => !img.isMain).forEach(img => {
             formData.append("images", img.file);
         });
+
+        images.filter(img => !img.file && !img.isMain).forEach(img => {
+            formData.append("existing_images", img.preview.replace("http://localhost:3000/", ""));
+        })
 
         // Append other fields
         formData.append("name", name);
@@ -58,16 +92,24 @@ export default function Upload() {
         formData.append("looking_for", looking);
         formData.append("owner_id", user._id);
 
-        fetch("http://localhost:3000/item/upload", {
-            method: "POST",
+        if (id) {
+            url = `http://localhost:3000/item/${id}`;
+            method = 'PATCH'
+        } else {
+            url = `http://localhost:3000/item/upload`;
+            method = "POST";
+        }
+        console.log(url)
+        fetch(url, {
+            method: method,
             credentials: "include",
             body: formData, // <--- send FormData directly
             // DO NOT set Content-Type, browser will handle multipart/form-data
         })
             .then(res => {
-                if(res.ok){
+                if (res.ok) {
                     return res.json();
-                } else{
+                } else {
                     throw new Error('error happened')
                 }
             })
@@ -75,7 +117,8 @@ export default function Upload() {
                 navigate('/');
                 console.log(data)
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(err)
+        );
     };
 
     //select and preview img (main img)
@@ -130,7 +173,7 @@ export default function Upload() {
 
     return (
         <main className="upload">
-            <h1 onClick={() => {console.log(category)}}>Item upload</h1>
+            <h1 onClick={() => { console.log(category) }}>Item upload</h1>
             <div className="item-inputs">
                 <div className="item-images">
                     <h3>Main Image</h3>
@@ -197,7 +240,7 @@ export default function Upload() {
                     <DetailInput type="date" data='boughtOn' placeholder='Bought on' setter={setBoughtOn} getter={boughtOn} />
                     <DetailInput type="number" data='condition' placeholder='Condition' setter={setCondition} getter={condition} p="/ 10" />
                     <AreaInput data="looking" label="Looking for (Category or specific)" setter={setLooking} getter={looking} color1='var(--primary)' color2='var(--secondary)' />
-                    <button id='submit-btn' onClick={handleUploadClick}>Upload</button>
+                    <button id='submit-btn' onClick={handleUploadClick}>{id ? "Update" : "Upload"}</button>
                 </div>
             </div>
         </main>
