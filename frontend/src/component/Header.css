@@ -1,4 +1,4 @@
-header{
+header {
     position: absolute;
     width: 100%;
     display: flex;
@@ -6,28 +6,42 @@ header{
     align-items: center;
     padding: 30px 120px;
 }
-header .auth{
+
+header .auth {
     border-radius: 5px;
     padding: 1px 15px;
     font-weight: 600;
     cursor: pointer;
     font-size: 15px;
 }
-header #search{
+
+header #search {
     background-color: transparent;
-    border-radius: 25px;
+    border-radius: 25px 0 0 25px;
     border: 2px solid var(--text-secondary);
+    border-right: 1px solid;
     padding: 7px 15px;
     /* text-indent: 10px; */
+    outline: none;
     width: 540px;
 }
-.right-head{
+
+header #search-btn {
+    border-radius: 0 25px 25px 0;
+    padding: 7px 15px;
+    border: 2px solid var(--text-secondary);
+    border-left: none;
+    cursor: pointer;
+}
+
+.right-head {
     display: flex;
     justify-content: space-around;
     align-items: center;
     gap: 30px;
 }
-#trade{
+
+#trade {
     background-color: var(--secondary);
     color: var(--white);
     padding: 10px 10px;
@@ -40,19 +54,22 @@ header #search{
     justify-content: center;
     gap: 4px;
 }
-#chat{
+
+#chat {
     border: none;
     background-color: transparent;
     width: 30px;
     height: 30px;
 }
-.signup{
+
+.signup {
     color: var(--white);
     background-color: var(--secondary);
     border: 1px solid var(--secondary);
     /* margin-right: 20px; */
 }
-.login{
+
+.login {
     color: var(--secondary);
     background-color: var(--white);
     border: 1px solid var(--secondary);

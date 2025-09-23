@@ -2,58 +2,77 @@ const Item = require('../models/itemModel');
 
 //get every item
 const get_all_items = (req, res) => {
-    Item.find()
-        .then(result => res.json(result));
+  Item.find()
+    .then(result => res.json(result));
 }
 const get_one_item = (req, res) => {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    Item.findById(id).populate("owner_id", "username occupation")
-        .then(result => res.json(result));
+  Item.findById(id).populate("owner_id", "username occupation")
+    .then(result => res.json(result));
 }
 const get_item_for_owner = (req, res) => {
-    const user_id = req.params.id;
+  const user_id = req.params.id;
 
-    Item.find({ owner_id: user_id })
-        .then(result => res.json(result));
+  Item.find({ owner_id: user_id })
+    .then(result => res.json(result));
 }
 
 const get_by_category = (req, res) => {
-    const category = req.query.category;
+  const category = req.query.category;
 
-    Item.find({ category_id: category })
-        .then(result => res.json(result));
+  Item.find({ category_id: category })
+    .then(result => res.json(result));
 }
+
+const search_item = (req, res) => {
+  const { query, category } = req.query;
+
+  const filter = {};
+
+  if(query){
+    filter.name = { $regex: query, $options: "i"};
+  }
+
+  if(category){
+    filter.category = category;
+  }
+
+  Item.find(filter)
+    .then(result => res.json(result));
+
+}
+
 const upload_item = (req, res) => {
-    const {
-        name,
-        category,
-        description,
-        brand,
-        original_price,
-        bought_on,
-        item_condition,
-        looking_for,
-        owner_id,
-    } = req.body;
+  const {
+    name,
+    category,
+    description,
+    brand,
+    original_price,
+    bought_on,
+    item_condition,
+    looking_for,
+    owner_id,
+  } = req.body;
 
-    const imgPaths = req.files['images'] ? req.files['images'].map(file => file.path.replace(/\\/g, '/')) : [];
-    const mainImgPath = req.files['main_img'] ? req.files['main_img'][0].path.replace(/\\/g, '/') : null;
+  const imgPaths = req.files['images'] ? req.files['images'].map(file => file.path.replace(/\\/g, '/')) : [];
+  const mainImgPath = req.files['main_img'] ? req.files['main_img'][0].path.replace(/\\/g, '/') : null;
 
-    console.log(imgPaths, mainImgPath);
+  console.log(imgPaths, mainImgPath);
 
-    console.log('files', req.files);
-    Item.create({
-        name, category_id: category, description, brand, original_price, bought_on, item_condition,
-        looking_for, imgs: imgPaths, main_img: mainImgPath, owner_id
-    }).then(result => res.json(result))
+  console.log('files', req.files);
+  Item.create({
+    name, category_id: category, description, brand, original_price, bought_on, item_condition,
+    looking_for, imgs: imgPaths, main_img: mainImgPath, owner_id
+  }).then(result => res.json(result))
 }
 
 const delete_item = (req, res) => {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    Item.findByIdAndDelete(id)
-        .then(result => res.json(result));
+  Item.findByIdAndDelete(id)
+    .then(result => res.json(result));
 }
 const update_item = async (req, res) => {
   const id = req.params.id;
@@ -114,11 +133,12 @@ const update_item = async (req, res) => {
 };
 
 module.exports = {
-    get_all_items,
-    get_one_item,
-    get_by_category,
-    upload_item,
-    get_item_for_owner,
-    delete_item,
-    update_item
+  get_all_items,
+  get_one_item,
+  get_by_category,
+  search_item,
+  upload_item,
+  get_item_for_owner,
+  delete_item,
+  update_item
 }

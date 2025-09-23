@@ -25,7 +25,9 @@ To help lower middle class people such as college students, small business owner
 - [x] category
 - [x] delete item
 - [x] update item
-- [ ] item search
+- [x] item search
+- [ ] filter item
+- [ ] pagination
 - [ ] trading system
 - [ ] estimate value in trade
 - [ ] chatting
