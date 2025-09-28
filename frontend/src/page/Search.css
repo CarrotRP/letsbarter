@@ -5,7 +5,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-primary)
+    color: var(--text-primary);
+    position: relative;
 }
 .search-page .title h1{
     font-size: 36px;

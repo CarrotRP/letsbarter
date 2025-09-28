@@ -5,7 +5,8 @@ import back from '../assets/back.png';
 export default function ChatDetail(props) {
     const {chat, setChat} = props;
 
-    const handleBackClick = () => {
+    const handleBackClick = (e) => {
+        e.stopPropagation();
         setChat("");
     }
 

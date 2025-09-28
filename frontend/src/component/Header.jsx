@@ -14,6 +14,7 @@ export default function Header(props) {
     const query = searchParams.get("query");
     const [value, setValue] = useState(query || ""); //search value
     const { chatRef, user } = props;
+    // const 
 
     // todo: make this works properly(navigate to search page if not on search page and search the query)
     const handleSearch = () => {
@@ -29,24 +30,6 @@ export default function Header(props) {
         chatRef.current.classList.toggle('chat-active');
     }
 
-    useEffect(() => {
-        const handleOutsideClick = (e) => {
-            if (chatRef && !chatRef.current.contains(e.target)) {
-                chatRef.current.classList.remove('chat-active');
-            }
-        }
-
-        document.addEventListener('click', handleOutsideClick);
-        window.addEventListener('scroll', () => {
-            chatRef.current.classList.remove('chat-active');
-        })
-
-        return () => {
-            document.removeEventListener('click', handleOutsideClick);
-        }
-    }, []);
-
-
     return (
         <header>
             <Link to="/"><TextLogo /></Link>
@@ -55,7 +38,6 @@ export default function Header(props) {
                 <button id='search-btn' onClick={handleSearch}>Search</button>
             </span>
             <span className="right-head">
-                {/* TODO: implement login function, check to whether add these 3 below */}
                 {user ?
                     <>
                         <Link to='/add' style={{ height: '27px' }}><img src={create} alt="" style={{ width: '27px' }} /></Link>

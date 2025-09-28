@@ -10,7 +10,8 @@ export default function Chat(props) {
     //NOTE: this is just prototype chat transition click
     const [chat, setChat] = useState("");
 
-    const handleChatclick = () => {
+    const handleChatclick = (e) => {
+        e.stopPropagation();
         setChat("hello");
     }
 
@@ -24,8 +25,9 @@ export default function Chat(props) {
                 <>
                     <span>
                         <h1 style={{ color: 'var(--text-primary)' }}>Chat</h1>
-                        <img src={close} alt="" onClick={handleCloseClick} style={{cursor: 'pointer'}}/>
-                    </span><input type="text" placeholder='Search' id='chat-search' /><div className="chat-list">
+                        <img src={close} alt="" onClick={handleCloseClick} style={{ cursor: 'pointer' }} />
+                    </span>
+                    <input type="text" placeholder='Search' id='chat-search' /><div className="chat-list">
                         {[...new Array(5)].map(v => {
                             return (<div onClick={handleChatclick}>
                                 <ChatTile />

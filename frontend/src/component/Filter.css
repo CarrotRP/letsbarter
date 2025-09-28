@@ -1,0 +1,39 @@
+.filter-popup{
+    position: absolute;
+    top: 40px;
+    right: 0;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px 30px;
+    width: 300px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: top 500ms, opacity 500ms, pointer-events 500ms;
+}
+.filter-popup-active{
+    top: 60px;
+    opacity: 1;
+    pointer-events: auto;
+}
+.filter-popup-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.filter-popup-head img{
+    width: 20px;
+}
+.filter-option{
+    color: var(--text-secondary);
+}
+.filter-option p{
+    font-weight: 600;
+    margin: 12px 0 5px;
+}
+.checks{
+    display: flex;
+    flex-direction: column;
+}

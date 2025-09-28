@@ -48,6 +48,9 @@ const itemSchema = new Schema({
         type: String,
         enum: ["available", "traded"],
         default: "available"
+    },
+    estimate_value: {
+        type: Number
     }
 }, { timestamps: true })
 

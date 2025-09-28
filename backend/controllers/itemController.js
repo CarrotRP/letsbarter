@@ -19,14 +19,32 @@ const get_item_for_owner = (req, res) => {
 }
 
 const get_by_category = (req, res) => {
-  const category = req.query.category;
+  const { category, condition, sortOpt} = req.query;
 
-  Item.find({ category_id: category })
+  const filter = {};
+
+  if(category){
+    filter.category_id = category;
+  }
+
+  if(condition == 'lt'){
+    filter.item_condition = { $lte: 5};
+  } else if(condition == 'gt'){
+    filter.item_condition = { $gte: 5};
+  }
+
+  const sort = {}
+  if(sortOpt == 'asc'){
+    sort.option = { estimate_value: 1}
+  } else if(sortOpt == 'desc'){
+    sort.option = {estimate_value: -1};
+  }
+  Item.find(filter).sort(sort)
     .then(result => res.json(result));
 }
 
 const search_item = (req, res) => {
-  const { query, category } = req.query;
+  const { query, condition, sortOpt } = req.query;
 
   const filter = {};
 
@@ -34,11 +52,27 @@ const search_item = (req, res) => {
     filter.name = { $regex: query, $options: "i"};
   }
 
-  if(category){
-    filter.category = category;
+  //filter item condition
+  //less than or equal 5
+  if(condition == 'lt'){
+    filter.item_condition = { $lte: 5};
+  }
+  //more than or equal 5
+  if(condition == 'gt'){
+    filter.item_condition = { $gte: 5}
   }
 
-  Item.find(filter)
+  const sort = {};
+
+  //sort item value estimate
+  if(sortOpt == 'asc'){
+    sort.option = {estimate_value: 1};
+  }
+  if(sortOpt == 'desc'){
+    sort.option = {estimate_value: -1};
+  }
+
+  Item.find(filter).sort(sort)
     .then(result => res.json(result));
 
 }
