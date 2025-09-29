@@ -15,7 +15,10 @@ export default function Profile() {
     const [occupation, setOccupation] = useState('');
     const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    const [conPassword, setConPassword] = useState('')
+    const [conPassword, setConPassword] = useState('');
+
+    const [profileImg, setProfileImg] = useState(null);
+    const [profilePreview, setProfilePreview] = useState(null);
 
     const [item, setItem] = useState([]);
     const navigate = useNavigate();
@@ -27,13 +30,18 @@ export default function Profile() {
 
     //fix on refresh, even if theres user still navigate
     useEffect(() => {
-        if(isLoading) return;
+        if (isLoading) return;
 
+        console.log(user);
         if (user) {
             setUsername(user.username || '');
             setOccupation(user.occupation || '');
             setEmail(user.email || '');
-
+            
+            //main img display(sidebar)
+            setProfileImg({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`});
+            //preview img on edit profile 
+            setProfilePreview({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`})
             //fetch user items
             fetch(`http://localhost:3000/item/user-item/${user?._id}`)
                 .then(res => res.json())
@@ -59,14 +67,20 @@ export default function Profile() {
     }
 
     const handleUserUpdate = () => {
+        const formData = new FormData();
+
+        if(profilePreview) formData.append("profile_img", profilePreview.file);
+
+        formData.append("username", username);
+        formData.append("occupation", occupation);
+        formData.append('email', email);
+        formData.append('password', newPassword);
+
         console.log(user._id);
         fetch(`http://localhost:3000/user/${user._id}`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             credentials: 'include',
-            body: JSON.stringify({ username, occupation, email, password: newPassword })
+            body: formData
         }).then(res => res.json())
             .then(data => {
                 console.log(data)
@@ -74,18 +88,27 @@ export default function Profile() {
             });
     }
 
+    const handleProfileImgChange = (e) => {
+        const file = e.target.files[0];
+        console.log(file);
+        if (file) {
+            setProfilePreview({ file, preview: URL.createObjectURL(file)});
+        }
+        console.log(profileImg)
+    }
+
     return (
         <main className="profile-page">
             <div className="profile-page-content">
                 <section className="profile-display">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '30px' }}>
-                        <img src="/favicon.png" style={{ width: '60px', height: '60px' }} alt="user-image" />
+                        <img src={profileImg?.preview} style={{ width: '60px', height: '60px', borderRadius: '50%' }} alt="user-image" />
                         <span>
                             <h1>{user?.username}</h1>
                             <p style={{ fontSize: '20px', fontWeight: 300 }}>{user?.occupation}</p>
                         </span>
                     </div>
-                    <span className='nav inventory-nav' onClick={() => { setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email) }} style={currentPage == 'inventory' ? selectedStyle : null}>
+                    <span className='nav inventory-nav' onClick={() => { setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`});}} style={currentPage == 'inventory' ? selectedStyle : null}>
                         <img src={inventory} alt="" />
                         <p style={{ fontWeight: currentPage == 'inventory' ? 'bold' : '' }}>Inventory</p>
                     </span>
@@ -93,7 +116,7 @@ export default function Profile() {
                         <img src={userIcon} alt="" />
                         <p style={{ fontWeight: currentPage == 'personal' ? 'bold' : '' }}>Personal Info</p>
                     </span>
-                    <span className='nav setting-nav' onClick={() => { setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email) }} style={currentPage == 'setting' ? selectedStyle : null}>
+                    <span className='nav setting-nav' onClick={() => { setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`});}} style={currentPage == 'setting' ? selectedStyle : null}>
                         <img src={setting} alt="" />
                         <p style={{ fontWeight: currentPage == 'setting' ? 'bold' : '' }}>Setting</p>
                     </span>
@@ -108,21 +131,22 @@ export default function Profile() {
                             {item.map(v => {
                                 return (
                                     <Link to={`/product/${v?._id}`} style={{ color: 'var(--text-secondary)' }}>
-                                        <ProductCard pname={v?.name} condition={v?.item_condition} lookfor={v?.looking_for} mainImg={v?.main_img}/>
+                                        <ProductCard pname={v?.name} condition={v?.item_condition} lookfor={v?.looking_for} mainImg={v?.main_img} />
                                     </Link>
                                 );
                             })}
                         </div> : currentPage == 'personal' ?
                             <div className="personal">
                                 <div className="photo">
-                                    <img src="/favicon.png" alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%' }} />
-                                    <p>Change Photo</p>
+                                    <img src={profilePreview?.preview} alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%' }} />
+                                    <label htmlFor='choose-profile-img'>Change Photo</label>
+                                    <input type='file' id="choose-profile-img" accept='image/*' onChange={handleProfileImgChange}></input>
                                 </div>
                                 <div className="profile-form-input">
                                     <FormComponent htmlFor="name" label="Full Name" type="text" value={username} setter={setUsername} />
                                     <FormComponent htmlFor="occupation" label="Occupation" type="text" value={occupation} setter={setOccupation} />
                                     <FormComponent htmlFor="email" label="Email Address" type="email" value={email} setter={setEmail} />
-                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password" disable={true}/>
+                                    <FormComponent htmlFor="oldPassword" label="Old Password" type="password" disable={true} />
                                     <FormComponent htmlFor="newPassword" label="New Password" type="password" value={newPassword} setter={setNewPassword} />
                                     <FormComponent htmlFor="confirmPassword" label="Confirm Password" type="password" value={conPassword} setter={setConPassword} />
                                 </div>

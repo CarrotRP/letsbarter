@@ -54,14 +54,14 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.client_secret,
     callbackURL: process.env.client_callback
 }, (accessToken, refreshToken, profile, done) => {
+    console.log(profile.photos?.[0]?.value);
     const email = profile.emails?.[0]?.value;
     const displayName = profile.displayName;
+    const profile_img = profile.photos?.[0]?.value;
 
     // 1. Find existing user
     User.findOne({ email})
         .then(user => {
-            console.log('hello error?')
-            console.log(user)
             if (user) {
                 // Found existing user
                 return done(null, user);
@@ -73,6 +73,7 @@ passport.use(new GoogleStrategy({
                 username: displayName,
                 email,
                 password: null,
+                profile_img,
             });
 
             return newUser.save()

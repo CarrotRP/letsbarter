@@ -13,11 +13,13 @@ import Trade from "./page/Trade"
 import OtherProfile from './page/OtherProfile'
 import TradePopup from "./component/TradePopup"
 import Query from "./page/Query"
+import ScrollToTop from "./component/ScrollToTop"
 
 function App() {
 
   return (
     <Router>
+      <ScrollToTop/>
       <Routes>
         {/* nested route for login layout */}
         <Route element={<AuthLayout />}>

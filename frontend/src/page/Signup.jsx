@@ -26,7 +26,7 @@ export default function Signup() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ username: fullname, email, occupation, password })
+                    body: JSON.stringify({ username: fullname, email, occupation, password, profile: 'uploads/default.png' })
                 }).then(res => res.json())
                     .then(data => {
                         navigate(data.redirect);

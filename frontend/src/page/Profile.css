@@ -55,7 +55,7 @@
     align-items: center;
     gap: 10px;
 }
-.photo p{
+.photo label{
     cursor: pointer;
 }
 .profile-form-input{

@@ -5,6 +5,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 30px 120px;
+    z-index: 1;
 }
 
 header .auth {

@@ -2,14 +2,10 @@ import close from '../assets/close.png';
 import './Filter.css';
 
 export default function Filter(props) {
-    const { filterRef, setFilter } = props;
+    const { filterRef, filter, setFilter } = props;
 
     const handleCloseClick = () => {
         filterRef.current.classList.remove('filter-popup-active');
-    }
-
-    const handleFilterClick = () => {
-
     }
 
     return (
@@ -22,15 +18,27 @@ export default function Filter(props) {
             <div className="filter-option">
                 <p>Condition</p>
                 <div className="checks">
-                    <label htmlFor="less5" onClick={() => setFilter(prev => ({...prev, condition: 'lt'}))}>Less than 5</label>
-                    <label htmlFor="more5" onClick={() => setFilter(prev => ({...prev, condition: 'gt'}))}>More than 5</label>
+                    <span>
+                        <label htmlFor="less5" onClick={() => setFilter(prev => (filter.condition == 'lt' ? { ...prev, condition: null } : { ...prev, condition: 'lt' }))} style={{ fontWeight: filter.condition == 'lt' ? 800 : 300 }}>Less than 5</label>
+                        <img src={close} alt="" style={{ width: '10px', display: filter.condition == 'lt' ? 'block' : 'none' }} />
+                    </span>
+                    <span>
+                        <label htmlFor="more5" onClick={() => setFilter(prev => (filter.condition == 'gt' ? { ...prev, condition: null } : { ...prev, condition: 'gt' }))} style={{ fontWeight: filter.condition == 'gt' ? 800 : 300 }}>More than 5</label>
+                        <img src={close} alt="" style={{ width: '10px', display: filter.condition == 'gt' ? 'block' : 'none' }} />
+                    </span>
                 </div>
             </div>
             <div className="filter-option">
                 <p>Looking for</p>
                 <div className="checks">
-                    <label htmlFor="valueAsc" onClick={() => setFilter(prev => ({...prev, sort: 'asc'}))}>Estimate value (Ascending)</label>
-                    <label htmlFor="valueDesc" onClick={() => setFilter(prev => ({...prev, sort: 'desc'}))}>More than 5 (Descending)</label>
+                    <span>
+                        <label htmlFor="valueAsc" onClick={() => setFilter(prev => (filter.sortOpt == 'asc' ? {...prev, sortOpt: null} : { ...prev, sortOpt: 'asc' }))} style={{ fontWeight: filter.sortOpt == 'asc' ? 800 : 300 }}>Estimate value (Ascending)</label>
+                        <img src={close} alt="" style={{ width: '10px', display: filter.sortOpt == 'asc' ? 'block' : 'none' }} />
+                    </span>
+                    <span>
+                        <label htmlFor="valueDesc" onClick={() => setFilter(prev => (filter.sortOpt == 'desc' ? {...prev, sortOpt: null} : { ...prev, sortOpt: 'desc' }))} style={{ fontWeight: filter.sortOpt == 'desc' ? 800 : 300 }}>Estimate value (Descending)</label>
+                        <img src={close} alt="" style={{ width: '10px', display: filter.sortOpt == 'desc' ? 'block' : 'none' }} />
+                    </span>
                 </div>
             </div>
         </div>

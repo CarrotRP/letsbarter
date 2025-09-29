@@ -8,8 +8,10 @@ import Filter from "../component/Filter";
 export default function Query() {
     const location = useLocation();
     const [item, setItem] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState();
     const {filterRef, handleFilterDropdown} = useOutletContext();
-    const [filter, setFilter] = useState({condition: null, sort: null});
+    const [filter, setFilter] = useState({condition: null, sortOpt: null});
 
     useEffect(() => {
         const url = new URL(`http://localhost:3000/item/category${location.search}`);
@@ -17,11 +19,16 @@ export default function Query() {
         for(const key in filter){
             if(filter[key]) url.searchParams.append(key, filter[key]);
         }
+
+        url.searchParams.append('page', page);
         
         fetch(url)
             .then(res => res.json())
-            .then(data => setItem(data));
-    }, [filter]);
+            .then(data => {
+                setTotalPage(data.totalPage);
+                setItem(data.items)
+            });
+    }, [page, filter]);
 
     return (
         <main className="search-page">
@@ -31,7 +38,7 @@ export default function Query() {
                     <img src={filterIcon} alt="" style={{ width: '30px' }} />
                     <h3>Filter</h3>
                 </span>
-                <Filter filterRef={filterRef} setFilter={setFilter}/>
+                <Filter filterRef={filterRef} filter={filter} setFilter={setFilter}/>
             </span>
             <div className="search-result">
                 {item.map(v => {
@@ -41,6 +48,13 @@ export default function Query() {
                         </Link>
                     );
                 })}
+            </div>
+            <div className="navigator">
+                {page == 1 ? <></> :
+                <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
+                <p className='current-page'>{page}</p>
+                {page >= totalPage ? <></> : 
+                <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
             </div>
         </main>
     );

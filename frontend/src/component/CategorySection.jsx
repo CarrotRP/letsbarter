@@ -11,7 +11,7 @@ export default function CategorySection(props){
                 {categoryList.map(v => {
                     return (
                         <Link to={`/item?category=${v._id}`} state={v.name} style={{color: 'var(--text-secondary)'}}>
-                            <CategoryCard name={v.name}/>
+                            <CategoryCard name={v.name} img={v.img}/>
                         </Link>
                     );
                 })}

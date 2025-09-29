@@ -4,8 +4,8 @@
     right: 0;
     border: 1px solid black;
     border-radius: 10px;
-    padding: 20px 30px;
-    width: 300px;
+    padding: 20px 25px;
+    width: 320px;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -36,4 +36,13 @@
 .checks{
     display: flex;
     flex-direction: column;
+    user-select: none;
+}
+.checks span{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.checks label{
+    cursor: pointer;
 }

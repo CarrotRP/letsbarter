@@ -2,6 +2,8 @@ import TradePopup from "../component/TradePopup";
 import HomeComponent from "../component/HomeComponent";
 import { useParams, Link, useOutletContext, useNavigate } from "react-router";
 import { useEffect, useRef, useState } from "react";
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import Toaster from "../component/Toaster";
 import './Detail.css';
 
 export default function Detail() {
@@ -16,10 +18,15 @@ export default function Detail() {
     const [currentImg, setCurrentImg] = useState(0);
 
     const handleOfferClick = (e) => {
-        e.stopPropagation();
-        tradePopupRef.current.style.display = 'block'
-        tradePopupContentRef.current.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+        if (user) {
+            e.stopPropagation();
+            tradePopupRef.current.style.display = 'block'
+            tradePopupContentRef.current.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        } else {
+            //show this toast when user not log in
+            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe'});
+        }
     }
 
     const handleItemDelete = () => {
@@ -27,10 +34,10 @@ export default function Detail() {
             method: 'DELETE',
             credentials: 'include'
         }).then(res => res.json())
-        .then(data => {
-            console.log(data)
-            navigate(-1);
-        })
+            .then(data => {
+                console.log(data)
+                navigate(-1);
+            })
     }
 
     const handleImgClick = (e) => {
@@ -44,7 +51,7 @@ export default function Detail() {
             .then(data => {
                 setItemDetail(data);
                 setImage([data.main_img]);
-                setImage(prev => [...prev, ...data.imgs])
+                setImage(prev => [...prev, ...data.imgs]);
                 console.log(data)
             });
 
@@ -70,6 +77,19 @@ export default function Detail() {
 
     return (
         <main className="detail-page">
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="light"
+                transition={Slide}
+            />
             <section className="product-detail">
                 <aside onClick={handleImgClick}>
                     {image.map((v, i) => {
@@ -94,14 +114,14 @@ export default function Detail() {
                         <p>{`${new Date(itemDetail?.bought_on).getDate().toString().padStart(2, '0')}/${new Date(itemDetail?.bought_on).toLocaleString('en-GB', { month: 'long' })}/${new Date(itemDetail?.bought_on).getFullYear()}`}</p>
                     </div>
 
-                    {user?._id ?
-                        <span style={{display: 'flex', gap: '20px'}}>
+                    {user?._id == itemDetail?.owner_id._id ?
+                        <span style={{ display: 'flex', gap: '20px' }}>
                             <button onClick={() => navigate(`/edit/${itemDetail?._id}`)} style={{}}>Edit</button>
-                            <button onClick={handleItemDelete} style={{backgroundColor: 'transparent', border: '1px solid var(--text-primary)', color: 'var(--text-primary)'}}>Delete</button>
+                            <button onClick={handleItemDelete} style={{ backgroundColor: 'transparent', border: '1px solid var(--text-primary)', color: 'var(--text-primary)' }}>Delete</button>
                         </span> :
                         <>
                             <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
-                                <img src="/favicon.png" style={{ width: '40px' }} alt="user-image" />
+                                <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', borderRadius: '50%', marginRight: '10px'}} alt="user-image" />
                                 <span>
                                     <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
                                     <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>

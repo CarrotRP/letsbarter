@@ -32,7 +32,7 @@ export default function Header(props) {
 
     return (
         <header>
-            <Link to="/"><TextLogo /></Link>
+            <Link to="/home"><TextLogo /></Link>
             <span>
                 <input type="text" id='search' placeholder='Books, Category...' value={value}  onChange={(e) => setValue(e.target.value)} />
                 <button id='search-btn' onClick={handleSearch}>Search</button>
@@ -43,7 +43,7 @@ export default function Header(props) {
                         <Link to='/add' style={{ height: '27px' }}><img src={create} alt="" style={{ width: '27px' }} /></Link>
                         <Link to='/trade' id='trade'><img src={trade} alt="" style={{ width: '24px', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(353deg) brightness(102%) contrast(105%)' }} />My Trade</Link>
                         <button id='chat' onClick={handleChatClick}><img src={chat} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
-                        <Link to='/profile'><img src="/favicon.png" alt="" style={{ width: '70px', border: '1px solid black', borderRadius: '50%' }} /></Link>
+                        <Link to='/profile'><img src={user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`} alt="" style={{ width: '70px', height: '70px', border: '1px solid black', borderRadius: '50%', objectFit: 'contain' }} /></Link>
                     </>
                     :
                     <>

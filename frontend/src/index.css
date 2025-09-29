@@ -8,6 +8,10 @@
   --text-secondary: black;
   --darken-background: #F0F0F0;
   --white: white;
+
+  /* toastify package, overriding css theme color */
+  --toastify-color-progress-light: var(--secondary);
+  --toastify-color-progress-bgo: 0.2;
 }
 
 *{

@@ -7,9 +7,11 @@ import Filter from '../component/Filter';
 
 export default function Search() {
     const [searchParams] = useSearchParams();
-    const query = searchParams.get('query');
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState();
     const [searchResult, setSearchResult] = useState();
-    const [filter, setFilter] = useState({condition: null, sort: null});
+    const query = searchParams.get('query');
+    const [filter, setFilter] = useState({ condition: null, sortOpt: null });
     const { filterRef, handleFilterDropdown } = useOutletContext();
 
     useEffect(() => {
@@ -17,23 +19,27 @@ export default function Search() {
             //keeping this, cuz might use in future eventho this is kinda redundant than using URL obj;
             const params = new URLSearchParams();
 
-            if(query){
+            if (query) {
                 params.append("query", query);
             }
 
-            for(const key in filter){
-                if(filter[key]) params.append(key, filter[key]);
+            for (const key in filter) {
+                if (filter[key]) params.append(key, filter[key]);
             }
+
+            //set page
+            params.append("page", page);
 
             const url = `http://localhost:3000/item/search?${params.toString()}`;
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
-                    setSearchResult(data);
+                    setSearchResult(data.items);
+                    setTotalPage(data.totalPage);
                     console.log(data)
                 });
         }
-    }, [query, filter]);
+    }, [page, query, filter]);
 
     return (
         <main className="search-page">
@@ -43,7 +49,7 @@ export default function Search() {
                     <img src={filterIcon} alt="" style={{ width: '30px' }} />
                     <h3>Filter</h3>
                 </span>
-                <Filter filterRef={filterRef} setFilter={setFilter}/>
+                <Filter filterRef={filterRef} filter={filter} setFilter={setFilter} />
             </span>
             <div className="search-result">
                 {searchResult?.map(v => {
@@ -53,6 +59,13 @@ export default function Search() {
                         </Link>
                     );
                 })}
+            </div>
+            <div className="navigator">
+                {page == 1 ? <></> :
+                <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
+                <p className='current-page'>{page}</p>
+                {page >= totalPage ? <></> : 
+                <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
             </div>
         </main>
     );

@@ -24,7 +24,7 @@ const user_signup = async (req, res) => {
 }
 
 const user_login = (req, res) => {
-    res.json({ redirect: '/', user: req.user });
+    res.json({ redirect: '/home', user: req.user });
 }
 const user_google_login = (req, res) => {
     console.log('hello');
@@ -33,7 +33,7 @@ const user_google_login = (req, res) => {
         const user = ${JSON.stringify(req.user)};
 
         window.opener.postMessage(
-        { type: 'google-auth-success', user, redirect: '/'},
+        { type: 'google-auth-success', user, redirect: '/home'},
         'http://localhost:5173'
         );
 
@@ -51,10 +51,15 @@ const user_update = async (req, res) => {
     const id = req.params.id;
     const {username, occupation, email, password} = req.body;
 
+    
+    const profileImgPath = req.files['profile_img'] ? req.files['profile_img'][0].path.replace(/\\/g, '/') : null;
+    console.log(req.files['profile_img']);
+    console.log(profileImgPath);
+
     const saltRounds = 10;
     const hashedPw = await bcrypt.hash(password, saltRounds);
 
-    User.findByIdAndUpdate(id, {username, occupation, email, password: hashedPw}, {new: true})
+    User.findByIdAndUpdate(id, {username, occupation, email, password: hashedPw, profile_img: profileImgPath}, {new: true})
     .then(result => res.json(result))
     .catch(err => console.log(err));
 }

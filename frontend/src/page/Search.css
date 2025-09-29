@@ -1,7 +1,10 @@
 .search-page{
-    padding: 150px;
+    padding: 120px;
+    max-height: 1300px;
+    min-height: 750px;
+    position: relative;
 }
-.search-page .title{
+.title{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -27,4 +30,22 @@
     display: grid;
     grid-template-columns: repeat(5, 240px);
     justify-content: space-between;
+}
+.navigator{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    gap: 20px;
+    padding-bottom: 30px;
+}
+.prev-page, .next-page, .current-page{
+    font-weight: 600;
+    font-size: 24px;
+    cursor: pointer;
+}
+.current-page{
+    font-size: 36px;
 }

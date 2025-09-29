@@ -92,6 +92,10 @@ export default function Upload() {
         formData.append("looking_for", looking);
         formData.append("owner_id", user._id);
 
+        const estimate_value = ogPrice * condition / 10;
+
+        formData.append("estimate_value", estimate_value);
+
         if (id) {
             url = `http://localhost:3000/item/${id}`;
             method = 'PATCH'
@@ -114,7 +118,7 @@ export default function Upload() {
                 }
             })
             .then(data => {
-                navigate('/');
+                navigate('/home');
                 console.log(data)
             })
             .catch(err => console.error(err)

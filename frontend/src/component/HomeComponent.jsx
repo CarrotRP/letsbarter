@@ -3,7 +3,7 @@ import ProductCard from "../component/ProductCard";
 import { useEffect } from "react";
 
 export default function HomeComponent(props) {
-    const {items, setter} = props;
+    const {items, setter, limit, setLimit, itemCount} = props;
 
     return (
         <section>
@@ -17,7 +17,7 @@ export default function HomeComponent(props) {
                     );
                 })}
             </section>
-            <p style={{ textAlign: 'center', margin: '50px 0px' }}>See more</p>
+            <p style={{ textAlign: 'center', margin: '50px 0px', display: limit >= itemCount ? 'none' : 'block', cursor: 'pointer'}} onClick={() => setLimit(prev => prev + 5)}>See more</p>
         </section>
     );
 }

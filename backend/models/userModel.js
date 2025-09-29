@@ -21,6 +21,10 @@ const userSchema = new Schema({
         type: String,
         unique: true,
         sparse: true
+    },
+    profile_img: {
+        type: String,
+        default: 'uploads/default.png'
     }
 }, { timestamps: true })
 

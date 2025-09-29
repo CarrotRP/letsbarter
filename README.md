@@ -27,10 +27,12 @@ To help lower middle class people such as college students, small business owner
 - [x] update item
 - [x] item search
 - [x] filter item
-- [ ] pagination
+- [x] pagination
+- [x] estimate value in trade
 - [ ] trading system
-- [ ] estimate value in trade
 - [ ] chatting
+- [ ] khmer language
+- [ ] user review
 
 ## Screenshots
 not yet

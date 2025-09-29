@@ -6,13 +6,15 @@ import ProductCard from '../component/ProductCard';
 import './OtherProfile.css';
 import { Link, useOutletContext, useParams } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
+import { ToastContainer, toast, Slide } from 'react-toastify';
 import ReviewCard from '../component/ReviewCard';
 import Report from '../component/Report';
+import Toaster from '../component/Toaster';
 
 export default function OtherProfile() {
     const { id } = useParams();
     const [currentPage, setCurrentPage] = useState('inventory');
-    const chatRef = useOutletContext();
+    const { chatRef, user } = useOutletContext();
     const reportBgRef = useRef();
     const reportRef = useRef();
     const [otherUser, setOtherUser] = useState();
@@ -27,14 +29,22 @@ export default function OtherProfile() {
     }
 
     const handleMessageClick = (e) => {
-        e.stopPropagation();
-        chatRef.current.classList.toggle('chat-active');
+        if (user) {
+            e.stopPropagation();
+            chatRef.current.classList.toggle('chat-active');
+        } else {
+            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' })
+        }
     }
     const handleReportClick = (e) => {
-        e.stopPropagation();
-        document.body.style.overflow = 'hidden';
-        reportBgRef.current.style.display = 'block';
-        reportRef.current.style.display = 'block';
+        if (user) {
+            e.stopPropagation();
+            document.body.style.overflow = 'hidden';
+            reportBgRef.current.style.display = 'block';
+            reportRef.current.style.display = 'block';
+        } else {
+            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' });
+        }
     }
     const handleReportClose = () => {
         document.body.style.overflow = null;
@@ -75,8 +85,21 @@ export default function OtherProfile() {
 
     return (
         <main className="other-profile">
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="light"
+                transition={Slide}
+            />
             <div className='other-detail'>
-                <img src="/favicon.png" style={{ width: '120px', height: '120px' }} alt="user-image" />
+                <img src={otherUser?.profile_img.startsWith('http') ? otherUser?.profile_img : `http://localhost:3000/${otherUser?.profile_img}`} style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white'}} alt="user-image" />
                 <span>
                     <h1>{otherUser?.username}</h1>
                     <p style={{ fontSize: '20px', fontWeight: 300 }}>{otherUser?.occupation}</p>
@@ -103,7 +126,7 @@ export default function OtherProfile() {
                     <div className="other-inventory">
                         {item.map(v => {
                             return (
-                                <Link  to={`/product/${v._id}`} style={{color: 'var(--text-secondary)'}} key={v.id}>
+                                <Link to={`/product/${v._id}`} style={{ color: 'var(--text-secondary)' }} key={v.id}>
                                     <ProductCard pname={v.name} condition={v.condition} lookfor={v.looking_for} mainImg={v.main_img} />
                                 </Link>
                             );
