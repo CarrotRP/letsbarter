@@ -37,7 +37,6 @@ export default function Upload() {
             });
 
         //on edit, get current item detail
-        console.log(id);
         if (id) {
             fetch(`http://localhost:3000/item/${id}`)
                 .then(res => res.json())
@@ -103,7 +102,6 @@ export default function Upload() {
             url = `http://localhost:3000/item/upload`;
             method = "POST";
         }
-        console.log(url)
         fetch(url, {
             method: method,
             credentials: "include",
@@ -119,7 +117,6 @@ export default function Upload() {
             })
             .then(data => {
                 navigate('/home');
-                console.log(data)
             })
             .catch(err => console.error(err)
         );
@@ -134,7 +131,6 @@ export default function Upload() {
             setImages(prev => prev.filter(img => !img.isMain));
             setImages(prev => [...prev, { file, preview: URL.createObjectURL(file), isMain: true }]);
         }
-        console.log(mainImg, images)
     }
 
     //select and preview imgs (all imgs including main one)
@@ -177,7 +173,7 @@ export default function Upload() {
 
     return (
         <main className="upload">
-            <h1 onClick={() => { console.log(category) }}>Item upload</h1>
+            <h1>Item upload</h1>
             <div className="item-inputs">
                 <div className="item-images">
                     <h3>Main Image</h3>

@@ -21,6 +21,8 @@ export default function Profile() {
     const [profilePreview, setProfilePreview] = useState(null);
 
     const [item, setItem] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState();
     const navigate = useNavigate();
 
     const selectedStyle = {
@@ -32,28 +34,28 @@ export default function Profile() {
     useEffect(() => {
         if (isLoading) return;
 
-        console.log(user);
         if (user) {
             setUsername(user.username || '');
             setOccupation(user.occupation || '');
             setEmail(user.email || '');
-            
+
             //main img display(sidebar)
-            setProfileImg({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`});
+            setProfileImg({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` });
             //preview img on edit profile 
-            setProfilePreview({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`})
+            setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` })
             //fetch user items
-            fetch(`http://localhost:3000/item/user-item/${user?._id}`)
+            fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=10&page=${page}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
-                    setItem(data);
+                    setTotalPage(data.count);
+                    setItem(data.items);
                 });
         } else {
             navigate('/');
         }
 
-    }, [user, isLoading]);
+    }, [user, isLoading, page]);
 
     const handleLogout = () => {
         fetch('http://localhost:3000/user/logout', {
@@ -69,12 +71,16 @@ export default function Profile() {
     const handleUserUpdate = () => {
         const formData = new FormData();
 
-        if(profilePreview) formData.append("profile_img", profilePreview.file);
+        if (profilePreview && profilePreview.file) {
+            formData.append("profile_img", profilePreview.file);
+        }
 
         formData.append("username", username);
         formData.append("occupation", occupation);
         formData.append('email', email);
-        formData.append('password', newPassword);
+        if(newPassword){
+            formData.append('password', newPassword);
+        }
 
         console.log(user._id);
         fetch(`http://localhost:3000/user/${user._id}`, {
@@ -92,7 +98,7 @@ export default function Profile() {
         const file = e.target.files[0];
         console.log(file);
         if (file) {
-            setProfilePreview({ file, preview: URL.createObjectURL(file)});
+            setProfilePreview({ file, preview: URL.createObjectURL(file) });
         }
         console.log(profileImg)
     }
@@ -102,13 +108,13 @@ export default function Profile() {
             <div className="profile-page-content">
                 <section className="profile-display">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '30px' }}>
-                        <img src={profileImg?.preview} style={{ width: '60px', height: '60px', borderRadius: '50%' }} alt="user-image" />
+                        <img src={profileImg?.preview} style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white' }} alt="user-image" />
                         <span>
                             <h1>{user?.username}</h1>
                             <p style={{ fontSize: '20px', fontWeight: 300 }}>{user?.occupation}</p>
                         </span>
                     </div>
-                    <span className='nav inventory-nav' onClick={() => { setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`});}} style={currentPage == 'inventory' ? selectedStyle : null}>
+                    <span className='nav inventory-nav' onClick={() => { setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` }); }} style={currentPage == 'inventory' ? selectedStyle : null}>
                         <img src={inventory} alt="" />
                         <p style={{ fontWeight: currentPage == 'inventory' ? 'bold' : '' }}>Inventory</p>
                     </span>
@@ -116,7 +122,7 @@ export default function Profile() {
                         <img src={userIcon} alt="" />
                         <p style={{ fontWeight: currentPage == 'personal' ? 'bold' : '' }}>Personal Info</p>
                     </span>
-                    <span className='nav setting-nav' onClick={() => { setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`});}} style={currentPage == 'setting' ? selectedStyle : null}>
+                    <span className='nav setting-nav' onClick={() => { setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` }); }} style={currentPage == 'setting' ? selectedStyle : null}>
                         <img src={setting} alt="" />
                         <p style={{ fontWeight: currentPage == 'setting' ? 'bold' : '' }}>Setting</p>
                     </span>
@@ -128,17 +134,26 @@ export default function Profile() {
                 <section className="profile-page-right">
                     {currentPage == 'inventory' ?
                         <div className="inventory">
-                            {item.map(v => {
+                            {item.length == 0 ? <p style={{ position: 'absolute' }}>You got no item in your inventory</p> : item.map(v => {
                                 return (
                                     <Link to={`/product/${v?._id}`} style={{ color: 'var(--text-secondary)' }}>
                                         <ProductCard pname={v?.name} condition={v?.item_condition} lookfor={v?.looking_for} mainImg={v?.main_img} />
                                     </Link>
                                 );
                             })}
+                            {totalPage > 1 && totalPage &&
+                                <div className="profile-total">
+                                    {page == 1 ? <div></div> :
+                                        <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
+                                    <p className='current-page'>{page}</p>
+                                    {page >= totalPage ? <div></div> :
+                                        <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
+                                </div>
+                            }
                         </div> : currentPage == 'personal' ?
                             <div className="personal">
                                 <div className="photo">
-                                    <img src={profilePreview?.preview} alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%' }} />
+                                    <img src={profilePreview?.preview} alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%', objectFit: 'contain' }} />
                                     <label htmlFor='choose-profile-img'>Change Photo</label>
                                     <input type='file' id="choose-profile-img" accept='image/*' onChange={handleProfileImgChange}></input>
                                 </div>

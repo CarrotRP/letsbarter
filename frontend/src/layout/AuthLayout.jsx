@@ -24,7 +24,6 @@ export default function AuthLayout() {
         .then(data => {
             if(data.authenticated){
                 navigate(data.redirect);
-                console.log(data)
             }
         })
     }, []);
@@ -41,10 +40,8 @@ export default function AuthLayout() {
         window.addEventListener('message', (e) => {
             if (e.origin !== 'http://localhost:3000' && e.origin !== 'http://localhost:5173') return; //security check
             if (e.data.type === 'google-auth-success') {
-                console.log('user profile', e.data.user);
             }
             navigate(e.data.redirect);
-            dispatch({type: 'SET_USER', payload: e.data.user});
         });
     }
 

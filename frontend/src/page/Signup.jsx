@@ -18,7 +18,6 @@ export default function Signup() {
     }
 
     const handleSignupClick = () => {
-        console.log(fullname, email, occupation, password, conpassword)
         if (fullname && email && occupation && password && conpassword) {
             if (password == conpassword) {
                 fetch('http://localhost:3000/user/signup', {
@@ -30,7 +29,7 @@ export default function Signup() {
                 }).then(res => res.json())
                     .then(data => {
                         navigate(data.redirect);
-                        console.log(data)});
+                    });
             } else {
                 console.log('password must match');
             }

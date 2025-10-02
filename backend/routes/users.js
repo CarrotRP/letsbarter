@@ -23,8 +23,6 @@ router.post('/login', passport.authenticate('local'), userController.user_login)
 router.post('/logout', userController.user_logout);
 
 router.get('/:id', userController.get_user);
-router.patch('/:id', upload.fields([
-    {name: 'profile_img', maxCount: 1}
-]), userController.user_update);
+router.patch('/:id', upload.single('profile_img'), userController.user_update);
 
 module.exports = router;

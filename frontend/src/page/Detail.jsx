@@ -8,14 +8,27 @@ import './Detail.css';
 
 export default function Detail() {
     const { id } = useParams();
-    const { user } = useOutletContext();
+    const { user, isLoading } = useOutletContext();
     const navigate = useNavigate();
     const tradePopupRef = useRef();
     const tradePopupContentRef = useRef();
+    const [isPageLoading, setIsPageLoading] = useState(true);
     const [itemDetail, setItemDetail] = useState();
     const [currentTradePage, setCurrentTradePage] = useState('your');
     const [image, setImage] = useState([]);
     const [currentImg, setCurrentImg] = useState(0);
+    //other items in inventory
+    const [otherItem, setOtherItem] = useState();
+    const [limit, setLimit] = useState(5);
+    const [itemCount, setItemCount] = useState();
+
+    //item by category (item user might like)
+    const [mightLike, setMightLike] = useState();
+    const [mightLimit, setMightLimit] = useState(5);
+    const [mightCount, setMightCount] = useState();
+
+    //for doing fetch only when popup is true
+    const [isPopup, setIsPopup] = useState(false);
 
     const handleOfferClick = (e) => {
         if (user) {
@@ -23,9 +36,10 @@ export default function Detail() {
             tradePopupRef.current.style.display = 'block'
             tradePopupContentRef.current.style.display = 'block';
             document.body.style.overflow = 'hidden';
+            setIsPopup(true);
         } else {
             //show this toast when user not log in
-            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe'});
+            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' });
         }
     }
 
@@ -35,7 +49,6 @@ export default function Detail() {
             credentials: 'include'
         }).then(res => res.json())
             .then(data => {
-                console.log(data)
                 navigate(-1);
             })
     }
@@ -45,24 +58,46 @@ export default function Detail() {
     }
 
     useEffect(() => {
-        console.log(user);
         //fetch item detail
         fetch(`http://localhost:3000/item/${id}`).then(res => res.json())
             .then(data => {
+                setCurrentImg(0);
                 setItemDetail(data);
                 setImage([data.main_img]);
                 setImage(prev => [...prev, ...data.imgs]);
-                console.log(data)
-            });
+                //fetch other user inventory
+                fetch(`http://localhost:3000/item/user-item/${data.owner_id?._id}?limit=${limit}&filterOpt=${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        setOtherItem(data.items);
+                        setItemCount(data.count);
+                    });
+                //fetch item by category(item user might like)
+                const params = new URLSearchParams();
+
+                if (mightLimit) { params.append("limitOpt", mightLimit) }
+                if (data.category_id) { params.append("category", data.category_id) }
+                if (id) { params.append("filterOpt", id) }
+
+                fetch(`http://localhost:3000/item/category?${params.toString()}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        setMightLike(data.items);
+                        setMightCount(data.totalPage); //the var name is totalPage, but its actually itemcounts here
+                    });
+            }
+        ).finally(() => setIsPageLoading(false));
+
 
         //handle click outside
         const handleOutsideClick = (e) => {
-            if (tradePopupContentRef && !tradePopupContentRef.current.contains(e.target)) {
+            if (tradePopupContentRef && !tradePopupContentRef.current?.contains(e.target)) {
                 document.body.style.overflow = null;
                 tradePopupContentRef.current.style.display = 'none';
                 tradePopupRef.current.style.display = 'none';
-
+                
                 setCurrentTradePage('your');
+                setIsPopup(false);
             }
         }
 
@@ -73,7 +108,7 @@ export default function Detail() {
         }
 
 
-    }, [user]);
+    }, [id, user, limit, mightLimit]);
 
     return (
         <main className="detail-page">
@@ -97,6 +132,7 @@ export default function Detail() {
                     })}
                 </aside>
                 <img id="main-img" src={`http://localhost:3000/${image[currentImg]}`} alt="" />
+                { !isPageLoading &&
                 <section className="product-info">
                     <h1>{itemDetail?.name}</h1>
                     <p><b style={{ color: 'var(--primary)' }}>Looking for</b></p>
@@ -121,19 +157,23 @@ export default function Detail() {
                         </span> :
                         <>
                             <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
-                                <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', borderRadius: '50%', marginRight: '10px'}} alt="user-image" />
+                                <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', borderRadius: '50%', marginRight: '10px' }} alt="user-image" />
                                 <span>
                                     <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
                                     <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>
                                 </span>
                             </Link>
-                            <button onClick={handleOfferClick}>Offer Trade</button>
+                            <button onClick={handleOfferClick} style={{backgroundColor: itemDetail?.status == 'in-trade' ? 'var(--darken-background)' : 'var(--secondary)', cursor: itemDetail?.status == 'in-trade' ? 'not-allowed' : 'pointer', color: itemDetail?.status == 'in-trade' ? 'var(--text-secondary)' : 'white'}} disabled={itemDetail?.status == 'in-trade'}> {itemDetail?.status == 'in-trade' ? 'In Trade' : 'Offer Trade'}</button>
                         </>}
-                </section>
+                </section>}
             </section>
-            <HomeComponent sectionName="Other items in Bob's inventory" />
-            <HomeComponent sectionName="You might also like" />
-            <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} />
+            {user?._id !== itemDetail?.owner_id._id &&
+                <>
+                    <HomeComponent sectionName={`Other items in ${itemDetail?.owner_id.username}'s inventory`} items={otherItem} limit={limit} setLimit={setLimit} itemCount={itemCount} />
+                    {!mightLike || mightCount !== 0 ? <HomeComponent sectionName="You might also like" items={mightLike} limit={mightLimit} setLimit={setMightLimit} itemCount={mightCount} /> : <></>}
+                    <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} user={user} otherUserId={itemDetail?.owner_id._id} itemId={id} isLoading={isLoading} isPopup={isPopup} setIsPopup={setIsPopup} otherName={itemDetail?.owner_id.username}/>
+                </>
+            }
         </main>
     );
 }

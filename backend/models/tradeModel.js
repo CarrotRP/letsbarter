@@ -24,13 +24,10 @@ const tradeSchema = new Schema({
             ref: "Item"
         }
     ],
-    tradeType: {
-        type: String,
-        enum: ["offer", "incoming"]
-    },
     status: {
         type: String,
-        enum: ["accepted", "declined", "cancelled", "countered"]
+        enum: ["pending", "accepted", "declined", "cancelled", "countered"],
+        default: "pending"
     },
     originalTradeId: {
         type: Schema.Types.ObjectId,

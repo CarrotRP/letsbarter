@@ -27,13 +27,13 @@ export default function MainLayout() {
             if (chatRef && !chatRef.current.contains(e.target)) {
                 chatRef.current.classList.remove('chat-active');
             }
-            if(filterRef && !filterRef.current.contains(e.target)){
-                filterRef.current.classList.remove('filter-popup-active');
+            if(filterRef && !filterRef.current?.contains(e.target)){
+                filterRef.current?.classList.remove('filter-popup-active');
             }
         }
         const handleScroll = () => {
             chatRef.current.classList.remove('chat-active');
-            filterRef.current.classList.remove('filter-popup-active');
+            filterRef.current?.classList.remove('filter-popup-active');
         }
 
         //listeners

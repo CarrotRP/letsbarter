@@ -29,8 +29,7 @@ export default function Login() {
             }).then(res => res.json())
             .then(data => {
                 dispatch({type: 'SET_USER', payload: data.user});
-                navigate(data.redirect);    
-                console.log(data)
+                navigate(data.redirect);
             });
         }
     }

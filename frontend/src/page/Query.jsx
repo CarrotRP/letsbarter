@@ -10,18 +10,18 @@ export default function Query() {
     const [item, setItem] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState();
-    const {filterRef, handleFilterDropdown} = useOutletContext();
-    const [filter, setFilter] = useState({condition: null, sortOpt: null});
+    const { filterRef, handleFilterDropdown } = useOutletContext();
+    const [filter, setFilter] = useState({ condition: null, sortOpt: null });
 
     useEffect(() => {
         const url = new URL(`http://localhost:3000/item/category${location.search}`);
 
-        for(const key in filter){
-            if(filter[key]) url.searchParams.append(key, filter[key]);
+        for (const key in filter) {
+            if (filter[key]) url.searchParams.append(key, filter[key]);
         }
 
         url.searchParams.append('page', page);
-        
+
         fetch(url)
             .then(res => res.json())
             .then(data => {
@@ -38,24 +38,26 @@ export default function Query() {
                     <img src={filterIcon} alt="" style={{ width: '30px' }} />
                     <h3>Filter</h3>
                 </span>
-                <Filter filterRef={filterRef} filter={filter} setFilter={setFilter}/>
+                <Filter filterRef={filterRef} filter={filter} setFilter={setFilter} />
             </span>
             <div className="search-result">
                 {item.map(v => {
                     return (
-                        <Link  to={`/product/${v._id}`} style={{color: 'var(--text-secondary)'}} key={v.id}>
+                        <Link to={`/product/${v._id}`} style={{ color: 'var(--text-secondary)' }} key={v.id}>
                             <ProductCard pname={v.name} condition={v.item_condition} lookfor={v.looking_for} mainImg={v.main_img} />
                         </Link>
                     );
                 })}
             </div>
-            <div className="navigator">
-                {page == 1 ? <></> :
-                <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
-                <p className='current-page'>{page}</p>
-                {page >= totalPage ? <></> : 
-                <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
-            </div>
+            {totalPage > 1  && totalPage &&
+                <div className="navigator">
+                    {page == 1 ? <div></div> :
+                        <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
+                    <p className='current-page'>{page}</p>
+                    {page >= totalPage ? <div></div> :
+                        <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
+                </div>
+            }
         </main>
     );
 }

@@ -1,32 +1,49 @@
+import { useOutletContext } from 'react-router';
 import TradeCard from '../component/TradeCard';
 import TradePopup from '../component/TradePopup';
 import './Trade.css';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Trade() {
+    const { user } = useOutletContext();
     const [currentPage, setCurrentPage] = useState("Incoming");
     const tradePopupRef = useRef();
     const tradePopupContentRef = useRef();
     const [tradeType, setTradeType] = useState('incoming');
     const [currentTradePage, setCurrentTradePage] = useState('your');
 
-    const income_trade = [
-        { type: 'incoming', user: 'bob', itemCount1: '3', itemCount2: '2' },
-        { type: 'incoming', user: 'John', itemCount1: '3', itemCount2: '2' },
-        { type: 'incoming', user: 'Dave', itemCount2: '3', decide: 'Trade Accepted' },
-        { type: 'incoming', user: 'Bob', itemCount1: '3', decide: 'Trade Declined' }
-    ]
+    const [receivedTrade, setReceivedTrade] = useState();
+    const [sentTrade, setSentTrade] = useState();
 
-    const sent_trade = [
-        { user: 'bob', itemCount1: '3', itemCount2: '2' },
-        { user: 'John', itemCount1: '3', itemCount2: '2' },
-        { user: 'Dave', itemCount2: '3', decide: 'Counter Offer Made' },
-        { user: 'Bob', itemCount1: '3', decide: 'Trade Offer Canceled' }
-    ]
+    useEffect(() => {
+        if (user) {
+            if (currentPage == 'Incoming') {
+                //fetch received trade
+                fetch(`http://localhost:3000/trade/received/${user?._id}`, {
+                    credentials: 'include'
+                }).then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        setReceivedTrade(data)
+                    });
+            } else {
+                //fetch sent trade
+                fetch(`http://localhost:3000/trade/sent/${user?._id}`, {
+                    credentials: 'include'
+                }).then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        setSentTrade(data);
+                    });
+            }
+        }
+
+    }, [currentPage]);
+
     useEffect(() => {
         //handle click outside
         const handleOutsideClick = (e) => {
-            if(tradePopupContentRef && !tradePopupContentRef.current.contains(e.target)){
+            if (tradePopupContentRef && !tradePopupContentRef.current.contains(e.target)) {
                 document.body.style.overflow = null;
                 tradePopupContentRef.current.style.display = 'none';
                 tradePopupRef.current.style.display = 'none';
@@ -47,18 +64,40 @@ export default function Trade() {
             <h1 style={{ fontSize: '36px', color: 'var(--text-primary)' }}>My Trade</h1>
             <div className="trade-page-content">
                 <div className="trade-navi">
-                    <p onClick={() => setCurrentPage("Incoming")} style={{fontWeight: currentPage == 'Incoming' ? 'bold' : 300}}>Incoming Offer {currentPage == 'Incoming' ? '>' : ''}</p>
-                    <p onClick={() => setCurrentPage("Sent")} style={{fontWeight: currentPage == 'Sent' ? 'bold' : 300}}>Sent Offer {currentPage == 'Sent' ? '>' : ''}</p>
+                    <p onClick={() => setCurrentPage("Incoming")} style={{ fontWeight: currentPage == 'Incoming' ? 'bold' : 300, userSelect: 'none' }}>Incoming Offer {currentPage == 'Incoming' ? '>' : ''}</p>
+                    <p onClick={() => setCurrentPage("Sent")} style={{ fontWeight: currentPage == 'Sent' ? 'bold' : 300, userSelect: 'none' }}>Sent Offer {currentPage == 'Sent' ? '>' : ''}</p>
                 </div>
                 <div className="trades">
-                    {currentPage == 'Incoming' ? income_trade.map(v => {
-                        return (<TradeCard type={v.type} user={v.user} itemCount1={v.itemCount1} itemCount2={v.itemCount2} decide={v.decide} tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} />);
-                    }) : sent_trade.map(v => {
-                        return (<TradeCard user={v.user} itemCount1={v.itemCount1} itemCount2={v.itemCount2} decide={v.decide}/>);
-                    })}
+                    {currentPage === 'Incoming'
+                        ? receivedTrade?.map(v => (
+                            <TradeCard
+                                key={v._id}
+                                type="incoming"
+                                user={v.senderName}
+                                leftItem={v.senderFirstItem}
+                                leftCount={v.senderItemCount}
+                                rightItem={v.receiverFirstItem}
+                                rightCount={v.receiverItemCount}
+                                tradePopupRef={tradePopupRef}
+                                tradePopupContentRef={tradePopupContentRef}
+                            />
+                        ))
+                        : sentTrade?.map(v => (
+                            <TradeCard
+                                key={v._id}
+                                type="sent"
+                                user={v.receiverName}
+                                leftItem={v.senderFirstItem}
+                                leftCount={v.senderItemCount}
+                                rightItem={v.receiverFirstItem}
+                                rightCount={v.receiverItemCount}
+                                tradePopupRef={tradePopupRef}
+                                tradePopupContentRef={tradePopupContentRef}
+                            />
+                        ))}
                 </div>
             </div>
-            <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType={tradeType} setTradeType={setTradeType} currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage}/>
+            <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType={tradeType} setTradeType={setTradeType} currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} />
         </main>
     );
 }

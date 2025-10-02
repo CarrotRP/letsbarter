@@ -13,8 +13,8 @@ export default function Footer() {
                 <div className="logo-desc">
                     <TextLogo />
                     <p style={{ color: 'var(--text-primary)', fontWeight: '200' }}>Trade items without using your money. Save up your money!</p>
-                    <Link to="#"><img src={fbIcon} alt="facebookIcon" style={{ marginRight: '10px' }} /></Link>
-                    <Link to="#"><img src={igIcon} alt="instagramIcon" /></Link>
+                    <Link to="#"><img src={fbIcon} alt="facebookIcon" style={{ marginRight: '10px' }} loading="lazy"/></Link>
+                    <Link to="#"><img src={igIcon} alt="instagramIcon" loading="lazy"/></Link>
                 </div>
                 <div className="info">
                     <h4>INFORMATION</h4>

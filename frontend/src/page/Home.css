@@ -6,10 +6,12 @@
     grid-template-columns: repeat(5, 240px);
     grid-auto-flow: row;
     justify-content: space-between;
-    /* gap: 50px; */
+    gap: 50px 0;
+    user-select: none;
 }
 .categories{
     display: flex;
     overflow-x: scroll;
     gap: 20px;
+    user-select: none;
 }

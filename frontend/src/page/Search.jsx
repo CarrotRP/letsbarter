@@ -36,7 +36,6 @@ export default function Search() {
                 .then(data => {
                     setSearchResult(data.items);
                     setTotalPage(data.totalPage);
-                    console.log(data)
                 });
         }
     }, [page, query, filter]);
@@ -60,13 +59,15 @@ export default function Search() {
                     );
                 })}
             </div>
-            <div className="navigator">
-                {page == 1 ? <></> :
-                <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
-                <p className='current-page'>{page}</p>
-                {page >= totalPage ? <></> : 
-                <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
-            </div>
+            {totalPage > 1 && totalPage &&
+                <div className="navigator">
+                    {page == 1 ? <div></div> :
+                        <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
+                    <p className='current-page'>{page}</p>
+                    {page >= totalPage ? <div></div> :
+                        <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
+                </div>
+            }
         </main>
     );
 }

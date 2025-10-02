@@ -52,14 +52,22 @@ const user_update = async (req, res) => {
     const {username, occupation, email, password} = req.body;
 
     
-    const profileImgPath = req.files['profile_img'] ? req.files['profile_img'][0].path.replace(/\\/g, '/') : null;
-    console.log(req.files['profile_img']);
-    console.log(profileImgPath);
+    const profileImgPath = req.file ? req.file.path.replace(/\\/g, '/') : null;
+    console.log('profile upload: ', profileImgPath);
 
-    const saltRounds = 10;
-    const hashedPw = await bcrypt.hash(password, saltRounds);
+    const updateData = {username, occupation, email}
 
-    User.findByIdAndUpdate(id, {username, occupation, email, password: hashedPw, profile_img: profileImgPath}, {new: true})
+    if(profileImgPath){
+        updateData.profile_img = profileImgPath;
+    }
+
+    if(password){
+        const saltRounds = 10;  
+        const hashedPw = await bcrypt.hash(password, saltRounds);
+        updateData.password = hashedPw;
+    }
+
+    User.findByIdAndUpdate(id, updateData, {new: true})
     .then(result => res.json(result))
     .catch(err => console.log(err));
 }

@@ -24,7 +24,6 @@ export default function Home() {
         fetch(`http://localhost:3000/item?limit=${limit}&sortOpt=true`)
         .then(res => res.json())
         .then(data => {
-            console.log(data);
             setItems(data.items);
             setItemCount(data.count);
         });
@@ -33,7 +32,6 @@ export default function Home() {
         fetch(`http://localhost:3000/item?limit=${goodLimit}&condition=good`)
         .then(res => res.json())
         .then(data => {
-            console.log(data);
             setGoodItems(data.items);
             setGoodCount(data.count);
         })
@@ -47,7 +45,7 @@ export default function Home() {
     return (
         <main className="homepage">
             <CategorySection categoryList={categoryList}/>
-            <HomeComponent sectionName="Latest Items" items={items} setter={setItems} limit={limit} setLimit={setLimit} itemCount={itemCount}/>
+            <HomeComponent sectionName="Latest Items" items={items} limit={limit} setLimit={setLimit} itemCount={itemCount}/>
             <HomeComponent sectionName="Items in Good Shape" items={goodItems} limit={goodLimit} setLimit={setGoodLimit} itemCount={goodCount}/>
         </main>
     );

@@ -19,6 +19,8 @@ export default function OtherProfile() {
     const reportRef = useRef();
     const [otherUser, setOtherUser] = useState();
     const [item, setItem] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState();
 
     const selectedTxtStyle = {
         fontSize: '32px',
@@ -58,14 +60,13 @@ export default function OtherProfile() {
             .then(res => res.json())
             .then(data => {
                 setOtherUser(data);
-                console.log(data)
             });
 
-        fetch(`http://localhost:3000/item/user-item/${id}`)
+        fetch(`http://localhost:3000/item/user-item/${id}?limit=10&page=${page}`)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
-                setItem(data);
+                setItem(data.items);
+                setTotalPage(data.count);
             })
 
         const handleOutsideClick = (e) => {
@@ -81,7 +82,7 @@ export default function OtherProfile() {
         return () => {
             document.removeEventListener('click', handleOutsideClick)
         }
-    }, []);
+    }, [page]);
 
     return (
         <main className="other-profile">
@@ -99,7 +100,7 @@ export default function OtherProfile() {
                 transition={Slide}
             />
             <div className='other-detail'>
-                <img src={otherUser?.profile_img.startsWith('http') ? otherUser?.profile_img : `http://localhost:3000/${otherUser?.profile_img}`} style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white'}} alt="user-image" />
+                <img src={otherUser?.profile_img.startsWith('http') ? otherUser?.profile_img : `http://localhost:3000/${otherUser?.profile_img}`} style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white' }} alt="user-image" />
                 <span>
                     <h1>{otherUser?.username}</h1>
                     <p style={{ fontSize: '20px', fontWeight: 300 }}>{otherUser?.occupation}</p>
@@ -131,6 +132,15 @@ export default function OtherProfile() {
                                 </Link>
                             );
                         })}
+                        {totalPage > 1 && totalPage &&
+                            <div className="other-total">
+                                {page == 1 ? <div></div> :
+                                    <p className='prev-page' onClick={() => setPage(prev => prev - 1)}>{page - 1}</p>}
+                                <p className='current-page'>{page}</p>
+                                {page >= totalPage ? <div></div> :
+                                    <p className='next-page' onClick={() => setPage(prev => prev + 1)}>{page + 1}</p>}
+                            </div>
+                        }
                     </div> :
                     <div className="reviews">
                         {[...new Array(4)].map(_ => {

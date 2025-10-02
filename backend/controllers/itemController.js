@@ -29,15 +29,37 @@ const get_one_item = (req, res) => {
 //user own inventory
 const get_item_for_owner = (req, res) => {
   const user_id = req.params.id;
+  const { limit, filterOpt, page, query } = req.query;
+  let skip = 0;
 
-  Item.find({ owner_id: user_id })
-    .then(result => res.json(result));
+  const filter = {}
+
+  let totalCount = 0;
+
+  if(filterOpt){
+    filter._id = { $ne: filterOpt}
+  }
+
+  if(query){
+    filter.name = { $regex: query, $options: 'i'}
+  }
+
+  if(page){
+    skip = (page - 1) * limit;
+  }
+
+  Item.countDocuments({owner_id: user_id, ...filter})
+    .then(count => {
+      //totalCount, if its in home or detail, do the 'see more'(dont use pagination navigator), else(popup) do the pagination navigator
+      totalCount = page ? Math.ceil(count / limit) : count;
+      return Item.find({ owner_id: user_id, ...filter}).limit(limit).skip(skip);
+    }).then(items => res.json({count: totalCount, items}));
 }
 //get item by category
 const get_by_category = (req, res) => {
-  const { category, condition, sortOpt, page} = req.query;
+  const { category, condition, sortOpt, page, limitOpt, filterOpt} = req.query;
 
-  const limit = 2; //for testing
+  const limit = limitOpt ? limitOpt : 2; //for testing
   const skip = (page - 1) * limit;
   let totalPage = 0;
 
@@ -45,6 +67,10 @@ const get_by_category = (req, res) => {
 
   if(category){
     filter.category_id = category;
+  }
+  //if theres filterOpt req(detail page), add this filter
+  if(filterOpt){
+    filter._id = { $ne: filterOpt}
   }
 
   if(condition == 'lt'){
@@ -61,7 +87,8 @@ const get_by_category = (req, res) => {
   }
   Item.countDocuments(filter)
     .then(count => {
-      totalPage = Math.ceil(count / limit);
+      //if theres limit option req('see more' button), then send back the total item count instead not the page
+      totalPage = limitOpt ? count : Math.ceil(count / limit);
       return Item.find(filter).sort(sort).skip(skip).limit(limit);
     }).then(items => res.json({totalPage, items}));
 }

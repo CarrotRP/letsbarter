@@ -1,7 +1,8 @@
-.other-profile{
+.other-profile {
     padding: 120px;
 }
-.other-detail{
+
+.other-detail {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -11,14 +12,16 @@
     border-radius: 10px;
     position: relative;
 }
-.buttons{
+
+.buttons {
     position: absolute;
     bottom: 20px;
     right: 20px;
     display: flex;
     gap: 20px;
 }
-.buttons button{
+
+.buttons button {
     border: none;
     border-radius: 10px;
     background-color: var(--secondary);
@@ -31,38 +34,63 @@
     font-size: 16px;
     font-weight: 300;
 }
+
+.other-content {
+    position: relative;
+    height: 740px;
+}
+
 /* nav */
-.other-inventory-nav{
+.other-inventory-nav {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
 }
-.other-inventory-nav img{
+
+.other-inventory-nav img {
     width: 30px;
     filter: invert(27%) sepia(97%) saturate(1049%) hue-rotate(358deg) brightness(91%) contrast(97%);
 }
-.other-review-nav{
+
+.other-review-nav {
     cursor: pointer;
 }
-.buttons img{
+
+.buttons img {
     width: 15px;
     filter: invert(100%) sepia(0%) saturate(2048%) hue-rotate(76deg) brightness(105%) contrast(104%);
 }
-.other-content{
+
+.other-content {
     margin: 40px 0;
 }
+
+.other-total {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    bottom: -140px;
+    left: 0;
+    gap: 20px;
+    padding-bottom: 30px;
+    user-select: none;
+}
+
 /* inventory tab */
-.other-inventory{
+.other-inventory {
     display: grid;
     grid-template-columns: repeat(5, 240px);
     justify-content: space-between;
     gap: 50px 0;
 }
+
 /* reviews tab */
-.reviews{
+.reviews {
     display: grid;
-    grid-template-columns: repeat(2, 600px); /*old 780px*/
+    grid-template-columns: repeat(2, 600px);
+    /*old 780px*/
     justify-content: space-between;
     gap: 30px 0;
 }

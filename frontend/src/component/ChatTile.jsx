@@ -1,7 +1,7 @@
 export default function ChatTile() {
     return (
         <div className="chat-tile">
-            <img src="/favicon.png" alt="user" style={{width: '50px', borderRadius: '50%'}}/>
+            <img src="/favicon.png" alt="user" style={{width: '50px', borderRadius: '50%'}} loading="lazy"/>
             <div className="chat-info">
                 <span>
                     <p style={{fontWeight: '500'}}>Bob Krackin</p>

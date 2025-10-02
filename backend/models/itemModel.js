@@ -46,7 +46,7 @@ const itemSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ["available", "traded"],
+        enum: ["available", "traded", "in-trade"],
         default: "available"
     },
     estimate_value: {

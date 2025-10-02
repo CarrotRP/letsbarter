@@ -13,3 +13,6 @@
     margin: 15px 0;
     cursor: pointer;
 }
+.trades{
+    min-height: 210px;
+}
