@@ -17,16 +17,49 @@ footer{
     font-weight: 500;
     font-size: 20px;
     margin-bottom: 5px;
+    user-select: none;
 }
 .top img{
-    margin-top: 20px;
+    margin: 0;
     width: 38px;
 }
 .top a{
     font-weight: 300;
     line-height: 40px;
-    color: var(--text-secondary)
+    color: var(--text-secondary);
+    user-select: none;
+}
+.top svg{
+    
+}
+.logo-desc a{
+    line-height: 0;
 }
 a{
     text-decoration: none;
+}
+.lang-dropdown{
+    position: absolute;
+    right: 40px;
+    top: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: top 500ms, opacity 500ms, pointer-events 500ms;
+    background-color: var(--darken-background);
+}
+.lang-dropdown li{
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.lang-dropdown li:hover{
+    background-color:gainsboro;
+}
+.lang-dropdown-active{
+    opacity: 1;
+    pointer-events: all;
+    top: 40px;
 }

@@ -7,6 +7,7 @@ import { UserContext } from "../context/UserContext";
 export default function MainLayout() {
     const chatRef = useRef();
     const filterRef = useRef();
+    const langRef = useRef();
     const { user, dispatch } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -29,6 +30,9 @@ export default function MainLayout() {
             }
             if(filterRef && !filterRef.current?.contains(e.target)){
                 filterRef.current?.classList.remove('filter-popup-active');
+            }
+            if(langRef && !langRef.current?.contains(e.target)){
+                langRef.current?.classList.remove('lang-dropdown-active');
             }
         }
         const handleScroll = () => {
@@ -58,7 +62,7 @@ export default function MainLayout() {
         <>
             <Header chatRef={chatRef} user={user} />
             <Outlet context={{ chatRef, user, dispatch, isLoading, filterRef, handleFilterDropdown }} />
-            <Footer />
+            <Footer langRef={langRef}/>
         </>
     );
 }
