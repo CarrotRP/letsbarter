@@ -86,7 +86,7 @@ export default function Detail() {
                         setMightCount(data.totalPage); //the var name is totalPage, but its actually itemcounts here
                     });
             }
-        ).finally(() => setIsPageLoading(false));
+            ).finally(() => setIsPageLoading(false));
 
 
         //handle click outside
@@ -95,7 +95,7 @@ export default function Detail() {
                 document.body.style.overflow = null;
                 tradePopupContentRef.current.style.display = 'none';
                 tradePopupRef.current.style.display = 'none';
-                
+
                 setCurrentTradePage('your');
                 setIsPopup(false);
             }
@@ -108,7 +108,7 @@ export default function Detail() {
         }
 
 
-    }, [id, user, limit, mightLimit]);
+    }, [id, user, limit, mightLimit, isPopup]);
 
     return (
         <main className="detail-page">
@@ -132,46 +132,55 @@ export default function Detail() {
                     })}
                 </aside>
                 <img id="main-img" src={`http://localhost:3000/${image[currentImg]}`} alt="" />
-                { !isPageLoading &&
-                <section className="product-info">
-                    <h1>{itemDetail?.name}</h1>
-                    <p><b style={{ color: 'var(--primary)' }}>Looking for</b></p>
-                    <p style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--secondary)' }}>{itemDetail?.looking_for}</p>
-                    <p style={{ margin: '15px 0 10px' }}>{itemDetail?.description}</p>
-                    <hr style={{ border: '1px solid rgba(163, 68, 7, 0.3)' }} />
-                    <div className="other-info">
-                        <p>Orignal price</p>
-                        <p>{itemDetail?.original_price}$</p>
-                        <p>Brand</p>
-                        <p>{itemDetail?.brand}</p>
-                        <p>Conditions</p>
-                        <p>{itemDetail?.item_condition} / 10</p>
-                        <p>Bought on</p>
-                        <p>{`${new Date(itemDetail?.bought_on).getDate().toString().padStart(2, '0')}/${new Date(itemDetail?.bought_on).toLocaleString('en-GB', { month: 'long' })}/${new Date(itemDetail?.bought_on).getFullYear()}`}</p>
-                    </div>
+                {!isPageLoading &&
+                    <section className="product-info">
+                        <h1>{itemDetail?.name}</h1>
+                        <p><b style={{ color: 'var(--primary)' }}>Looking for</b></p>
+                        <p style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--secondary)' }}>{itemDetail?.looking_for}</p>
+                        <p style={{ margin: '15px 0 10px' }}>{itemDetail?.description}</p>
+                        <hr style={{ border: '1px solid rgba(163, 68, 7, 0.3)' }} />
+                        <div className="other-info">
+                            <p>Orignal price</p>
+                            <p>{itemDetail?.original_price}$</p>
+                            <p>Brand</p>
+                            <p>{itemDetail?.brand}</p>
+                            <p>Conditions</p>
+                            <p>{itemDetail?.item_condition} / 10</p>
+                            <p>Bought on</p>
+                            <p>{`${new Date(itemDetail?.bought_on).getDate().toString().padStart(2, '0')}/${new Date(itemDetail?.bought_on).toLocaleString('en-GB', { month: 'long' })}/${new Date(itemDetail?.bought_on).getFullYear()}`}</p>
+                        </div>
 
-                    {user?._id == itemDetail?.owner_id._id ?
-                        <span style={{ display: 'flex', gap: '20px' }}>
-                            <button onClick={() => navigate(`/edit/${itemDetail?._id}`)} style={{}}>Edit</button>
-                            <button onClick={handleItemDelete} style={{ backgroundColor: 'transparent', border: '1px solid var(--text-primary)', color: 'var(--text-primary)' }}>Delete</button>
-                        </span> :
-                        <>
-                            <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
-                                <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', borderRadius: '50%', marginRight: '10px' }} alt="user-image" />
-                                <span>
-                                    <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
-                                    <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>
-                                </span>
-                            </Link>
-                            <button onClick={handleOfferClick} style={{backgroundColor: itemDetail?.status == 'in-trade' ? 'var(--darken-background)' : 'var(--secondary)', cursor: itemDetail?.status == 'in-trade' ? 'not-allowed' : 'pointer', color: itemDetail?.status == 'in-trade' ? 'var(--text-secondary)' : 'white'}} disabled={itemDetail?.status == 'in-trade'}> {itemDetail?.status == 'in-trade' ? 'In Trade' : 'Offer Trade'}</button>
-                        </>}
-                </section>}
+                        {user?._id == itemDetail?.owner_id._id ?
+                            <span style={{ display: 'flex', gap: '20px' }}>
+                                {itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ?
+                                    <button style={{cursor: 'disable', pointerEvents: 'none', backgroundColor: 'var(--darken-background)', color: 'var(--text-secondary)'}}>{itemDetail?.status == 'in-trade' ? 'In Trade' : 'Traded'}</button> :
+                                    <>
+                                        <button onClick={() => navigate(`/edit/${itemDetail?._id}`)} style={{}}>Edit</button>
+                                        <button onClick={handleItemDelete} style={{ backgroundColor: 'transparent', border: '1px solid var(--text-primary)', color: 'var(--text-primary)' }}>Delete</button>
+                                    </>
+                                }
+                            </span> :
+                            <>
+                                <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
+                                    <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', borderRadius: '50%', marginRight: '10px' }} alt="user-image" />
+                                    <span>
+                                        <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
+                                        <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>
+                                    </span>
+                                </Link>
+                                <button onClick={handleOfferClick} 
+                                style={{ backgroundColor: itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ? 'var(--darken-background)' : 'var(--secondary)', 
+                                cursor: itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ? 'not-allowed' : 'pointer', 
+                                color: itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ? 'var(--text-secondary)' : 'white' }} 
+                                disabled={itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded'}> {itemDetail?.status == 'in-trade' ? 'In Trade' : itemDetail?.status == 'traded' ? 'Traded' : 'Offer Trade'}</button>
+                            </>}
+                    </section>}
             </section>
             {user?._id !== itemDetail?.owner_id._id &&
                 <>
                     <HomeComponent sectionName={`Other items in ${itemDetail?.owner_id.username}'s inventory`} items={otherItem} limit={limit} setLimit={setLimit} itemCount={itemCount} />
                     {!mightLike || mightCount !== 0 ? <HomeComponent sectionName="You might also like" items={mightLike} limit={mightLimit} setLimit={setMightLimit} itemCount={mightCount} /> : <></>}
-                    <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} user={user} otherUserId={itemDetail?.owner_id._id} itemId={id} isLoading={isLoading} isPopup={isPopup} setIsPopup={setIsPopup} otherName={itemDetail?.owner_id.username}/>
+                    <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} user={user} otherUserId={itemDetail?.owner_id._id} itemId={id} isLoading={isLoading} isPopup={isPopup} setIsPopup={setIsPopup} otherName={itemDetail?.owner_id.username} />
                 </>
             }
         </main>

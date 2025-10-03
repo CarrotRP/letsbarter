@@ -198,7 +198,7 @@ const update_item = async (req, res) => {
 
     // --- KEEP THIS EXACTLY AS YOUR ORIGINAL SNIPPET ---
     let imgPaths = [];
-    console.log(existing_images);
+
     if (existing_images) {
       imgPaths = Array.isArray(existing_images)
         ? existing_images
@@ -219,7 +219,6 @@ const update_item = async (req, res) => {
     res.json(updatedItem);
 
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };

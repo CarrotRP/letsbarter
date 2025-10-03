@@ -144,7 +144,11 @@
     display: flex;
     flex-direction: column;
 }
-
+.estimate-value{
+    position: absolute;
+    font-size: 14px;
+    color: var(--primary);
+}
 .middle-section img {
     width: 37px;
     position: absolute;
@@ -186,6 +190,7 @@
     display: grid;
     place-items: center;
     color: white;
+    z-index: 1;
 }
 
 .bg-overlay h2 {

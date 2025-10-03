@@ -29,7 +29,7 @@ To help lower middle class people such as college students, small business owner
 - [x] filter item
 - [x] pagination
 - [x] estimate value in trade
-- [ ] trading system
+- [x] trading system
 - [ ] chatting
 - [ ] khmer language
 - [ ] user review

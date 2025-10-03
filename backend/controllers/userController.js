@@ -24,10 +24,10 @@ const user_signup = async (req, res) => {
 }
 
 const user_login = (req, res) => {
+    console.log('user login')
     res.json({ redirect: '/home', user: req.user });
 }
 const user_google_login = (req, res) => {
-    console.log('hello');
     res.send(`
       <script>
         const user = ${JSON.stringify(req.user)};
@@ -53,7 +53,6 @@ const user_update = async (req, res) => {
 
     
     const profileImgPath = req.file ? req.file.path.replace(/\\/g, '/') : null;
-    console.log('profile upload: ', profileImgPath);
 
     const updateData = {username, occupation, email}
 

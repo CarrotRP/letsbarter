@@ -8,20 +8,20 @@ import './TradePopup.css'
 export default function TradePopup(props) {
     const {
         tradePopupRef, tradePopupContentRef, tradeType, setTradeType, currentTradePage, setCurrentTradePage,
-        user, otherUserId, itemId, isLoading, isPopup, setIsPopup, otherName,
+        user, otherUserId, itemId, isLoading, isPopup, setIsPopup, otherName, handleTradeUpdate, selectedTrade
     } = props;
 
     //current user inventory
     const [userInvent, setUserInvent] = useState();
     const [userTrade, setUserTrade] = useState([]);
-    const [userEstimate, setUserEstimate] = useState();
+    const [userEstimate, setUserEstimate] = useState(0);
     const [userPage, setUserPage] = useState(1);
     const [userTotalPage, setUserTotalPage] = useState();
 
     //other user inventory
     const [otherInvent, setOtherInvent] = useState();
     const [otherTrade, setOtherTrade] = useState([]);
-    const [otherEstimate, setOtherEstimate] = useState();
+    const [otherEstimate, setOtherEstimate] = useState(0);
     const [otherPage, setOtherPage] = useState(1);
     const [otherTotalPage, setOtherTotalPage] = useState();
 
@@ -44,27 +44,30 @@ export default function TradePopup(props) {
     }
 
     //add item to trade
-    const handleAddClick = (id, owner) => {
+    const handleAddClick = (id, owner, estimate) => {
         if (owner == 'user') {
-            setUserTrade(prev => [...prev, ...userInvent.filter(item => item._id == id)])
+            setUserTrade(prev => [...prev, ...userInvent.filter(item => item._id == id)]);
+            setUserEstimate(prev => prev + estimate);
         } else {
             setOtherTrade(prev => [...prev, ...otherInvent.filter(item => item._id == id)]);
+            setOtherEstimate(prev => prev + estimate);
         }
     }
 
     //remove item from trade
-    const handleRemoveClick = (e, id, owner) => {
+    const handleRemoveClick = (e, id, owner, estimate) => {
         e.stopPropagation();
         if (owner == 'user') {
             setUserTrade(prev => prev.filter(v => v._id != id));
+            setUserEstimate(prev => parseFloat((prev - Number(estimate || 0)).toFixed(1)));
         } else {
             setOtherTrade(prev => prev.filter(v => v._id != id));
+            setOtherEstimate(prev => parseFloat((prev - Number(estimate || 0)).toFixed(1)));
         }
     }
 
     //send offer senderItems, receiverItems, senderId, receiverId
     const handleOfferClick = () => {
-
         fetch(`http://localhost:3000/trade/offer`, {
             method: 'POST',
             credentials: 'include',
@@ -75,14 +78,17 @@ export default function TradePopup(props) {
             //if its not offer(incoming), then the otheruser(otherTrade, otherUserId) is the sender
             body: JSON.stringify({
                 senderItems: tradeType == 'offer' ? userTrade : otherTrade,
-                senderId: tradeType == 'offer' ? user._id : otherUserId,
-                receiverItems: tradeType == 'offer' ? otherTrade: userTrade,
-                receiverId: tradeType == 'offer' ? otherUserId : user._id
+                senderId: user._id,
+                receiverItems: tradeType == 'offer' ? otherTrade : userTrade,
+                receiverId: selectedTrade ? selectedTrade.userId : otherUserId
             })
         }).then(res => res.json())
-        .then(data => console.log(data));
+            .then(data => {
+                console.log(data)
+                handleClose();
+            });
     }
-
+    //for query debounce(delay search until user stop typing)
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebounceQ(query);
@@ -92,24 +98,66 @@ export default function TradePopup(props) {
     }, [query]);
 
     useEffect(() => {
-        if (isLoading) return;
+        if (!isPopup || isLoading) return;
 
         if (isPopup && user) {
-            fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
-                .then(res => res.json())
-                .then(data => {
-                    setUserTotalPage(data.count);
-                    setUserInvent(data.items);
-                });
-            fetch(`http://localhost:3000/item/user-item/${otherUserId}?limit=6&page=${otherPage}&query=${debounceQ}`)
-                .then(res => res.json())
-                .then(data => {
-                    setOtherTotalPage(data.count);
-                    setOtherInvent(data.items);
-                    if (!otherTrade.some(a => a._id == itemId)) {
-                        setOtherTrade(prev => [...prev, ...data.items.filter(item => item._id == itemId)]);
-                    }
-                })
+            setUserTrade([])
+            setUserEstimate(0);
+            //in detail page, initial offering
+            console.log(selectedTrade)
+            if (selectedTrade) {
+                console.log('select popup');
+                fetch(`http://localhost:3000/trade/${selectedTrade.tradeId}`)
+                    .then(res => res.json())
+                    .then(trade => {
+                        console.log('trade');
+                        console.log(trade)
+
+                        //get the user inventories
+                        fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                setUserTotalPage(data.count);
+                                setUserInvent(data.items);
+                                const newUserTrade = data.items.filter(d => trade.receiverItems.includes(d._id));
+                                setUserTrade(newUserTrade);
+                                setUserEstimate(newUserTrade.reduce((sum, item) => sum + (item.estimate_value || 0), 0));
+                            });
+                        fetch(`http://localhost:3000/item/user-item/${trade.senderId}?limit=6&page=${otherPage}&query=${debounceQ}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                setOtherTotalPage(data.count);
+                                setOtherInvent(data.items);
+
+                                setOtherTrade([]);
+
+                                const newOtherTrade = data.items.filter(d => trade.senderItems.includes(d._id));
+                                setOtherTrade(newOtherTrade);
+                                setOtherEstimate(newOtherTrade.reduce((sum, item) => sum + (item.estimate_value || 0), 0));
+                            })
+                    });
+            } else {
+                console.log('not selected')
+                fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        setUserTotalPage(data.count);
+                        setUserInvent(data.items);
+                    });
+                fetch(`http://localhost:3000/item/user-item/${otherUserId}?limit=6&page=${otherPage}&query=${debounceQ}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        setOtherTotalPage(data.count);
+                        setOtherInvent(data.items);
+                        // if (!otherTrade.some(a => a._id == itemId)) {
+                        //     setOtherTrade(prev => [...prev, ...data.items.filter(item => item._id == itemId)]);
+                        //     setOtherEstimate(prev => prev + estimate);
+                        // }
+                        const newItem = data.items.find(item => item._id == itemId);
+                        setOtherTrade(newItem ? [newItem] : []);
+                        setOtherEstimate(newItem ? newItem.estimate_value : 0);
+                    })
+            }
         }
 
     }, [isPopup, userPage, otherPage, debounceQ]);
@@ -125,8 +173,8 @@ export default function TradePopup(props) {
                 <div className="trade-popup-content">
                     <section className="item-selection">
                         <span className="user-inventory-nav">
-                            <h3 onClick={() => {setQuery(''); setCurrentTradePage('your')}} style={currentTradePage == 'your' ? null : unselectedStyle}>Your Inventory</h3>
-                            <h3 onClick={() => {setQuery(''); setCurrentTradePage('their')}} style={currentTradePage == 'their' ? null : unselectedStyle}>Their Inventory</h3>
+                            <h3 onClick={() => { setQuery(''); setCurrentTradePage('your') }} style={currentTradePage == 'your' ? null : unselectedStyle}>Your Inventory</h3>
+                            <h3 onClick={() => { setQuery(''); setCurrentTradePage('their') }} style={currentTradePage == 'their' ? null : unselectedStyle}>Their Inventory</h3>
                         </span>
                         <div className="user-inventory" style={{ position: 'relative', overflow: 'hidden' }}>
                             {tradeType == 'offer' ? <></> :
@@ -142,9 +190,22 @@ export default function TradePopup(props) {
                                     <>
                                         {userInvent?.length == 0 ? <p className="no-item">You got no item in your inventory</p> : userInvent?.map(v => {
                                             const isSelected = userTrade.some(a => a._id === v._id);
-                                            const isDisabled = isSelected || v.status === 'in-trade';
+                                            let isDisabled;
+
+                                            if (selectedTrade) {
+                                                // check if this item is part of the current trade
+                                                const inCurrentTrade =
+                                                    selectedTrade.leftItems?.some(item => item._id === v._id) ||
+                                                    selectedTrade.rightItems?.some(item => item._id === v._id);
+
+                                                // Counter offer: disable if already selected OR not in current trade but in-trade/traded
+                                                isDisabled = isSelected || (!inCurrentTrade && (v.status === 'in-trade' || v.status === 'traded'));
+                                            } else {
+                                                // New offer: disable if already selected or in-trade/traded
+                                                isDisabled = isSelected || v.status === 'in-trade' || v.status === 'traded';
+                                            }
                                             return (
-                                                <div style={{ cursor: isDisabled ? 'default' : 'pointer', position: 'relative', pointerEvents: isDisabled ? 'none' : 'auto', userSelect: 'none' }} onClick={() => handleAddClick(v._id, 'user')}>
+                                                <div style={{ cursor: isDisabled ? 'default' : 'pointer', position: 'relative', pointerEvents: isDisabled ? 'none' : 'auto', userSelect: 'none' }} onClick={() => handleAddClick(v._id, 'user', v.estimate_value)}>
                                                     {isDisabled && <div className="selected-overlay"></div>}
                                                     <ProductCard pname={v.name} condition={v.item_condition} lookfor={v.looking_for} imgSize='150' fontSize1='16' fontSize2='14' fontSize3='13' mainImg={v.main_img} />
                                                 </div>
@@ -154,9 +215,22 @@ export default function TradePopup(props) {
                                     <>
                                         {otherInvent?.map(v => {
                                             const isSelected = otherTrade.some(a => a._id === v._id);
-                                            const isDisabled = isSelected || v.status === 'in-trade';
+                                            let isDisabled;
+
+                                            if (selectedTrade) {
+                                                // check if this item is part of the current trade
+                                                const inCurrentTrade =
+                                                    selectedTrade.leftItems?.some(item => item._id === v._id) ||
+                                                    selectedTrade.rightItems?.some(item => item._id === v._id);
+
+                                                // Counter offer: disable if already selected OR not in current trade but in-trade/traded
+                                                isDisabled = isSelected || (!inCurrentTrade && (v.status === 'in-trade' || v.status === 'traded'));
+                                            } else {
+                                                // New offer: disable if already selected or in-trade/traded
+                                                isDisabled = isSelected || v.status === 'in-trade' || v.status === 'traded';
+                                            }
                                             return (
-                                                <div style={{ cursor: isDisabled ? 'default' : 'pointer', position: 'relative', pointerEvents: isDisabled ? 'none' : 'auto', userSelect: 'none' }} onClick={() => handleAddClick(v._id, 'other')}>
+                                                <div style={{ cursor: isDisabled ? 'default' : 'pointer', position: 'relative', pointerEvents: isDisabled ? 'none' : 'auto', userSelect: 'none' }} onClick={() => handleAddClick(v._id, 'other', v.estimate_value)}>
                                                     {isDisabled && <div className="selected-overlay"></div>}
                                                     <ProductCard pname={v.name} condition={v.item_condition} lookfor={v.looking_for} imgSize='150' fontSize1='16' fontSize2='14' fontSize3='13' mainImg={v.main_img} />
                                                 </div>
@@ -193,30 +267,34 @@ export default function TradePopup(props) {
                         <div className="other-user-table">
                             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <img src="/favicon.png" alt="" style={{ width: '50px', border: '1px solid black', borderRadius: '50%' }} />
-                                <h3 style={{ fontSize: '20px' }}><span style={{ fontWeight: 500 }}>For </span>{otherName}'s</h3>
+                                {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px' }}>{selectedTrade?.user} <span style={{ fontWeight: 300 }}>offered</span></h3> :
+                                    <h3 style={{ fontSize: '20px' }}><span style={{ fontWeight: 300 }}>For </span>{selectedTrade ? selectedTrade?.user : otherName}'s</h3>}
                             </span>
                             <div className="their-stuff">
                                 {otherTrade == '' ? 'No Item Added Yet' :
                                     otherTrade?.map(v => {
                                         return (
-                                            <div style={{ cursor: 'pointer' }} onClick={(e) => handleRemoveClick(e, v._id, 'other')}>
+                                            <div style={{ cursor: selectedTrade && tradeType == 'incoming' ? 'default' : 'pointer' }} onClick={(e) => { if (!(selectedTrade && tradeType == 'incoming')) handleRemoveClick(e, v._id, 'other', v.estimate_value) }}>
                                                 <HorizontalCard pname={v.name} condition={v.item_condition} lookfor={v.looking_for} mainImg={v.main_img} imgSize='90' fontSize1='14' fontSize2='12' fontSize3='13' />
                                             </div>
                                         );
                                     })}
                             </div>
+                            <p className="estimate-value">{selectedTrade ? selectedTrade?.user : otherName} estimate item value: {otherEstimate}</p>
                         </div>
                         <span className="middle-section" style={{ position: 'relative', margin: '30px 0', display: 'block', width: '100%' }}>
                             <hr style={{ border: '1px solid var(--text-primary)' }} />
                             <img src={tradeIcon} alt="" />
                         </span>
-                        <div className="your-table">
-                            <h3 style={{ fontWeight: 300, fontSize: '20px' }}>You offered</h3>
+                        <div className="your-table" style={{ position: 'relative' }}>
+                            <p className="estimate-value" style={{ top: '-20px' }}>Your estimate item value: {userEstimate}</p>
+                            {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px', fontWeight: 300 }}>For your</h3> :
+                                <h3 style={{ fontSize: '20px', fontWeight: 300 }}>You offered</h3>}
                             <div className="your-stuff">
                                 {userTrade == '' ? "No Item Added Yet" :
                                     userTrade?.map(v => {
                                         return (
-                                            <div style={{ cursor: 'pointer', width: '230px', height: '90px' }} onClick={(e) => handleRemoveClick(e, v._id, 'user')}>
+                                            <div style={{ cursor: selectedTrade && tradeType == 'incoming' ? 'default' : 'pointer' }} onClick={(e) => { if (!(selectedTrade && tradeType == 'incoming')) { console.log('hello'); handleRemoveClick(e, v._id, 'user', v.estimate_value) } }}>
                                                 <HorizontalCard pname={v.name} condition={v.item_condition} lookfor={v.looking_for} mainImg={v.main_img} imgSize='90' fontSize1='14' fontSize2='12' fontSize3='13' />
                                             </div>
                                         );
@@ -224,11 +302,19 @@ export default function TradePopup(props) {
                             </div>
                         </div>
                         {tradeType == 'offer' ?
-                            <button className="do-offer" onClick={handleOfferClick}>Make Offer</button>
+                            <button className="do-offer" onClick={async () => {
+                                if (selectedTrade) {
+                                    //if theres selectedTrade(doing counter offer); update the old trade to countered status and send a new offer
+                                    await handleTradeUpdate(selectedTrade.tradeId, 'counter');
+                                    handleOfferClick();
+                                } else {
+                                    handleOfferClick();
+                                }
+                            }}>Make Offer</button>
                             :
                             <span style={{ display: 'flex', gap: '30px', justifyContent: 'center', margin: '0 auto' }}>
-                                <button className="accept-trade respond-btn">Accept Trade</button>
-                                <button className="decline-trade respond-btn">Decline Trade</button>
+                                <button className="accept-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'accept'); handleClose(); }}>Accept Trade</button>
+                                <button className="decline-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'decline'); handleClose(); }}>Decline Trade</button>
                             </span>
                         }
                         {tradeType == 'offer' ?

@@ -4,30 +4,43 @@ import './TradeCard.css'
 
 export default function TradeCard(props) {
     const {
+        tradeId,
         type,
         user,
+        userId,
+        userImg,
         leftItem,
         leftCount,
+        leftItems,
         rightItem,
         rightCount,
+        rightItems,
+        status,
+        updatedAt,
         tradePopupRef,
-        tradePopupContentRef
+        tradePopupContentRef,
+        handleTradeUpdate,
+        setSelectedTrade,
+        setIsPopup,
     } = props;
 
     const handleRespondClick = (e) => {
         e.stopPropagation();
+        setSelectedTrade({
+            tradeId, user, userId, leftItem, rightItem, leftItems, rightItems
+        })
         tradePopupRef.current.style.display = 'block'
         tradePopupContentRef.current.style.display = 'block';
         document.body.style.overflow = 'hidden';
+        setIsPopup(true);
     }
-
 
     return (
         <>
             <div className='trade-card-container' style={{ position: 'relative' }}>
                 <div className="trade-card">
                     <section className="left-side">
-                        <img src="/favicon.png" alt="" />
+                        <img src={userImg?.startsWith('http') ? userImg : `http://localhost:3000/${userImg}`} alt="" style={{ objectFit: 'contain', backgroundColor: 'white'}}/>
                         <div className="trade-detail">
                             <h2>{type == 'incoming' ? <>{user} <span style={{ fontWeight: 300 }}>offered</span></> : <><span style={{ fontWeight: 300 }}>For</span> {user}</>}</h2>
                             <HorizontalCard
@@ -52,27 +65,30 @@ export default function TradeCard(props) {
                             {rightCount > 1 && <p className="item-count">+ {rightCount - 1} more items</p>}
                         </div>
                     </section>
-                    <span className="decision">
-                        {type === 'incoming' ? (
-                            <>
-                                <p
-                                    onClick={handleRespondClick}
-                                    className="respond"
-                                    style={{ marginRight: '30px' }}
-                                >
-                                    Respond to Offer
-                                </p>
-                                <p className="decline">Decline Trade</p>
-                            </>
-                        ) : (
-                            <p className="cancel">Cancel Trade Offer</p>
-                        )}
-                    </span>
+                    {status == 'pending' &&
+                        <span className="decision">
+                            {type === 'incoming' ? (
+                                <>
+                                    <p
+                                        onClick={handleRespondClick}
+                                        className="respond"
+                                        style={{ marginRight: '30px' }}
+                                    >
+                                        Respond to Offer
+                                    </p>
+                                    <p className="decline" onClick={() => handleTradeUpdate(tradeId, 'decline')}>Decline Trade</p>
+                                </>
+                            ) : (
+                                <p className="cancel" onClick={() => handleTradeUpdate(tradeId, 'cancel')}>Cancel Trade Offer</p>
+                            )}
+                        </span>
+                    }
+                <p style={{position: 'absolute', bottom: '-10px', left: '0px', padding: 'inherit', zIndex: 1, color: status != 'pending' ? 'white' : 'black'}}>{new Date(updatedAt).toLocaleString('en-GB', {day: '2-digit', month: 'long', year: 'numeric'})}</p>
                 </div>
-                {/* {decide ?
+                {status != 'pending' ?
                     <div className="overlay" >
-                        <p>{decide}</p>
-                    </div> : <></>} */}
+                        <p>{status == 'cancelled' ? 'Trade Offer Cancelled' : status == "countered" ? 'Counter Offer Made' : status == 'accepted' ? 'Trade Accepted' : 'Trade Declined'}</p>
+                    </div> : <></>}
             </div>
         </>
     );

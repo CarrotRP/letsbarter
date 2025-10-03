@@ -7,7 +7,7 @@ const tradeController = require('../controllers/tradeController');
 router.get('/sent/:id', tradeController.get_sent_trade);
 
 //get received trade
-router.get('/received/:id', tradeController.get_receieved_trade);
+router.get('/received/:id', tradeController.get_received_trade);
 
 //send trade
 router.post('/offer', tradeController.send_trade);
@@ -16,6 +16,7 @@ router.post('/offer', tradeController.send_trade);
 router.get('/:id', tradeController.get_one_trade);
 
 //update trade
+router.patch('/:id', tradeController.update_trade);
 
 //delete trade (prob not)
 

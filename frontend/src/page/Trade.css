@@ -1,18 +1,34 @@
-.trade-page{
+.trade-page {
     padding: 120px;
 }
-.trade-page-content{
+
+.trade-page-content {
     display: grid;
     grid-template-columns: 200px 1fr;
     justify-content: space-between;
+    height: 1150px;
+    position: relative;
 }
-.trade-navi{
+
+.trade-navi {
     padding: 20px 0;
 }
-.trade-navi p{
+
+.trade-navi p {
     margin: 15px 0;
     cursor: pointer;
 }
-.trades{
+
+.trades {
     min-height: 210px;
+}
+
+.trade-page-navi {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    bottom: -70px;
+    left: 0;
+    gap: 20px;
 }

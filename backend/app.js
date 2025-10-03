@@ -46,7 +46,6 @@ passport.use(new LocalStrategy((email, password, done) => {
             if (await bcrypt.compare(password, data.password) == false) {
                 return done(null, false);
             }
-            console.log(data);
             return done(null, data);
         })
 }))
@@ -55,7 +54,6 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.client_secret,
     callbackURL: process.env.client_callback
 }, (accessToken, refreshToken, profile, done) => {
-    console.log(profile.photos?.[0]?.value);
     const email = profile.emails?.[0]?.value;
     const displayName = profile.displayName;
     const profile_img = profile.photos?.[0]?.value;
@@ -69,7 +67,6 @@ passport.use(new GoogleStrategy({
             }
 
             // 2. Create new user
-            console.log(email);
             const newUser = new User({
                 username: displayName,
                 email,
