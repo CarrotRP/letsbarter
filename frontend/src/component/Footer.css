@@ -18,6 +18,7 @@ footer{
     font-size: 20px;
     margin-bottom: 5px;
     user-select: none;
+    text-transform: uppercase;
 }
 .top img{
     margin: 0;
@@ -29,8 +30,8 @@ footer{
     color: var(--text-secondary);
     user-select: none;
 }
-.top svg{
-    
+.top .infos h4{
+    text-transform: uppercase;
 }
 .logo-desc a{
     line-height: 0;

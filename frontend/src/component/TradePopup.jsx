@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import close from '../assets/close.png'
 import tradeIcon from '../assets/trade.png';
 import './TradePopup.css'
+import { useTranslation } from "react-i18next";
 
 export default function TradePopup(props) {
     const {
         tradePopupRef, tradePopupContentRef, tradeType, setTradeType, currentTradePage, setCurrentTradePage,
         user, otherUserId, itemId, isLoading, isPopup, setIsPopup, otherName, handleTradeUpdate, selectedTrade
     } = props;
+    const {t} = useTranslation();
 
     //current user inventory
     const [userInvent, setUserInvent] = useState();
@@ -104,14 +106,10 @@ export default function TradePopup(props) {
             setUserTrade([])
             setUserEstimate(0);
             //in detail page, initial offering
-            console.log(selectedTrade)
             if (selectedTrade) {
-                console.log('select popup');
                 fetch(`http://localhost:3000/trade/${selectedTrade.tradeId}`)
                     .then(res => res.json())
                     .then(trade => {
-                        console.log('trade');
-                        console.log(trade)
 
                         //get the user inventories
                         fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
@@ -137,7 +135,6 @@ export default function TradePopup(props) {
                             })
                     });
             } else {
-                console.log('not selected')
                 fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
                     .then(res => res.json())
                     .then(data => {
@@ -149,10 +146,6 @@ export default function TradePopup(props) {
                     .then(data => {
                         setOtherTotalPage(data.count);
                         setOtherInvent(data.items);
-                        // if (!otherTrade.some(a => a._id == itemId)) {
-                        //     setOtherTrade(prev => [...prev, ...data.items.filter(item => item._id == itemId)]);
-                        //     setOtherEstimate(prev => prev + estimate);
-                        // }
                         const newItem = data.items.find(item => item._id == itemId);
                         setOtherTrade(newItem ? [newItem] : []);
                         setOtherEstimate(newItem ? newItem.estimate_value : 0);
@@ -167,28 +160,28 @@ export default function TradePopup(props) {
             <div className="popup-bg" ref={tradePopupRef}></div>
             <div className="trade-popup" ref={tradePopupContentRef}>
                 <span className="popup-head">
-                    <h1>{tradeType == 'offer' ? 'Offer Trade' : 'Respond to Trade'}</h1>
+                    <h1>{tradeType == 'offer' ? t('offer trade') : t('respond trade')}</h1>
                     <img src={close} alt="" onClick={handleClose} />
                 </span>
                 <div className="trade-popup-content">
                     <section className="item-selection">
                         <span className="user-inventory-nav">
-                            <h3 onClick={() => { setQuery(''); setCurrentTradePage('your') }} style={currentTradePage == 'your' ? null : unselectedStyle}>Your Inventory</h3>
-                            <h3 onClick={() => { setQuery(''); setCurrentTradePage('their') }} style={currentTradePage == 'their' ? null : unselectedStyle}>Their Inventory</h3>
+                            <h3 onClick={() => { setQuery(''); setCurrentTradePage('your') }} style={currentTradePage == 'your' ? null : unselectedStyle}>{t('your invent')}</h3>
+                            <h3 onClick={() => { setQuery(''); setCurrentTradePage('their') }} style={currentTradePage == 'their' ? null : unselectedStyle}>{t('their invent')}</h3>
                         </span>
                         <div className="user-inventory" style={{ position: 'relative', overflow: 'hidden' }}>
                             {tradeType == 'offer' ? <></> :
                                 <div className="bg-overlay">
-                                    <h2>Change Offer to adjust items</h2>
+                                    <h2>{t('change offer to')}</h2>
                                 </div>}
                             <span style={{ display: 'flex', alignItems: 'start' }}>
                                 <input className="search" type="text" placeholder="Search" value={query} onChange={e => setQuery(e.target.value)} />
-                                <button className='search-btn'>Search</button>
+                                <button className='search-btn'>{t('search')}</button>
                             </span>
                             <div className="item-display">
                                 {currentTradePage == 'your' ?
                                     <>
-                                        {userInvent?.length == 0 ? <p className="no-item">You got no item in your inventory</p> : userInvent?.map(v => {
+                                        {userInvent?.length == 0 ? <p className="no-item">{t('you got no item')}</p> : userInvent?.map(v => {
                                             const isSelected = userTrade.some(a => a._id === v._id);
                                             let isDisabled;
 
@@ -267,8 +260,8 @@ export default function TradePopup(props) {
                         <div className="other-user-table">
                             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <img src="/favicon.png" alt="" style={{ width: '50px', border: '1px solid black', borderRadius: '50%' }} />
-                                {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px' }}>{selectedTrade?.user} <span style={{ fontWeight: 300 }}>offered</span></h3> :
-                                    <h3 style={{ fontSize: '20px' }}><span style={{ fontWeight: 300 }}>For </span>{selectedTrade ? selectedTrade?.user : otherName}'s</h3>}
+                                {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px' }}>{selectedTrade?.user} <span style={{ fontWeight: 300 }}>{t('offer')}</span></h3> :
+                                    <h3 style={{ fontSize: '20px' }}><span style={{ fontWeight: 300 }}>{t('for')} </span>{selectedTrade ? selectedTrade?.user : otherName}'s</h3>}
                             </span>
                             <div className="their-stuff">
                                 {otherTrade == '' ? 'No Item Added Yet' :
@@ -280,16 +273,16 @@ export default function TradePopup(props) {
                                         );
                                     })}
                             </div>
-                            <p className="estimate-value">{selectedTrade ? selectedTrade?.user : otherName} estimate item value: {otherEstimate}</p>
+                            <p className="estimate-value">{t('their estimate', {name: selectedTrade ? selectedTrade?.user : otherName})} {otherEstimate}</p>
                         </div>
                         <span className="middle-section" style={{ position: 'relative', margin: '30px 0', display: 'block', width: '100%' }}>
                             <hr style={{ border: '1px solid var(--text-primary)' }} />
                             <img src={tradeIcon} alt="" />
                         </span>
                         <div className="your-table" style={{ position: 'relative' }}>
-                            <p className="estimate-value" style={{ top: '-20px' }}>Your estimate item value: {userEstimate}</p>
-                            {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px', fontWeight: 300 }}>For your</h3> :
-                                <h3 style={{ fontSize: '20px', fontWeight: 300 }}>You offered</h3>}
+                            <p className="estimate-value" style={{ top: '-20px' }}>{t('your estimate')} {userEstimate}</p>
+                            {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px', fontWeight: 300 }}>{t('for your')}</h3> :
+                                <h3 style={{ fontSize: '20px', fontWeight: 300 }}>{t('you offered')}</h3>}
                             <div className="your-stuff">
                                 {userTrade == '' ? "No Item Added Yet" :
                                     userTrade?.map(v => {
@@ -310,16 +303,16 @@ export default function TradePopup(props) {
                                 } else {
                                     handleOfferClick();
                                 }
-                            }}>Make Offer</button>
+                            }}>{t('make offer')}</button>
                             :
                             <span style={{ display: 'flex', gap: '30px', justifyContent: 'center', margin: '0 auto' }}>
-                                <button className="accept-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'accept'); handleClose(); }}>Accept Trade</button>
-                                <button className="decline-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'decline'); handleClose(); }}>Decline Trade</button>
+                                <button className="accept-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'accept'); handleClose(); }}>{t('accept trade')}</button>
+                                <button className="decline-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'decline'); handleClose(); }}>{t('decline trade')}</button>
                             </span>
                         }
                         {tradeType == 'offer' ?
-                            <p className='other-option' onClick={handleClose}>Cancel</p>
-                            : <p className="other-option" onClick={() => setTradeType('offer')}>Change Offer</p>}
+                            <p className='other-option' onClick={handleClose}>{t('cancel')}</p>
+                            : <p className="other-option" onClick={() => setTradeType('offer')}>{t('change offer')}</p>}
                     </section>
                 </div>
             </div>

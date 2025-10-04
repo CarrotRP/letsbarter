@@ -25,6 +25,7 @@ header #search {
     /* text-indent: 10px; */
     outline: none;
     width: 540px;
+    background-color: white;
 }
 
 header #search-btn {

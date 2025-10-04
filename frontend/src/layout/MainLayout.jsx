@@ -4,7 +4,8 @@ import { Outlet } from "react-router";
 import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 
-export default function MainLayout() {
+export default function MainLayout(props) {
+    const { language, setLanguage} = props;
     const chatRef = useRef();
     const filterRef = useRef();
     const langRef = useRef();
@@ -62,7 +63,7 @@ export default function MainLayout() {
         <>
             <Header chatRef={chatRef} user={user} />
             <Outlet context={{ chatRef, user, dispatch, isLoading, filterRef, handleFilterDropdown }} />
-            <Footer langRef={langRef}/>
+            <Footer langRef={langRef} language={language} setLanguage={setLanguage}/>
         </>
     );
 }

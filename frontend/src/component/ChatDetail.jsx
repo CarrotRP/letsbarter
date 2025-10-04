@@ -1,9 +1,11 @@
 import attachment from '../assets/attachment.png';
 import send from '../assets/send.png';
 import back from '../assets/back.png';
+import { useTranslation } from 'react-i18next';
 
 export default function ChatDetail(props) {
     const {chat, setChat} = props;
+    const {t} = useTranslation();
 
     const handleBackClick = (e) => {
         e.stopPropagation();
@@ -25,7 +27,7 @@ export default function ChatDetail(props) {
             </div>
             <div className="chat-input">
                 <img src={attachment} alt="" />
-                <input type="text" placeholder='Message' />
+                <input type="text" placeholder={t('message')} />
                 <img src={send} alt="" />
             </div>
         </>

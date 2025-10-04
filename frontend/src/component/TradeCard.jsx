@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import tradeIcon from '../assets/trade.png';
 import HorizontalCard from '../component/HorizontalCard';
 import './TradeCard.css'
@@ -23,6 +24,7 @@ export default function TradeCard(props) {
         setSelectedTrade,
         setIsPopup,
     } = props;
+    const {t} = useTranslation();
 
     const handleRespondClick = (e) => {
         e.stopPropagation();
@@ -42,27 +44,27 @@ export default function TradeCard(props) {
                     <section className="left-side">
                         <img src={userImg?.startsWith('http') ? userImg : `http://localhost:3000/${userImg}`} alt="" style={{ objectFit: 'contain', backgroundColor: 'white'}}/>
                         <div className="trade-detail">
-                            <h2>{type == 'incoming' ? <>{user} <span style={{ fontWeight: 300 }}>offered</span></> : <><span style={{ fontWeight: 300 }}>For</span> {user}</>}</h2>
+                            <h2>{type == 'incoming' ? <>{user} <span style={{ fontWeight: 300 }}>{t('offer')}</span></> : <><span style={{ fontWeight: 300 }}>{t('for')}</span> {user}</>}</h2>
                             <HorizontalCard
                                 pname={leftItem?.name}
                                 condition={leftItem?.item_condition}
                                 lookfor={leftItem?.looking_for}
                                 mainImg={leftItem?.main_img}
                             />
-                            {leftCount > 1 && <p className="item-count">+ {leftCount - 1} more items</p>}
+                            {leftCount > 1 && <p className="item-count">{t('more items', {item: leftCount - 1})}</p>}
                         </div>
                     </section>
                     <img src={tradeIcon} alt="" style={{ width: '35px', height: '25px', alignSelf: 'center' }} />
                     <section className="right-side">
                         <div className="trade-detail">
-                            <h2 style={{ fontWeight: 300 }}>{type == 'incoming' ? "For your" : "You offered"}</h2>
+                            <h2 style={{ fontWeight: 300 }}>{type == 'incoming' ? t('for your') : t('you offered')}</h2>
                             <HorizontalCard
                                 pname={rightItem?.name}
                                 condition={rightItem?.item_condition}
                                 lookfor={rightItem?.looking_for}
                                 mainImg={rightItem?.main_img}
                             />
-                            {rightCount > 1 && <p className="item-count">+ {rightCount - 1} more items</p>}
+                            {rightCount > 1 && <p className="item-count">{t('more items', {item: rightCount - 1})}</p>}
                         </div>
                     </section>
                     {status == 'pending' &&
@@ -74,12 +76,12 @@ export default function TradeCard(props) {
                                         className="respond"
                                         style={{ marginRight: '30px' }}
                                     >
-                                        Respond to Offer
+                                        {t('respond offer')}
                                     </p>
-                                    <p className="decline" onClick={() => handleTradeUpdate(tradeId, 'decline')}>Decline Trade</p>
+                                    <p className="decline" onClick={() => handleTradeUpdate(tradeId, 'decline')}>{t('decline trade')}</p>
                                 </>
                             ) : (
-                                <p className="cancel" onClick={() => handleTradeUpdate(tradeId, 'cancel')}>Cancel Trade Offer</p>
+                                <p className="cancel" onClick={() => handleTradeUpdate(tradeId, 'cancel')}>{t('cancel trade')}</p>
                             )}
                         </span>
                     }
@@ -87,7 +89,7 @@ export default function TradeCard(props) {
                 </div>
                 {status != 'pending' ?
                     <div className="overlay" >
-                        <p>{status == 'cancelled' ? 'Trade Offer Cancelled' : status == "countered" ? 'Counter Offer Made' : status == 'accepted' ? 'Trade Accepted' : 'Trade Declined'}</p>
+                        <p>{status == 'cancelled' ? t('trade cancelled') : status == "countered" ? t('trade countered') : status == 'accepted' ? t('trade accepted') : t('trade declined')}</p>
                     </div> : <></>}
             </div>
         </>

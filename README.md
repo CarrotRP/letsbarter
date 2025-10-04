@@ -30,9 +30,9 @@ To help lower middle class people such as college students, small business owner
 - [x] pagination
 - [x] estimate value in trade
 - [x] trading system
-- [ ] chatting
-- [ ] khmer language
+- [x] khmer language
 - [ ] user review
+- [ ] chatting
 
 ## Screenshots
 not yet

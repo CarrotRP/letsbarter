@@ -5,8 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import Toaster from "../component/Toaster";
 import './Detail.css';
+import { useTranslation } from "react-i18next";
 
 export default function Detail() {
+    const {t} = useTranslation();
     const { id } = useParams();
     const { user, isLoading } = useOutletContext();
     const navigate = useNavigate();
@@ -135,28 +137,28 @@ export default function Detail() {
                 {!isPageLoading &&
                     <section className="product-info">
                         <h1>{itemDetail?.name}</h1>
-                        <p><b style={{ color: 'var(--primary)' }}>Looking for</b></p>
+                        <p><b style={{ color: 'var(--primary)' }}>{t('looking')}</b></p>
                         <p style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--secondary)' }}>{itemDetail?.looking_for}</p>
                         <p style={{ margin: '15px 0 10px' }}>{itemDetail?.description}</p>
                         <hr style={{ border: '1px solid rgba(163, 68, 7, 0.3)' }} />
                         <div className="other-info">
-                            <p>Orignal price</p>
+                            <p>{t('original price')}</p>
                             <p>{itemDetail?.original_price}$</p>
-                            <p>Brand</p>
+                            <p>{t('brand')}</p>
                             <p>{itemDetail?.brand}</p>
-                            <p>Conditions</p>
+                            <p>{t('condition')}</p>
                             <p>{itemDetail?.item_condition} / 10</p>
-                            <p>Bought on</p>
+                            <p>{t('bought on')}</p>
                             <p>{`${new Date(itemDetail?.bought_on).getDate().toString().padStart(2, '0')}/${new Date(itemDetail?.bought_on).toLocaleString('en-GB', { month: 'long' })}/${new Date(itemDetail?.bought_on).getFullYear()}`}</p>
                         </div>
 
                         {user?._id == itemDetail?.owner_id._id ?
                             <span style={{ display: 'flex', gap: '20px' }}>
                                 {itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ?
-                                    <button style={{cursor: 'disable', pointerEvents: 'none', backgroundColor: 'var(--darken-background)', color: 'var(--text-secondary)'}}>{itemDetail?.status == 'in-trade' ? 'In Trade' : 'Traded'}</button> :
+                                    <button style={{cursor: 'disable', pointerEvents: 'none', backgroundColor: 'var(--darken-background)', color: 'var(--text-secondary)'}}>{itemDetail?.status == 'in-trade' ? t('in trade') : t('traded')}</button> :
                                     <>
-                                        <button onClick={() => navigate(`/edit/${itemDetail?._id}`)} style={{}}>Edit</button>
-                                        <button onClick={handleItemDelete} style={{ backgroundColor: 'transparent', border: '1px solid var(--text-primary)', color: 'var(--text-primary)' }}>Delete</button>
+                                        <button onClick={() => navigate(`/edit/${itemDetail?._id}`)} style={{}}>{t('edit')}</button>
+                                        <button onClick={handleItemDelete} style={{ backgroundColor: 'transparent', border: '1px solid var(--text-primary)', color: 'var(--text-primary)' }}>{t('delete')}</button>
                                     </>
                                 }
                             </span> :
@@ -172,14 +174,14 @@ export default function Detail() {
                                 style={{ backgroundColor: itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ? 'var(--darken-background)' : 'var(--secondary)', 
                                 cursor: itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ? 'not-allowed' : 'pointer', 
                                 color: itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded' ? 'var(--text-secondary)' : 'white' }} 
-                                disabled={itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded'}> {itemDetail?.status == 'in-trade' ? 'In Trade' : itemDetail?.status == 'traded' ? 'Traded' : 'Offer Trade'}</button>
+                                disabled={itemDetail?.status == 'in-trade' || itemDetail?.status == 'traded'}> {itemDetail?.status == 'in-trade' ? t('in trade') : itemDetail?.status == 'traded' ? t('traded') : t('offer trade')}</button>
                             </>}
                     </section>}
             </section>
             {user?._id !== itemDetail?.owner_id._id &&
                 <>
-                    <HomeComponent sectionName={`Other items in ${itemDetail?.owner_id.username}'s inventory`} items={otherItem} limit={limit} setLimit={setLimit} itemCount={itemCount} />
-                    {!mightLike || mightCount !== 0 ? <HomeComponent sectionName="You might also like" items={mightLike} limit={mightLimit} setLimit={setMightLimit} itemCount={mightCount} /> : <></>}
+                    {itemCount > 0 && <HomeComponent sectionName={t('other items', {name: itemDetail?.owner_id.username})} items={otherItem} limit={limit} setLimit={setLimit} itemCount={itemCount} />}
+                    {!mightLike || mightCount > 0 ? <HomeComponent sectionName={t('might like')} items={mightLike} limit={mightLimit} setLimit={setMightLimit} itemCount={mightCount} /> : <></>}
                     <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} user={user} otherUserId={itemDetail?.owner_id._id} itemId={id} isLoading={isLoading} isPopup={isPopup} setIsPopup={setIsPopup} otherName={itemDetail?.owner_id.username} />
                 </>
             }

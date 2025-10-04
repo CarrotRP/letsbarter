@@ -45,8 +45,8 @@ export default function Home() {
     return (
         <main className="homepage">
             <CategorySection categoryList={categoryList}/>
-            <HomeComponent sectionName="Latest Items" items={items} limit={limit} setLimit={setLimit} itemCount={itemCount}/>
-            <HomeComponent sectionName="Items in Good Shape" items={goodItems} limit={goodLimit} setLimit={setGoodLimit} itemCount={goodCount}/>
+            <HomeComponent sectionName="latest" items={items} limit={limit} setLimit={setLimit} itemCount={itemCount}/>
+            <HomeComponent sectionName="item good" items={goodItems} limit={goodLimit} setLimit={setGoodLimit} itemCount={goodCount}/>
         </main>
     );
 }

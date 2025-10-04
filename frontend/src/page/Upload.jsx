@@ -4,10 +4,12 @@ import './Upload.css';
 import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate, useParams } from 'react-router';
 import Dropdown from '../component/Dropdown';
+import { useTranslation } from 'react-i18next';
 
 export default function Upload() {
     const { id } = useParams();
     const { user } = useOutletContext();
+    const {t} = useTranslation();
     const navigate = useNavigate();
 
     //form detail
@@ -173,10 +175,11 @@ export default function Upload() {
 
     return (
         <main className="upload">
-            <h1>Item upload</h1>
+            <h1>{t('item upload')}</h1>
             <div className="item-inputs">
                 <div className="item-images">
-                    <h3>Main Image</h3>
+                    <h3>{t('main image')}</h3>
+                    <p style={{color: 'var(--primary)'}}>{t('1 main')}</p>
                     {/* main image will display here */}
                     {mainImg &&
                         <div style={{ position: 'relative', width: '150px' }}>
@@ -199,13 +202,14 @@ export default function Upload() {
                                 x
                             </button>
                         </div>}
-                    <label htmlFor="choose-main" className='choose-file' >Choose File</label>
+                    <label htmlFor="choose-main" className='choose-file' >{t('choose file')}</label>
                     <input type='file' id="choose-main" accept='image/*' onChange={handleMainImgChange}></input>
-                    <h3>Images</h3>
+                    <h3>{t('images')}</h3>
                     <div className="images">
+                        <p style={{color: 'var(--primary)', position: 'absolute'}}>{t('4 images')}</p>
                         {/* other images will display here */}
                         {images.map((src, i) =>
-                            <div style={{ position: 'relative' }}>
+                            <div style={{ position: 'relative', marginTop: '20px'}}>
                                 <img key={i} src={src.preview} alt="" />
                                 <button
                                     type="button"
@@ -227,20 +231,20 @@ export default function Upload() {
                             </div>
                         )}
                     </div>
-                    <label htmlFor="choose-images" className='choose-file'>Choose File</label>
+                    <label htmlFor="choose-images" className='choose-file'>{t('choose file')}</label>
                     <input type='file' id="choose-images" multiple accept='image/*' onChange={handleImgChange}></input>
                 </div>
                 <div className="item-infos">
-                    <h3>Detail</h3>
-                    <DetailInput type="text" data='name' placeholder='Name' setter={setName} getter={name} />
+                    <h3>{t('detail')}</h3>
+                    <DetailInput type="text" data='name' placeholder={t('main')} setter={setName} getter={name} />
                     <Dropdown getter={category} setter={setCategory} categoryList={categoryList}></Dropdown>
-                    <AreaInput data="description" label="Description" setter={setDescription} getter={description} />
-                    <DetailInput type="text" data='brand' placeholder='Brand' setter={setBrand} getter={brand} />
-                    <DetailInput type="number" data='price' placeholder='Original Price' setter={setOgPrice} getter={ogPrice} p="$" />
-                    <DetailInput type="date" data='boughtOn' placeholder='Bought on' setter={setBoughtOn} getter={boughtOn} />
-                    <DetailInput type="number" data='condition' placeholder='Condition' setter={setCondition} getter={condition} p="/ 10" />
-                    <AreaInput data="looking" label="Looking for (Category or specific)" setter={setLooking} getter={looking} color1='var(--primary)' color2='var(--secondary)' />
-                    <button id='submit-btn' onClick={handleUploadClick}>{id ? "Update" : "Upload"}</button>
+                    <AreaInput data="description" label={t('description')} setter={setDescription} getter={description} />
+                    <DetailInput type="text" data='brand' placeholder={t('brand')} setter={setBrand} getter={brand} />
+                    <DetailInput type="number" data='price' placeholder={t('original price')} setter={setOgPrice} getter={ogPrice} p="$" />
+                    <DetailInput type="date" data='boughtOn' placeholder={t('bought on')} setter={setBoughtOn} getter={boughtOn} />
+                    <DetailInput type="number" data='condition' placeholder={t('condition')} setter={setCondition} getter={condition} p="/ 10" />
+                    <AreaInput data="looking" label={t('looking for')} setter={setLooking} getter={looking} color1='var(--primary)' color2='var(--secondary)' />
+                    <button id='submit-btn' onClick={handleUploadClick}>{id ? t('update') : t('upload')}</button>
                 </div>
             </div>
         </main>

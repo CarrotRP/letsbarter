@@ -5,6 +5,7 @@ import FormComponent from "../component/FormComponent";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { UserContext } from "../context/UserContext";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
     const [isVisible, setIsVisible] = useState(false);
@@ -12,6 +13,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const {user, dispatch} = useContext(UserContext);
+    const {t} = useTranslation();
 
     const handleEyeClick = () => {
         setIsVisible(!isVisible);
@@ -37,18 +39,18 @@ export default function Login() {
     return (
         <>
             <section className="form-input">
-                <FormComponent htmlFor="email" label="Email" type="email" placeholder="Enter your email" value={email} setter={setEmail}/>
-                <FormComponent htmlFor="password" label="Password" type={isVisible ? 'text' : 'password'} placeholder="Enter your password" value={password} setter={setPassword}/>
+                <FormComponent htmlFor="email" label={t('email')} type="email" placeholder={t('enter email')} value={email} setter={setEmail}/>
+                <FormComponent htmlFor="password" label={t('password')} type={isVisible ? 'text' : 'password'} placeholder={t('enter password')} value={password} setter={setPassword}/>
                 <img onClick={handleEyeClick} src={isVisible ? eyeIcon : eyeCloseIcon} alt="" className="eyeIcon" style={{ cursor: 'pointer', width: '20px', position: 'absolute', bottom: '10px', right: '10px' }} />
             </section>
             <span className="options">
                 <span className="remember">
                     <input type="checkbox" id="rememberMe" />
-                    <label htmlFor="rememberMe" style={{ fontSize: '14px' }}>Remember me</label>
+                    <label htmlFor="rememberMe" style={{ fontSize: '14px' }}>{t('remember')}</label>
                 </span>
-                <a href="" style={{ fontSize: '14px' }}>Forgot Password</a>
+                <a href="" style={{ fontSize: '14px' }}>{t('forget')}</a>
             </span>
-            <button className="submit-btn" onClick={handleLoginClick}>Login</button>
+            <button className="submit-btn" onClick={handleLoginClick}>{t('login')}</button>
         </>
     );
 }

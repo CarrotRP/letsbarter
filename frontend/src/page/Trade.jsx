@@ -3,9 +3,11 @@ import TradeCard from '../component/TradeCard';
 import TradePopup from '../component/TradePopup';
 import './Trade.css';
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function Trade() {
     const { user } = useOutletContext();
+    const {t} = useTranslation();
     const [currentPage, setCurrentPage] = useState("Incoming");
     const tradePopupRef = useRef();
     const tradePopupContentRef = useRef();
@@ -106,11 +108,11 @@ export default function Trade() {
 
     return (
         <main className="trade-page">
-            <h1 style={{ fontSize: '36px', color: 'var(--text-primary)' }}>My Trade</h1>
+            <h1 style={{ fontSize: '36px', color: 'var(--text-primary)' }}>{t('my trade')}</h1>
             <div className="trade-page-content">
                 <div className="trade-navi">
-                    <p onClick={() => { setCurrentPage("Incoming"); setPage(1) }} style={{ fontWeight: currentPage == 'Incoming' ? 'bold' : 300, userSelect: 'none' }}>Incoming Offer {currentPage == 'Incoming' ? '>' : ''}</p>
-                    <p onClick={() => { setCurrentPage("Sent"); setPage(1) }} style={{ fontWeight: currentPage == 'Sent' ? 'bold' : 300, userSelect: 'none' }}>Sent Offer {currentPage == 'Sent' ? '>' : ''}</p>
+                    <p onClick={() => { setCurrentPage("Incoming"); setPage(1) }} style={{ fontWeight: currentPage == 'Incoming' ? 'bold' : 300, userSelect: 'none' }}>{t('incoming')} {currentPage == 'Incoming' ? '>' : ''}</p>
+                    <p onClick={() => { setCurrentPage("Sent"); setPage(1) }} style={{ fontWeight: currentPage == 'Sent' ? 'bold' : 300, userSelect: 'none' }}>{t('sent')} {currentPage == 'Sent' ? '>' : ''}</p>
                 </div>
                 <div className="trades">
                     {currentPage === 'Incoming'

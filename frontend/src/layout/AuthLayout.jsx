@@ -4,10 +4,12 @@ import TextLogo from "../component/TextLogo";
 import "./AuthLayout.css";
 import googleIcon from "../assets/google.png";
 import { useEffect } from "react";
+import { useTranslation, Trans } from "react-i18next";
 
 export default function AuthLayout() {
     const location = useLocation();
     const navigate = useNavigate();
+    const {t} = useTranslation();
 
     const headTextStyle = {
         fontSize: '48px',
@@ -55,14 +57,14 @@ export default function AuthLayout() {
                 </Link>
                 <section className="form">
                     <p style={headTextStyle}>
-                        {location.pathname == '/login' ? "Welcome Back" : "Create an Account"}
+                        {location.pathname == '/login' ? t('welcome') : t('create account')}
                     </p>
                     <Outlet />
-                    <button className="sign-with-google" onClick={handleGoogleClick}><img src={googleIcon} alt="" className="googleIcon" style={{ width: '24px' }} />Sign in with Google</button>
+                    <button className="sign-with-google" onClick={handleGoogleClick}><img src={googleIcon} alt="" className="googleIcon" style={{ width: '24px' }} />{t('google sign')}</button>
                 </section>
                 {location.pathname == "/login" ?
-                    <Link to="/signup">Don't have an account? <b>Sign Up</b></Link> :
-                    <Link to="/login">Have an account? <b>Sign In</b></Link>
+                    <Link to="/signup"><Trans i18nKey='no account' components={{bold: <b></b>}}/></Link> :
+                    <Link to="/login"><Trans i18nKey='have account' components={{bold: <b></b>}}/></Link>
                 }
             </section>
         </main>

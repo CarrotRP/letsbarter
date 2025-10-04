@@ -6,6 +6,7 @@ import './Header.css';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 import Chat from './Chat';
+import { useTranslation } from 'react-i18next';
 
 export default function Header(props) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -14,7 +15,7 @@ export default function Header(props) {
     const query = searchParams.get("query");
     const [value, setValue] = useState(query || ""); //search value
     const { chatRef, user } = props;
-    // const 
+    const {t} = useTranslation();
 
     // todo: make this works properly(navigate to search page if not on search page and search the query)
     const handleSearch = () => {
@@ -34,21 +35,21 @@ export default function Header(props) {
         <header>
             <Link to="/home"><TextLogo /></Link>
             <span>
-                <input type="text" id='search' placeholder='Books, Category...' value={value}  onChange={(e) => setValue(e.target.value)} />
-                <button id='search-btn' onClick={handleSearch}>Search</button>
+                <input type="text" id='search' placeholder={t('search place')} value={value}  onChange={(e) => setValue(e.target.value)} />
+                <button id='search-btn' onClick={handleSearch}>{t('search')}</button>
             </span>
             <span className="right-head">
                 {user ?
                     <>
                         <Link to='/add' style={{ height: '27px' }}><img src={create} alt="" style={{ width: '27px' }} /></Link>
-                        <Link to='/trade' id='trade'><img src={trade} alt="" style={{ width: '24px', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(353deg) brightness(102%) contrast(105%)' }} />My Trade</Link>
+                        <Link to='/trade' id='trade'><img src={trade} alt="" style={{ width: '24px', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(353deg) brightness(102%) contrast(105%)' }} />{t('my trade')}</Link>
                         <button id='chat' onClick={handleChatClick}><img src={chat} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
                         <Link to='/profile'><img src={user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`} alt="" style={{ width: '70px', height: '70px', border: '1px solid black', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white'}} /></Link>
                     </>
                     :
                     <>
-                        <Link to='/signup'><button className='signup auth'>SIGN UP</button></Link>
-                        <Link to='/login'><button className='login auth'>LOGIN</button></Link>
+                        <Link to='/signup'><button className='signup auth'>{t('signup')}</button></Link>
+                        <Link to='/login'><button className='login auth'>{t('login')}</button></Link>
                     </>
                 }
                 <Chat chatRef={chatRef} />

@@ -4,6 +4,7 @@ import ProductCard from '../component/ProductCard';
 import './Search.css';
 import { useEffect, useState } from 'react';
 import Filter from '../component/Filter';
+import { useTranslation } from 'react-i18next';
 
 export default function Search() {
     const [searchParams] = useSearchParams();
@@ -13,6 +14,7 @@ export default function Search() {
     const query = searchParams.get('query');
     const [filter, setFilter] = useState({ condition: null, sortOpt: null });
     const { filterRef, handleFilterDropdown } = useOutletContext();
+    const {t} = useTranslation();
 
     useEffect(() => {
         if (query || filter) {
@@ -43,10 +45,10 @@ export default function Search() {
     return (
         <main className="search-page">
             <span className='title'>
-                <h1>Search for: {query}</h1>
+                <h1>{t('search for', {search: query})}</h1>
                 <span className="filter" onClick={handleFilterDropdown}>
                     <img src={filterIcon} alt="" style={{ width: '30px' }} />
-                    <h3>Filter</h3>
+                    <h3>{t('filter')}</h3>
                 </span>
                 <Filter filterRef={filterRef} filter={filter} setFilter={setFilter} />
             </span>

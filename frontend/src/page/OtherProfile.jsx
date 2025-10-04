@@ -10,9 +10,11 @@ import { ToastContainer, toast, Slide } from 'react-toastify';
 import ReviewCard from '../component/ReviewCard';
 import Report from '../component/Report';
 import Toaster from '../component/Toaster';
+import { useTranslation } from 'react-i18next';
 
 export default function OtherProfile() {
     const { id } = useParams();
+    const {t} = useTranslation();
     const [currentPage, setCurrentPage] = useState('inventory');
     const { chatRef, user } = useOutletContext();
     const reportBgRef = useRef();
@@ -110,22 +112,22 @@ export default function OtherProfile() {
                     </span>
                 </span>
                 <span className="buttons">
-                    <button onClick={handleMessageClick}><img src={message} alt="" />Message</button>
-                    <button onClick={handleReportClick}><img src={flag} alt="" />Report</button>
-                    <button>Review</button>
+                    <button onClick={handleMessageClick}><img src={message} alt="" />{t('message')}</button>
+                    <button onClick={handleReportClick}><img src={flag} alt="" />{t('report')}</button>
+                    <button>{t('review')}</button>
                 </span>
             </div>
             <section className="other-profile-nav" style={{ display: 'flex', alignItems: 'center', gap: '50px', color: 'var(--text-primary)' }}>
                 <span className='other-inventory-nav' onClick={() => setCurrentPage('inventory')} style={currentPage == 'inventory' ? selectedTxtStyle : null}>
                     <img src={inventory} alt="" style={currentPage == 'inventory' ? null : unselectedImgStyle} />
-                    <p>Inventory</p>
+                    <p>{t('inventory')}</p>
                 </span>
-                <p className='other-review-nav' onClick={() => setCurrentPage('review')} style={currentPage == 'review' ? selectedTxtStyle : null}>・Review</p>
+                <p className='other-review-nav' onClick={() => setCurrentPage('review')} style={currentPage == 'review' ? selectedTxtStyle : null}>・{t('review')}</p>
             </section>
             <section className="other-content">
                 {currentPage == 'inventory' ?
                     <div className="other-inventory">
-                        {item.map(v => {
+                        {item.length == 0 ? <p style={{ position: 'absolute' }}>{t('they got no item', {name: otherUser?.username})}</p> : item.map(v => {
                             return (
                                 <Link to={`/product/${v._id}`} style={{ color: 'var(--text-secondary)' }} key={v.id}>
                                     <ProductCard pname={v.name} condition={v.condition} lookfor={v.looking_for} mainImg={v.main_img} />

@@ -25,13 +25,12 @@ const get_sent_trade = (req, res) => {
                 .skip(skip)
                 .limit(limit)
                 .then(result => {
-                    const statusOrder = ["pending", "countered", "accepted", "declined", "cancelled"];
 
                     result.sort((a, b) => {
-                        const statusDiff = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
-                        if (statusDiff !== 0) return statusDiff;
+                        if (a.status === "pending" && b.status !== "pending") return -1; // a goes before b
+                        if (a.status !== "pending" && b.status === "pending") return 1;  // b goes before a
                         return 0;
-                    })
+                    });
                     const formatted = result.map(r => ({
                         _id: r._id,
                         senderFirstItem: r.senderItems[0],
@@ -46,7 +45,7 @@ const get_sent_trade = (req, res) => {
                         status: r.status,
                         updatedAt: r.updatedAt
                     }))
-                    res.json({totalPage, formatted})
+                    res.json({ totalPage, formatted })
                 });
         })
 }
@@ -59,7 +58,7 @@ const get_received_trade = (req, res) => {
     let totalPage = 0;
     const skip = (page - 1) * limit;
 
-    Trade.countDocuments({ receiverId: id})
+    Trade.countDocuments({ receiverId: id })
         .then(count => {
             totalPage = Math.ceil(count / limit);
             return Trade.find({ receiverId: id })
@@ -75,13 +74,12 @@ const get_received_trade = (req, res) => {
                 .skip(skip)
                 .limit(limit)
                 .then(result => {
-                    const statusOrder = ["pending", "countered", "accepted", "declined", "cancelled"];
-        
+
                     result.sort((a, b) => {
-                        const statusDiff = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
-                        if (statusDiff !== 0) return statusDiff;
+                        if (a.status === "pending" && b.status !== "pending") return -1; // a goes before b
+                        if (a.status !== "pending" && b.status === "pending") return 1;  // b goes before a
                         return 0;
-                    })
+                    });
                     const formatted = result.map(r => ({
                         _id: r._id,
                         senderId: r.senderId,
@@ -96,7 +94,7 @@ const get_received_trade = (req, res) => {
                         status: r.status,
                         updatedAt: r.updatedAt
                     }))
-                    res.json({totalPage, formatted})
+                    res.json({ totalPage, formatted })
                 });
         })
 }
@@ -109,7 +107,7 @@ const get_one_trade = (req, res) => {
 }
 
 const send_trade = (req, res) => {
-    const { senderItems, receiverItems, senderId, receiverId} = req.body;
+    const { senderItems, receiverItems, senderId, receiverId } = req.body;
 
     console.log("Sending trade...");
     console.log("Sender ID:", senderId, "Receiver ID:", receiverId);
@@ -148,7 +146,7 @@ const update_trade = (req, res) => {
                     { _id: { $in: allItems } },
                     { $set: { status: 'available' } }
                 ).then(() => res.json(result));
-            } else if(status == 'accepted'){
+            } else if (status == 'accepted') {
                 console.log("Marking items as traded...");
                 const allItems = [...result.senderItems, ...result.receiverItems];
                 return Item.updateMany(
