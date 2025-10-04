@@ -156,6 +156,9 @@
   "other": "ផ្សេងទៀត",
   "submit": "ដាក់ស្នើ",
   "review": "ពិនិត្យ",
+  "reviewing": "កំពុងពិនិត្យ {{user}}",
+  "comment": "មតិ",
+  "share": "ចែករំលែកបទពិសោធន័របស់អ្នកអំពី {{user}}",
 
   "category name": "ប្រភេទ៖ {{category}}",
   "filter": "ចម្រាញ់",

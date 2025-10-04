@@ -1,0 +1,65 @@
+.review-popup{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    z-index: 1;
+    user-select: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 100ms, pointer-events 100ms;
+}
+.review-popup-active{
+    opacity: 1;
+    pointer-events: all;
+}
+.review-popup-content{
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px
+}
+.review-popup-content span{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.stars{
+    margin: 30px 0;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+.stars img{
+    cursor: pointer;
+    width: 30px;
+    filter: invert(90%) sepia(8%) saturate(6%) hue-rotate(339deg) brightness(74%) contrast(77%);
+}
+.checked{
+    filter: invert(59%) sepia(27%) saturate(359%) hue-rotate(43deg) brightness(98%) contrast(93%);
+}
+.cmts{
+    display: flex;
+    flex-direction: column;
+}
+.cmts textarea{
+    border-radius: 5px;
+    resize: none;
+    border: 1px solid black;
+    padding: 5px;
+    height: 95px;
+}
+.review-popup-content button{
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 20px;
+    margin-top: 30px;
+    display: flex;
+    justify-self: center;
+}

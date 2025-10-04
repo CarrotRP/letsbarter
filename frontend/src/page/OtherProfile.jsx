@@ -11,18 +11,31 @@ import ReviewCard from '../component/ReviewCard';
 import Report from '../component/Report';
 import Toaster from '../component/Toaster';
 import { useTranslation } from 'react-i18next';
+import ReviewPopup from '../component/ReviewPopup';
 
 export default function OtherProfile() {
     const { id } = useParams();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [currentPage, setCurrentPage] = useState('inventory');
     const { chatRef, user } = useOutletContext();
     const reportBgRef = useRef();
     const reportRef = useRef();
+    const reviewBgRef = useRef();
+    const reviewRef = useRef();
     const [otherUser, setOtherUser] = useState();
     const [item, setItem] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState();
+
+    //report state
+    const [report, setReport] = useState('deceptive');
+
+    //review state
+    const [review, setReview] = useState();
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
+    const [reviewPage, setReviewPage] = useState(1);
+    const [reviewTotal, setReviewTotal] = useState();
 
     const selectedTxtStyle = {
         fontSize: '32px',
@@ -44,16 +57,36 @@ export default function OtherProfile() {
         if (user) {
             e.stopPropagation();
             document.body.style.overflow = 'hidden';
-            reportBgRef.current.style.display = 'block';
-            reportRef.current.style.display = 'block';
+            reportBgRef.current.classList.add('report-active');
         } else {
             toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' });
         }
     }
     const handleReportClose = () => {
         document.body.style.overflow = null;
-        reportBgRef.current.style.display = 'none';
-        reportRef.current.style.display = 'none';
+        reportBgRef.current.classList.remove('report-active');
+        setReport('deceptive')
+    }
+    const handleReviewClick = (e) => {
+        if(user){
+            e.stopPropagation();
+            document.body.style.overflow = 'hidden';
+            reviewBgRef.current.classList.add('review-popup-active')
+        } else{
+            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' });
+        }
+    }
+
+    const fetchReviews = () => {
+        fetch(`http://localhost:3000/review/${id}?limit=6&page=${reviewPage}`, {
+                credentials: 'include'
+            }).then(res => res.json())
+                .then(data => {
+                    console.log('data');
+                    console.log(data);
+                    setReview(data.result);
+                    setReviewTotal(data.totalPage)
+                })
     }
 
     useEffect(() => {
@@ -71,11 +104,22 @@ export default function OtherProfile() {
                 setTotalPage(data.count);
             })
 
+        //fetch review
+        if (currentPage !== 'inventory') {
+            fetchReviews();
+        }
+
         const handleOutsideClick = (e) => {
-            if (reportRef && !reportRef.current.contains(e.target)) {
+            if (reportBgRef.current && !reportRef.current.contains(e.target) && reportBgRef.current.classList.contains('report-active')) {
                 document.body.style.overflow = null;
-                reportBgRef.current.style.display = 'none';
-                reportRef.current.style.display = 'none';
+                reportBgRef.current.classList.remove('report-active');
+                setReport('deceptive')
+            }
+            if (reviewBgRef.current && !reviewRef.current.contains(e.target) && reviewBgRef.current.classList.contains('review-popup-active')) {
+                document.body.style.overflow = null;
+                reviewBgRef.current.classList.remove('review-popup-active');
+                setRating(0)
+                setComment('')
             }
         }
 
@@ -84,7 +128,7 @@ export default function OtherProfile() {
         return () => {
             document.removeEventListener('click', handleOutsideClick)
         }
-    }, [page]);
+    }, [page, currentPage, reviewPage]);
 
     return (
         <main className="other-profile">
@@ -114,7 +158,7 @@ export default function OtherProfile() {
                 <span className="buttons">
                     <button onClick={handleMessageClick}><img src={message} alt="" />{t('message')}</button>
                     <button onClick={handleReportClick}><img src={flag} alt="" />{t('report')}</button>
-                    <button>{t('review')}</button>
+                    <button onClick={handleReviewClick}>{t('review')}</button>
                 </span>
             </div>
             <section className="other-profile-nav" style={{ display: 'flex', alignItems: 'center', gap: '50px', color: 'var(--text-primary)' }}>
@@ -127,9 +171,9 @@ export default function OtherProfile() {
             <section className="other-content">
                 {currentPage == 'inventory' ?
                     <div className="other-inventory">
-                        {item.length == 0 ? <p style={{ position: 'absolute' }}>{t('they got no item', {name: otherUser?.username})}</p> : item.map(v => {
+                        {item.length == 0 ? <p style={{ position: 'absolute' }}>{t('they got no item', { name: otherUser?.username })}</p> : item.map(v => {
                             return (
-                                <Link to={`/product/${v._id}`} style={{ color: 'var(--text-secondary)' }} key={v.id}>
+                                <Link to={`/product/${v._id}`} style={{ color: 'var(--text-secondary)' }} key={v._id}>
                                     <ProductCard pname={v.name} condition={v.condition} lookfor={v.looking_for} mainImg={v.main_img} />
                                 </Link>
                             );
@@ -145,14 +189,24 @@ export default function OtherProfile() {
                         }
                     </div> :
                     <div className="reviews">
-                        {[...new Array(4)].map(_ => {
+                        {review?.length == 0 ? "No review yet" : review?.map(v => {
                             return (
-                                <ReviewCard />
+                                <ReviewCard profile={v.reviewerId.profile_img} username={v.reviewerId.username} rating={v.rating} comment={v.comment} date={v.createdAt} />
                             );
                         })}
+                        {reviewTotal > 1 && reviewTotal &&
+                            <div className="other-total">
+                                {reviewPage == 1 ? <div></div> :
+                                    <p className='prev-page' onClick={() => setReviewPage(prev => prev - 1)}>{reviewPage - 1}</p>}
+                                <p className='current-page'>{reviewPage}</p>
+                                {reviewPage >= reviewTotal ? <div></div> :
+                                    <p className='next-page' onClick={() => setReviewPage(prev => prev + 1)}>{reviewPage + 1}</p>}
+                            </div>
+                        }
                     </div>}
             </section>
-            <Report reportBgRef={reportBgRef} reportRef={reportRef} handleReportClose={handleReportClose} />
+            <Report reportBgRef={reportBgRef} reportRef={reportRef} handleReportClose={handleReportClose} report={report} setReport={setReport} />
+            <ReviewPopup reviewBgRef={reviewBgRef} reviewRef={reviewRef} reviewerId={user?._id} otherUserId={id} otherUser={otherUser?.username} rating={rating} setRating={setRating} comment={comment} setComment={setComment} fetchReviews={fetchReviews}/>
         </main>
     );
 }

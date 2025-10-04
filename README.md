@@ -31,7 +31,7 @@ To help lower middle class people such as college students, small business owner
 - [x] estimate value in trade
 - [x] trading system
 - [x] khmer language
-- [ ] user review
+- [x] user review
 - [ ] chatting
 
 ## Screenshots

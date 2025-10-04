@@ -2,14 +2,32 @@
     border: 2px solid var(--secondary);
     border-radius: 10px;
     width: 600px;
+    height: auto;
     display: flex;
-    align-items: center;
     padding: 10px 15px;
     position: relative;
+    align-items: start;
 }
-.review-card img{
-    width: 100px
+.review-card .reviewer-img  {
+    width: 100px;
+    border-radius: 50%;
+    object-fit: contain;
+    margin-right: 10px;
 }
 .whonwhat{
-    width: 400px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.card-stars{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: inherit;
+    display: flex;
+    gap: 5px;
+}
+.card-stars .star{
+    width: 30px;
 }

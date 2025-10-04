@@ -154,8 +154,11 @@
     "nudity": "Nudity and sexual content",
     "impersonation": "Impersonation",
     "other": "Other",
-    "submit": "Sumbit",
+    "submit": "Submit",
     "review": "Review",
+    "reviewing": "Reviewing {{user}}",
+    "comment": "Comments",
+    "share": "Share your experience with {{user}}",
 
     "category name": "Category: {{category}}",
     "filter": "Filter",

@@ -17,6 +17,7 @@ const userRoutes = require('./routes/users');
 const itemRoutes = require('./routes/items');
 const categoryRoutes = require('./routes/categories');
 const tradeRoutes = require('./routes/trades');
+const reviewRoutes = require('./routes/reviews');
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -110,3 +111,4 @@ app.use('/user', userRoutes);
 app.use('/item', itemRoutes);
 app.use('/category', categoryRoutes);
 app.use('/trade', tradeRoutes);
+app.use('/review', reviewRoutes);
