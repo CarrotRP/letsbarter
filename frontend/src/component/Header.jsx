@@ -1,7 +1,7 @@
 import TextLogo from './TextLogo';
 import create from '../assets/create.png';
 import trade from '../assets/trade.png';
-import chat from '../assets/chat.png';
+import chatIcon from '../assets/chat.png';
 import './Header.css';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
@@ -14,7 +14,7 @@ export default function Header(props) {
     const location = useLocation();
     const query = searchParams.get("query");
     const [value, setValue] = useState(query || ""); //search value
-    const { chatRef, user } = props;
+    const { chatRef, user, chat, setChat } = props;
     const {t} = useTranslation();
 
     // todo: make this works properly(navigate to search page if not on search page and search the query)
@@ -43,8 +43,9 @@ export default function Header(props) {
                     <>
                         <Link to='/add' style={{ height: '27px' }}><img src={create} alt="" style={{ width: '27px' }} /></Link>
                         <Link to='/trade' id='trade'><img src={trade} alt="" style={{ width: '24px', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(353deg) brightness(102%) contrast(105%)' }} />{t('my trade')}</Link>
-                        <button id='chat' onClick={handleChatClick}><img src={chat} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
+                        <button id='chat' onClick={handleChatClick}><img src={chatIcon} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
                         <Link to='/profile'><img src={user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`} alt="" style={{ width: '70px', height: '70px', border: '1px solid black', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white'}} /></Link>
+                        <Chat chatRef={chatRef} chat={chat} setChat={setChat} user={user}/>
                     </>
                     :
                     <>
@@ -52,7 +53,6 @@ export default function Header(props) {
                         <Link to='/login'><button className='login auth'>{t('login')}</button></Link>
                     </>
                 }
-                <Chat chatRef={chatRef} />
             </span>
         </header>
     );

@@ -11,6 +11,7 @@ export default function MainLayout(props) {
     const langRef = useRef();
     const { user, dispatch } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
+    const [chat, setChat] = useState();
 
     useEffect(() => {
         fetch('http://localhost:3000/user/check-auth', {
@@ -26,14 +27,16 @@ export default function MainLayout(props) {
 
         // outside click
         const handleOutsideClick = (e) => {
-            if (chatRef && !chatRef.current.contains(e.target)) {
-                chatRef.current.classList.remove('chat-active');
+            if (chatRef && !chatRef.current?.contains(e.target) && chatRef.current.classList?.contains('chat-active')) {
+                chatRef.current?.classList.remove('chat-active');
             }
-            if(filterRef && !filterRef.current?.contains(e.target)){
+            if(filterRef && !filterRef.current?.contains(e.target) && filterRef.current?.classList.contains('filter-popup-active')){
                 filterRef.current?.classList.remove('filter-popup-active');
+                console.log('filter');
             }
-            if(langRef && !langRef.current?.contains(e.target)){
+            if(langRef && !langRef.current?.contains(e.target) && langRef.current?.classList.contains('lang-dropdown-active')){
                 langRef.current?.classList.remove('lang-dropdown-active');
+                console.log('lang');
             }
         }
         const handleScroll = () => {
@@ -61,8 +64,8 @@ export default function MainLayout(props) {
 
     return (
         <>
-            <Header chatRef={chatRef} user={user} />
-            <Outlet context={{ chatRef, user, dispatch, isLoading, filterRef, handleFilterDropdown }} />
+            <Header chatRef={chatRef} user={user} chat={chat} setChat={setChat}/>
+            <Outlet context={{ chatRef, user, dispatch, isLoading, filterRef, handleFilterDropdown, chat, setChat}}/>
             <Footer langRef={langRef} language={language} setLanguage={setLanguage}/>
         </>
     );

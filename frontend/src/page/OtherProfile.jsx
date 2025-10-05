@@ -17,7 +17,7 @@ export default function OtherProfile() {
     const { id } = useParams();
     const { t } = useTranslation();
     const [currentPage, setCurrentPage] = useState('inventory');
-    const { chatRef, user } = useOutletContext();
+    const { chatRef, user, chat, setChat } = useOutletContext();
     const reportBgRef = useRef();
     const reportRef = useRef();
     const reviewBgRef = useRef();
@@ -49,6 +49,7 @@ export default function OtherProfile() {
         if (user) {
             e.stopPropagation();
             chatRef.current.classList.toggle('chat-active');
+            setChat(otherUser);
         } else {
             toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' })
         }

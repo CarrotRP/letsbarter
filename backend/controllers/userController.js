@@ -44,7 +44,7 @@ const user_google_login = (req, res) => {
 const get_user = (req, res) => {
     const id = req.params.id;
     
-    User.findById(id).then(result => res.json(result));
+    User.findById(id).select('-password').then(result => res.json(result));
 }
 
 const user_update = async (req, res) => {
