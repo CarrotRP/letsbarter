@@ -132,6 +132,7 @@ export default function Upload() {
 
             setImages(prev => prev.filter(img => !img.isMain));
             setImages(prev => [...prev, { file, preview: URL.createObjectURL(file), isMain: true }]);
+            e.target.value = null;
         }
     }
 

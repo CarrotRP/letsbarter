@@ -9,7 +9,8 @@ import { useTranslation } from "react-i18next";
 export default function TradePopup(props) {
     const {
         tradePopupRef, tradePopupContentRef, tradeType, setTradeType, currentTradePage, setCurrentTradePage,
-        user, otherUserId, itemId, isLoading, isPopup, setIsPopup, otherName, handleTradeUpdate, selectedTrade
+        user, otherUserId, itemId, isLoading, isPopup, setIsPopup, otherName, handleTradeUpdate, selectedTrade,
+        otherImg
     } = props;
     const {t} = useTranslation();
 
@@ -259,7 +260,7 @@ export default function TradePopup(props) {
                     <section className="item-trading">
                         <div className="other-user-table">
                             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <img src="/favicon.png" alt="" style={{ width: '50px', border: '1px solid black', borderRadius: '50%' }} />
+                                <img src={otherImg?.startsWith('http') ? otherImg : `http://localhost:3000/${otherImg}`} alt="" style={{ width: '50px', border: '1px solid black', borderRadius: '50%' }} />
                                 {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px' }}>{selectedTrade?.user} <span style={{ fontWeight: 300 }}>{t('offer')}</span></h3> :
                                     <h3 style={{ fontSize: '20px' }}><span style={{ fontWeight: 300 }}>{t('for')} </span>{selectedTrade ? selectedTrade?.user : otherName}'s</h3>}
                             </span>

@@ -8,9 +8,20 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const User = require('./models/userModel');
 const path = require('path');
+const http = require('http');
+const {Server} = require('socket.io')
 require('dotenv').config();
 
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:5173'
+    }
+})
+app.set('io', io) //store in instance 
 
 // routes
 const userRoutes = require('./routes/users');
@@ -26,7 +37,7 @@ app.use(cors({
 }))
 
 mongoose.connect(process.env.DB_URL)
-    .then(res => app.listen(3000))
+    .then(res => server.listen(3000))
     .catch(err => console.log(err));
 
 app.use(express.json());
@@ -103,6 +114,14 @@ passport.deserializeUser((id, done) => {
     User.findById(id)
         .then(result => done(null, result))
         .catch(err => console.log(err));
+})
+
+io.on('connection', (socket) =>  {
+    console.log('user connected', socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected', socket.id);
+    })
 })
 
 app.get('/', (req, res) => {

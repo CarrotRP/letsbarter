@@ -48,6 +48,7 @@ export default function OtherProfile() {
     const handleMessageClick = (e) => {
         if (user) {
             e.stopPropagation();
+            console.log(otherUser);
             chatRef.current.classList.toggle('chat-active');
             setChat(otherUser);
         } else {

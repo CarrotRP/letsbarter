@@ -1,13 +1,40 @@
-export default function ChatTile() {
+export default function ChatTile(props) {
+    const { username, profile, text, date } = props
+
     return (
         <div className="chat-tile">
-            <img src="/favicon.png" alt="user" style={{width: '45px', borderRadius: '50%', border: '1px solid black', alignSelf: 'center'}} loading="lazy"/>
+            <img src={profile?.startsWith('http') ? profile : `http://localhost:3000/${profile}`} alt="user" style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid black', alignSelf: 'center', objectFit: 'contain' }} loading="lazy" />
             <div className="chat-info">
                 <span>
-                    <p style={{fontWeight: '500'}}>Bob Krackin</p>
-                    <p style={{fontWeight: '300', color: 'rgba(0, 0, 0, 0.65)'}}>10:12 AM</p>
+                    <p style={{ fontWeight: '500' }}>{username}</p>
+                    <p style={{ fontWeight: '300', color: 'rgba(0, 0, 0, 0.65)' }}>  {(() => {
+                        const msgDate = new Date(date);
+                        const now = new Date();
+
+                        const isToday =
+                            msgDate.getDate() === now.getDate() &&
+                            msgDate.getMonth() === now.getMonth() &&
+                            msgDate.getFullYear() === now.getFullYear();
+
+                        const yesterday = new Date();
+                        yesterday.setDate(now.getDate() - 1);
+                        const isYesterday =
+                            msgDate.getDate() === yesterday.getDate() &&
+                            msgDate.getMonth() === yesterday.getMonth() &&
+                            msgDate.getFullYear() === yesterday.getFullYear();
+
+                        if (isToday) {
+                            return msgDate
+                                .toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })
+                                .replace(/am|pm/i, match => match.toUpperCase());
+                        } else if (isYesterday) {
+                            return 'Yesterday';
+                        } else {
+                            return msgDate.toLocaleDateString('en-GB', { weekday: 'long' }); // Monday, Tuesday...
+                        }
+                    })()}</p>
                 </span>
-                <p style={{fontWeight: '300'}}>hello</p>
+                <p style={{ fontWeight: '300' }}>{text}</p>
             </div>
         </div>
     );

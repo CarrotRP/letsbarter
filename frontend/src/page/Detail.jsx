@@ -182,7 +182,7 @@ export default function Detail() {
                 <>
                     {itemCount > 0 && <HomeComponent sectionName={t('other items', {name: itemDetail?.owner_id.username})} items={otherItem} limit={limit} setLimit={setLimit} itemCount={itemCount} />}
                     {!mightLike || mightCount > 0 ? <HomeComponent sectionName={t('might like')} items={mightLike} limit={mightLimit} setLimit={setMightLimit} itemCount={mightCount} /> : <></>}
-                    <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} user={user} otherUserId={itemDetail?.owner_id._id} itemId={id} isLoading={isLoading} isPopup={isPopup} setIsPopup={setIsPopup} otherName={itemDetail?.owner_id.username} />
+                    <TradePopup tradePopupRef={tradePopupRef} tradePopupContentRef={tradePopupContentRef} tradeType='offer' currentTradePage={currentTradePage} setCurrentTradePage={setCurrentTradePage} user={user} otherUserId={itemDetail?.owner_id._id} itemId={id} isLoading={isLoading} isPopup={isPopup} setIsPopup={setIsPopup} otherName={itemDetail?.owner_id.username} otherImg={itemDetail?.owner_id.profile_img}/>
                 </>
             }
         </main>

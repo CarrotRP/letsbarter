@@ -126,6 +126,9 @@
 
     "chat": "Chat",
     "message": "Message",
+    "you": "You: {{text}}",
+    "you sent": "You sent a photo",
+    "they sent": "{{user}} sent a photo",
 
     "inventory": "Inventory",
     "personal info": "Personal Info",

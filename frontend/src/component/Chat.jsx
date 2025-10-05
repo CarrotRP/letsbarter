@@ -20,9 +20,9 @@ export default function Chat(props) {
     const handleCloseClick = () => {
         chatRef.current.classList.remove('chat-active');
     }
-    
+
     useEffect(() => {
-        if(user){
+        if (user) {
             fetch(`http://localhost:3000/message/`, {
                 credentials: 'include'
             })
@@ -32,7 +32,7 @@ export default function Chat(props) {
                     setChatList(data);
                 })
         }
-    }, [user]);
+    }, []);
 
     return (
         <div className='chat' ref={chatRef}>
@@ -45,14 +45,26 @@ export default function Chat(props) {
                     <input type="text" placeholder={t('search')} id='chat-search' />
                     <div className="chat-list">
                         {chatList?.map(v => {
-                            return (<div onClick={handleChatclick}>
-                                <ChatTile />
+                            return (<div onClick={(e) => { e.stopPropagation(); setChat(v.receiverId._id == user?._id ? v.senderId : v.receiverId) }} style={{ cursor: 'pointer' }}>
+                                <ChatTile
+                                    username={v.receiverId._id == user?._id ? v.senderId.username : v.receiverId.username}
+                                    profile={v.receiverId._id == user?._id ? v.senderId.profile_img : v.receiverId.profile_img}
+                                    text={
+                                        v.receiverId._id === user?._id
+                                            ? v.image
+                                                ? t('they sent', { user: v.senderId.username })
+                                                : v.text
+                                            : v.image
+                                                ? t('you sent')
+                                                : t('you', {text: v.text})
+                                    }
+                                    date={v.updatedAt} />
                             </div>);
                         }
                         )}
                     </div>
                 </>}
-            {chat && <ChatDetail chat={chat} setChat={setChat} user={user}/>}
+            {chat && <ChatDetail chat={chat} setChat={setChat} user={user} />}
         </div>
     );
 }

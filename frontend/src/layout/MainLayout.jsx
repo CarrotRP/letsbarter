@@ -3,6 +3,8 @@ import Footer from "../component/Footer"
 import { Outlet } from "react-router";
 import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "../context/UserContext";
+//socket
+import {io} from 'socket.io-client';
 
 export default function MainLayout(props) {
     const { language, setLanguage} = props;
@@ -20,6 +22,7 @@ export default function MainLayout(props) {
             .then(data => {
                 if (data.authenticated) {
                     dispatch({ type: "SET_USER", payload: data.user });
+                    const socket = io.connect('http://localhost:3000');
                 }
             }).finally(() => {
                 setIsLoading(false);
