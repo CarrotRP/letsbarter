@@ -12,7 +12,7 @@ export default function CategorySection(props){
             <section className="categories">
                 {categoryList.map(v => {
                     return (
-                        <Link to={`/item?category=${v._id}`} state={v.name} style={{color: 'var(--text-secondary)'}}>
+                        <Link to={`/item?category=${v._id}`} state={v.name} style={{color: 'var(--text-secondary)'}} key={v._id}>
                             <CategoryCard name={t(v.name)} img={v.img}/>
                         </Link>
                     );

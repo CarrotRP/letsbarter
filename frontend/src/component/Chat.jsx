@@ -2,28 +2,33 @@ import close from '../assets/close.png';
 import ChatTile from './ChatTile';
 import ChatDetail from './ChatDetail';
 import './Chat.css'
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SocketContext } from '../context/SocketContext';
 
 export default function Chat(props) {
-    const { chatRef, chat, setChat, user } = props
+    const { chatRef, chat, setChat, user, handleViewImg} = props
     const { t } = useTranslation();
     const [chatList, setChatList] = useState();
-
-    //NOTE: this is just prototype chat transition click
-
-    const handleChatclick = (e) => {
-        e.stopPropagation();
-        setChat("hello");
-    }
+    const [query, setQuery] = useState('');
+    const [debounceQ, setDebounceQ] = useState(query);
+    const {socket, setSocket} = useContext(SocketContext);
 
     const handleCloseClick = () => {
         chatRef.current.classList.remove('chat-active');
     }
 
     useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebounceQ(query);
+        }, 500);
+
+        return () => clearTimeout(handler);
+    }, [query]);
+
+    useEffect(() => {
         if (user) {
-            fetch(`http://localhost:3000/message/`, {
+            fetch(`http://localhost:3000/message?search=${debounceQ}`, {
                 credentials: 'include'
             })
                 .then(res => res.json())
@@ -32,7 +37,7 @@ export default function Chat(props) {
                     setChatList(data);
                 })
         }
-    }, []);
+    }, [debounceQ]);
 
     return (
         <div className='chat' ref={chatRef}>
@@ -42,29 +47,29 @@ export default function Chat(props) {
                         <h1 style={{ color: 'var(--text-primary)' }}>{t('chat')}</h1>
                         <img src={close} alt="" onClick={handleCloseClick} style={{ cursor: 'pointer' }} />
                     </span>
-                    <input type="text" placeholder={t('search')} id='chat-search' />
+                    <input type="text" placeholder={t('search')} id='chat-search' value={query} onChange={(e) => setQuery(e.target.value)} />
                     <div className="chat-list">
                         {chatList?.map(v => {
-                            return (<div onClick={(e) => { e.stopPropagation(); setChat(v.receiverId._id == user?._id ? v.senderId : v.receiverId) }} style={{ cursor: 'pointer' }}>
+                            return (<div onClick={(e) => { e.stopPropagation(); setChat(v.receiver?._id == user?._id ? v.sender : v.receiver) }} style={{ cursor: 'pointer' }}>
                                 <ChatTile
-                                    username={v.receiverId._id == user?._id ? v.senderId.username : v.receiverId.username}
-                                    profile={v.receiverId._id == user?._id ? v.senderId.profile_img : v.receiverId.profile_img}
+                                    username={v.receiver?._id == user?._id ? v.sender?.username : v.receiver?.username}
+                                    profile={v.receiver?._id == user?._id ? v.sender?.profile_img : v.receiver?.profile_img}
                                     text={
-                                        v.receiverId._id === user?._id
+                                        v.receiver?._id === user?._id
                                             ? v.image
-                                                ? t('they sent', { user: v.senderId.username })
+                                                ? t('they sent', { user: v.sender?.username })
                                                 : v.text
                                             : v.image
                                                 ? t('you sent')
-                                                : t('you', {text: v.text})
+                                                : t('you', { text: v.text })
                                     }
-                                    date={v.updatedAt} />
+                                    date={v.createdAt} />
                             </div>);
                         }
                         )}
                     </div>
                 </>}
-            {chat && <ChatDetail chat={chat} setChat={setChat} user={user} />}
+            {chat && <ChatDetail chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} socket={socket} setSocket={setSocket}/>}
         </div>
     );
 }

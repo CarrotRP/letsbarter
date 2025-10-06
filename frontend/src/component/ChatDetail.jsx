@@ -2,14 +2,15 @@ import attachment from '../assets/attachment.png';
 import send from '../assets/send.png';
 import back from '../assets/back.png';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ChatDetail(props) {
-    const { chat, setChat, user } = props;
+    const { chat, setChat, user, handleViewImg, socket, setSocket } = props;
     const { t } = useTranslation();
     const [img, setImg] = useState();
     const [text, setText] = useState();
     const [message, setMessage] = useState();
+    const scrollRef = useRef(); //TODO: scroll to updated scrollHeight
 
     const handleBackClick = (e) => {
         e.stopPropagation();
@@ -19,7 +20,7 @@ export default function ChatDetail(props) {
     const handleSetImg = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setImg({ file, preview: URL.createObjectURL(file)});
+            setImg({ file, preview: URL.createObjectURL(file) });
             e.target.value = null;
         }
     }
@@ -38,24 +39,54 @@ export default function ChatDetail(props) {
                 credentials: 'include',
                 body: formData
             }).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setMessage(prev => [...prev, data]);
-                setText('');
-                setImg(null);
-            })
+                .then(data => {
+                    setText('');
+                    setImg(null);
+                })
         }
     }
 
+
+    //get messages
     useEffect(() => {
         fetch(`http://localhost:3000/message/${chat?._id}`, {
             credentials: 'include'
         }).then(res => res.json())
-        .then(data => {
-            console.log(data);
-            setMessage(data);
-        })
+            .then(data => {
+                setMessage(data);
+            })
     }, []);
+
+    //for scrolling to bottom after sending msg or get messages
+    useEffect(() => {
+        if (message?.length > 0) {
+            scrollRef?.current?.scrollTo({
+                top: scrollRef.current.scrollHeight,
+                behavior: 'auto'
+            });
+        }
+    }, [message]);
+
+    useEffect(() => {
+        if (!socket || !chat) return;
+
+        const handleReceiveMessage = (incomingMessage) => {
+            if (
+                incomingMessage.senderId === chat._id ||
+                incomingMessage.receiverId === chat._id
+            ) {
+                setMessage(prev => [...prev, incomingMessage]);
+            }
+        };
+
+        socket.on('sendMessage', handleReceiveMessage);
+
+        return () => {
+            socket.off('sendMessage', handleReceiveMessage);
+        };
+    }, [socket, chat]);
+
+
 
     return (
         <>
@@ -67,23 +98,23 @@ export default function ChatDetail(props) {
                     <p style={{ fontWeight: '300' }}>{chat?.occupation}</p>
                 </span>
             </div>
-            <div className="chat-msg">
-                {message?.map(m => 
-                <div className='chat-bubble' style={{alignSelf: m.receiverId == user?._id ? 'start' : 'end'}}> 
-                {/*if the receiver is me(m.receiverId == user?._id) then  left side(its not my message) else right-side*/}
-                    {m.image && <img src={`http://localhost:3000/${m.image}`}></img>}
-                    {m.text && <p style={{padding: '5px 10px'}}>{m.text}</p>}
-                </div>)}
+            <div className="chat-msg" ref={scrollRef}>
+                {message?.map(m =>
+                    <div className='chat-bubble' style={{ alignSelf: m.receiverId == user?._id ? 'start' : 'end' }}>
+                        {/*if the receiver is me(m.receiverId == user?._id) then  left side(its not my message) else right-side*/}
+                        {m.image && <img src={`http://localhost:3000/${m.image}`} onClick={(e) => handleViewImg(e, m.image)}></img>}
+                        {m.text && <p style={{ padding: '5px 10px' }}>{m.text}</p>}
+                    </div>)}
             </div>
             <div className="chat-input">
                 <input type="file" id='msg-image' accept='image/*' onChange={handleSetImg} />
                 <label htmlFor="msg-image" className='msg-attachment-label'>
                     <img src={attachment} alt="" className='msg-attachment' />
                 </label>
-                <div className="text-input-wrapper" style={{paddingTop: img ? '10px' : '5px'}}>
+                <div className="text-input-wrapper" style={{ paddingTop: img ? '10px' : '5px' }}>
                     {img && (
                         <div className="chat-img-preview">
-                            <img src={img.preview} alt=""/>
+                            <img src={img.preview} alt="" />
                             <button onClick={(e) => { e.stopPropagation(); setImg(null); }} className="chat-img-remove">×</button>
                         </div>
                     )}
@@ -106,8 +137,9 @@ export default function ChatDetail(props) {
                         className="text-input"
                     />
                 </div>
-                <img src={send} className='chat-send' alt="" onClick={handleSendMessage}/>
+                <img src={send} className='chat-send' alt="" onClick={handleSendMessage} />
             </div>
+
         </>
     );
 }

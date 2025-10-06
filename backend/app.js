@@ -9,7 +9,7 @@ const cors = require('cors');
 const User = require('./models/userModel');
 const path = require('path');
 const http = require('http');
-const {Server} = require('socket.io')
+const { Server } = require('socket.io')
 require('dotenv').config();
 
 const app = express();
@@ -18,10 +18,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:5173'
+        origin: 'http://localhost:5173',
+        credentials: true
     }
-})
-app.set('io', io) //store in instance 
+});
 
 // routes
 const userRoutes = require('./routes/users');
@@ -43,11 +43,13 @@ mongoose.connect(process.env.DB_URL)
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use(session({
+const sessionMiddleware = session({
     secret: process.env.secret,
     resave: false,
     saveUninitialized: false,
-}))
+});
+
+app.use(sessionMiddleware);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -72,7 +74,7 @@ passport.use(new GoogleStrategy({
     const profile_img = profile.photos?.[0]?.value;
 
     // 1. Find existing user
-    User.findOne({ email})
+    User.findOne({ email })
         .then(user => {
             if (user) {
                 // Found existing user
@@ -115,18 +117,42 @@ passport.deserializeUser((id, done) => {
         .then(result => done(null, result))
         .catch(err => console.log(err));
 })
+io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+});
+const userSocketMap = {};
 
-io.on('connection', (socket) =>  {
+io.on('connection', (socket) => {
+    const session = socket.request.session;
+
+    if (!session || !session.passport || !session.passport.user) {
+        console.log('Unauthenticated socket connection rejected');
+        socket.disconnect();
+        return;
+    }
+
+    const userId = session.passport.user.toString();
+
+    if (!userSocketMap[userId]) {
+        userSocketMap[userId] = [];
+    }
+
+    userSocketMap[userId].push(socket.id);
+    console.log('this is user:', userId)
     console.log('user connected', socket.id);
 
     socket.on('disconnect', () => {
+        userSocketMap[userId] = userSocketMap[userId].filter(id => id !== socket.id);
+        if (userSocketMap[userId].length === 0) {
+            delete userSocketMap[userId];
+        }
         console.log('user disconnected', socket.id);
     })
 })
 
-app.get('/', (req, res) => {
-    res.json('hello bruh')
-})
+app.set('userSocketMap', userSocketMap);
+app.set('io', io) //store in instance 
+
 app.use('/user', userRoutes);
 app.use('/item', itemRoutes);
 app.use('/category', categoryRoutes);

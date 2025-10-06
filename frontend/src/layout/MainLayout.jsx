@@ -4,15 +4,20 @@ import { Outlet } from "react-router";
 import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 //socket
-import {io} from 'socket.io-client';
+import { io } from 'socket.io-client';
+import { SocketContext } from "../context/SocketContext";
 
 export default function MainLayout(props) {
-    const { language, setLanguage} = props;
+    const { language, setLanguage } = props;
     const chatRef = useRef();
     const filterRef = useRef();
     const langRef = useRef();
+    const viewImgRef = useRef();
+    const viewImgBgRef = useRef();
     const { user, dispatch } = useContext(UserContext);
+    const { socket, setSocket } = useContext(SocketContext);
     const [isLoading, setIsLoading] = useState(true);
+    const [viewImg, setViewImg] = useState(); //in chat view image
     const [chat, setChat] = useState();
 
     useEffect(() => {
@@ -22,7 +27,7 @@ export default function MainLayout(props) {
             .then(data => {
                 if (data.authenticated) {
                     dispatch({ type: "SET_USER", payload: data.user });
-                    const socket = io.connect('http://localhost:3000');
+                    setSocket(io.connect('http://localhost:3000', { withCredentials: true }));
                 }
             }).finally(() => {
                 setIsLoading(false);
@@ -30,17 +35,26 @@ export default function MainLayout(props) {
 
         // outside click
         const handleOutsideClick = (e) => {
+            // if(viewImgBgRef.current?.classList.contains('view-img-active')){
+            if (viewImgBgRef.current && viewImgBgRef.current?.classList.contains('view-img-active') && !viewImgRef.current?.contains(e.target)) {
+                setViewImg(null);
+                viewImgBgRef.current?.classList.remove('view-img-active');
+                document.body.style.overflow = null;
+                return;
+            }
+            // }
             if (chatRef && !chatRef.current?.contains(e.target) && chatRef.current.classList?.contains('chat-active')) {
                 chatRef.current?.classList.remove('chat-active');
             }
-            if(filterRef && !filterRef.current?.contains(e.target) && filterRef.current?.classList.contains('filter-popup-active')){
+            if (filterRef && !filterRef.current?.contains(e.target) && filterRef.current?.classList.contains('filter-popup-active')) {
                 filterRef.current?.classList.remove('filter-popup-active');
                 console.log('filter');
             }
-            if(langRef && !langRef.current?.contains(e.target) && langRef.current?.classList.contains('lang-dropdown-active')){
+            if (langRef && !langRef.current?.contains(e.target) && langRef.current?.classList.contains('lang-dropdown-active')) {
                 langRef.current?.classList.remove('lang-dropdown-active');
                 console.log('lang');
             }
+
         }
         const handleScroll = () => {
             chatRef.current.classList.remove('chat-active');
@@ -67,9 +81,9 @@ export default function MainLayout(props) {
 
     return (
         <>
-            <Header chatRef={chatRef} user={user} chat={chat} setChat={setChat}/>
-            <Outlet context={{ chatRef, user, dispatch, isLoading, filterRef, handleFilterDropdown, chat, setChat}}/>
-            <Footer langRef={langRef} language={language} setLanguage={setLanguage}/>
+            <Header chatRef={chatRef} user={user} chat={chat} setChat={setChat} viewImgRef={viewImgRef} viewImgBgRef={viewImgBgRef} viewImg={viewImg} setViewImg={setViewImg} />
+            <Outlet context={{ chatRef, user, dispatch, isLoading, filterRef, handleFilterDropdown, chat, setChat }} />
+            <Footer langRef={langRef} language={language} setLanguage={setLanguage} />
         </>
     );
 }

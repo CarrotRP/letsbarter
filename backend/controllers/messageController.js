@@ -3,28 +3,102 @@ const User = require('../models/userModel');
 
 const get_chat = (req, res) => {
     const userId = req.user._id;
+    const { search } = req.query;
 
-    Message.find({
-        $or: [{ senderId: userId }, { receiverId: userId }]
-    }).populate('receiverId', '_id username profile_img occupation')
-        .populate('senderId', '_id username profile_img occupation')
-        .sort({ createdAt: -1 })
-        .then(chat => {
-            const uniqueChatsMap = new Map();
-
-            chat.forEach(c => {
-                // Create a unique key that is independent of sender/receiver order
-                const ids = [c.senderId._id.toString(), c.receiverId._id.toString()].sort();
-                const key = ids.join('_');
-
-                if (!uniqueChatsMap.has(key)) {
-                    uniqueChatsMap.set(key, c);
+    Message.aggregate(
+        [
+            {
+                $match: {
+                    $or: [
+                        { senderId: userId },
+                        { receiverId: userId }
+                    ]
                 }
-            });
-
-            const uniqueChats = Array.from(uniqueChatsMap.values());
-            res.json(uniqueChats);
-        })
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: "senderId",
+                    foreignField: '_id',
+                    as: 'sender'
+                }
+            },
+            { $unwind: '$sender' },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'receiverId',
+                    foreignField: "_id",
+                    as: "receiver"
+                }
+            },
+            { $unwind: '$receiver' },
+            ...(search ? [{
+                $match: {
+                    $or: [
+                        { 'sender.username': { $regex: search, $options: 'i' } },
+                        { 'receiver.username': { $regex: search, $options: 'i' } }
+                    ]
+                }
+            }] : []),
+            {
+                $addFields: {
+                    chatKey: {
+                        $cond: [
+                            { $lt: ['$sender._id', '$receiver._id'] },
+                            {
+                                $concat: [
+                                    { $toString: '$sender._id' },
+                                    '_',
+                                    { $toString: '$receiver._id' }
+                                ]
+                            },
+                            {
+                                $concat: [
+                                    { $toString: '$receiver._id' },
+                                    '_',
+                                    { $toString: '$sender._id' }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            },
+            {
+                $group: {
+                    _id: '$chatKey',
+                    latestMessage: { $first: '$$ROOT' }
+                }
+            },
+            {
+                $replaceRoot: { newRoot: '$latestMessage' }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    text: 1,
+                    createdAt: 1,
+                    sender: {
+                        _id: 1,
+                        username: 1,
+                        profile_img: 1,
+                        occupation: 1
+                    },
+                    receiver: {
+                        _id: 1,
+                        username: 1,
+                        profile_img: 1,
+                        occupation: 1
+                    }
+                }
+            },
+        ]
+    ).then(chats => {
+        res.json(chats);
+    })
 }
 
 const get_message = (req, res) => {
@@ -40,16 +114,24 @@ const get_message = (req, res) => {
 }
 
 const post_message = (req, res) => {
-    const { text} = req.body;
-    const { id } = req.params;
-    const userId = req.user._id;
+    const { text } = req.body;
+    const { id } = req.params; //receiverid or otheruser
+    const userId = req.user._id; //senderId or current user
     const io = req.app.get('io');
+    const userSocketMap = req.app.get('userSocketMap');
 
     const imagePath = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
     Message.create({ senderId: userId, receiverId: id, text, image: imagePath })
         .then(result => {
-            io.emit('new_message', message);
+            const receiverSocketId = userSocketMap[id] || [];
+            receiverSocketId.forEach(socketId => {
+                io.to(socketId).emit('sendMessage', result);
+            })
+            const senderSockets = userSocketMap[userId] || [];
+            senderSockets.forEach(socketId => {
+                io.to(socketId).emit('sendMessage', result);
+            })
             res.json(result)
         });
 }
