@@ -15,8 +15,9 @@ export default function Header(props) {
     const location = useLocation();
     const query = searchParams.get("query");
     const [value, setValue] = useState(query || ""); //search value
-    const { chatRef, user, chat, setChat, viewImgRef, viewImgBgRef, viewImg, setViewImg} = props;
+    const { chatRef, user, chat, setChat, viewImgRef, viewImgBgRef, viewImg, setViewImg } = props;
     const { t } = useTranslation();
+    const [chatList, setChatList] = useState();
 
     // todo: make this works properly(navigate to search page if not on search page and search the query)
     const handleSearch = () => {
@@ -47,6 +48,14 @@ export default function Header(props) {
         chatRef.current.classList.toggle('chat-active');
     }
 
+    const unreadCount = chatList?.reduce((acc, chat) => {
+        // Only count messages sent to me that I haven't read
+        if (chat.receiver._id === user._id && !chat.isRead) {
+            return acc + 1;
+        }
+        return acc;
+    }, 0);
+
     return (
         <header>
             <Link to="/home"><TextLogo /></Link>
@@ -59,9 +68,12 @@ export default function Header(props) {
                     <>
                         <Link to='/add' style={{ height: '27px' }}><img src={create} alt="" style={{ width: '27px' }} /></Link>
                         <Link to='/trade' id='trade'><img src={trade} alt="" style={{ width: '24px', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(353deg) brightness(102%) contrast(105%)' }} />{t('my trade')}</Link>
-                        <button id='chat' onClick={handleChatClick}><img src={chatIcon} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
+                        <span style={{ display: 'flex', position: 'relative'}}>
+                            <button id='chat' onClick={handleChatClick}><img src={chatIcon} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
+                            {unreadCount > 0 && <span className="badge"></span>}
+                        </span>
                         <Link to='/profile'><img src={user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`} alt="" style={{ width: '70px', height: '70px', border: '1px solid black', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white' }} /></Link>
-                        <Chat chatRef={chatRef} chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} />
+                        <Chat chatRef={chatRef} chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} chatList={chatList} setChatList={setChatList} />
                         <div className="view-img" ref={viewImgBgRef}>
                             <div className='view-close'>
                                 <img src={closeIcon} alt="" onClick={handleViewClose} />

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function Trade() {
     const { user } = useOutletContext();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [currentPage, setCurrentPage] = useState("Incoming");
     const tradePopupRef = useRef();
     const tradePopupContentRef = useRef();
@@ -23,22 +23,31 @@ export default function Trade() {
 
     const [selectedTrade, setSelectedTrade] = useState();
 
-    const handleTradeUpdate = async (id, decide) => {
+    const handleTradeUpdate = async (userId, id, decide) => {
         const updateData = {};
+        let text = ''
         //"pending", "countered", "accepted", "declined", "cancelled"
         switch (decide) {
             case 'cancel':
+                text = `[system] ${user?.username} system cancel`
                 updateData.status = 'cancelled'
                 break;
             case 'decline':
+                text = `[system] ${user?.username} system decline`
                 updateData.status = 'declined'
                 break;
             case 'accept':
+                text = `[system] ${user?.username} system accept`
                 updateData.status = 'accepted'
                 break;
             case 'counter':
+                text = `[system] ${user?.username} system counter`
                 updateData.status = 'countered'
                 break;
+            default:
+                text = `[system] ${user?.username} system offer`
+                break;
+
         }
 
         const res = await fetch(`http://localhost:3000/trade/${id}`, {
@@ -54,6 +63,20 @@ export default function Trade() {
             setSentTrade(prev => prev.map(p => p._id == data._id ? { ...p, status: data.status } : p));
         } else if (decide == 'decline' || decide == 'counter' || decide == 'accept') {
             setReceivedTrade(prev => prev.map(p => p._id == data._id ? { ...p, status: data.status } : p));
+        }
+
+        if (text) {
+            fetch(`http://localhost:3000/message/send/${userId}`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text })
+            }).then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                })
         }
 
         return data;

@@ -76,6 +76,7 @@ const get_chat = (req, res) => {
             {
                 $replaceRoot: { newRoot: '$latestMessage' }
             },
+            { $sort: { createdAt: -1 } },
             {
                 $project: {
                     _id: 1,
@@ -92,7 +93,8 @@ const get_chat = (req, res) => {
                         username: 1,
                         profile_img: 1,
                         occupation: 1
-                    }
+                    },
+                    isRead: 1
                 }
             },
         ]
@@ -120,6 +122,8 @@ const post_message = (req, res) => {
     const io = req.app.get('io');
     const userSocketMap = req.app.get('userSocketMap');
 
+    console.log(text);
+
     const imagePath = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
     Message.create({ senderId: userId, receiverId: id, text, image: imagePath })
@@ -135,9 +139,40 @@ const post_message = (req, res) => {
             res.json(result)
         });
 }
+const update_read_status = (req, res) => {
+    const { id } = req.params; //otheruser
+    const userId = req.user._id;
+    const io = req.app.get('io');
+    const userSocketMap = req.app.get('userSocketMap');
+
+    Message.updateMany(
+        {
+            senderId: id,
+            receiverId: userId,
+            isRead: false
+        },
+        {
+            $set: { isRead: true }
+        }).then(async result => {
+            const updatedMessages = await Message.find({ senderId: id, receiverId: userId, isRead: true }).select('_id');
+
+            const senderSockets = userSocketMap[id] || [];
+            senderSockets.forEach(socketId => {
+                io.to(socketId).emit('readMessage', { messageIds: updatedMessages.map(m => m._id), receiverId: userId });
+            });
+
+            const currentUserSockets = userSocketMap[userId] || [];
+            currentUserSockets.forEach(socketId => {
+                io.to(socketId).emit('readMessage', { messageIds: updatedMessages.map(m => m._id), receiverId: userId });
+            });
+
+            res.json({ success: true, updatedCount: result.modifiedCount })
+        });
+}
 
 module.exports = {
     get_chat,
     get_message,
     post_message,
+    update_read_status
 }

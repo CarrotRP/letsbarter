@@ -32,7 +32,7 @@ To help lower middle class people such as college students, small business owner
 - [x] trading system
 - [x] khmer language
 - [x] user review
-- [ ] chatting
+- [x] chatting
 
 ## Screenshots
 not yet

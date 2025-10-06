@@ -79,10 +79,18 @@ export default function ChatDetail(props) {
             }
         };
 
+        const handleReadMessage = ({ messageIds, receiverId }) => {
+            setMessage(prev =>
+                prev?.map(msg => messageIds.includes(msg._id) ? { ...msg, isRead: true } : msg)
+            );
+        };
+
         socket.on('sendMessage', handleReceiveMessage);
+        socket.on('readMessage', handleReadMessage);
 
         return () => {
             socket.off('sendMessage', handleReceiveMessage);
+            socket.off('readMessage', handleReadMessage);
         };
     }, [socket, chat]);
 
@@ -99,12 +107,44 @@ export default function ChatDetail(props) {
                 </span>
             </div>
             <div className="chat-msg" ref={scrollRef}>
-                {message?.map(m =>
-                    <div className='chat-bubble' style={{ alignSelf: m.receiverId == user?._id ? 'start' : 'end' }}>
-                        {/*if the receiver is me(m.receiverId == user?._id) then  left side(its not my message) else right-side*/}
-                        {m.image && <img src={`http://localhost:3000/${m.image}`} onClick={(e) => handleViewImg(e, m.image)}></img>}
-                        {m.text && <p style={{ padding: '5px 10px' }}>{m.text}</p>}
-                    </div>)}
+                {message?.map((m, idx) => {
+                    const isLast = idx === message.length - 1; // last message in the array
+                    const isSentByMe = m.senderId === user?._id;
+
+                    return (
+                        <div
+                            className='chat-bubble'
+                            style={{
+                                alignSelf: m.text.startsWith('[system]') ? 'center' : (m.receiverId === user?._id ? 'start' : 'end'),
+                                position: 'relative', backgroundColor: m.text.startsWith('[system]') ? 'transparent' : 'var(--darken-background)'
+                            }}
+                            key={m._id}
+                        >
+                            {m.image && <img src={`http://localhost:3000/${m.image}`} onClick={(e) => handleViewImg(e, m.image)} />}
+                            {m.text && <p style={{ padding: '5px 10px' }}>{m.text.startsWith('[system]')
+                                ? (() => {
+                                    const content = m.text.split(']')[1]?.trim();
+                                    const name = content?.split(' ')[0];
+                                    const message = content?.split(' ').slice(1).join(' ');
+                                    return (
+                                        <>
+                                            <strong>{name}</strong> {t(message)}
+                                        </>
+                                    );
+                                })()
+                                : m.text
+                            }
+                            </p>}
+
+                            {/* show status only for last message sent by me */}
+                            {isLast && isSentByMe && (
+                                <p style={{ fontSize: '12px', position: 'absolute', bottom: '-20px', right: 0 }}>
+                                    {m.isRead ? t('seen') : t('delivered')}
+                                </p>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
             <div className="chat-input">
                 <input type="file" id='msg-image' accept='image/*' onChange={handleSetImg} />

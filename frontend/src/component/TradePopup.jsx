@@ -12,7 +12,7 @@ export default function TradePopup(props) {
         user, otherUserId, itemId, isLoading, isPopup, setIsPopup, otherName, handleTradeUpdate, selectedTrade,
         otherImg
     } = props;
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     //current user inventory
     const [userInvent, setUserInvent] = useState();
@@ -69,9 +69,22 @@ export default function TradePopup(props) {
         }
     }
 
+    const sendOfferMessage = () => {
+        fetch(`http://localhost:3000/message/send/${otherUserId}`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: `[system] ${user?.username} system offer` })
+        }).then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+    }
     //send offer senderItems, receiverItems, senderId, receiverId
-    const handleOfferClick = () => {
-        fetch(`http://localhost:3000/trade/offer`, {
+    const handleOfferClick = async () => {
+        const res = await fetch(`http://localhost:3000/trade/offer`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -85,11 +98,10 @@ export default function TradePopup(props) {
                 receiverItems: tradeType == 'offer' ? otherTrade : userTrade,
                 receiverId: selectedTrade ? selectedTrade.userId : otherUserId
             })
-        }).then(res => res.json())
-            .then(data => {
-                console.log(data)
-                handleClose();
-            });
+        });
+        const data = await res.json();
+        console.log(data)
+        handleClose();
     }
     //for query debounce(delay search until user stop typing)
     useEffect(() => {
@@ -159,7 +171,7 @@ export default function TradePopup(props) {
     return (
         <>
             <div className="popup-bg" ref={tradePopupRef}></div>
-            <div className="trade-popup" ref={tradePopupContentRef}>
+            <div className="trade-popup" ref={tradePopupContentRef} onClick={() => console.log(selectedTrade)}>
                 <span className="popup-head">
                     <h1>{tradeType == 'offer' ? t('offer trade') : t('respond trade')}</h1>
                     <img src={close} alt="" onClick={handleClose} />
@@ -274,7 +286,7 @@ export default function TradePopup(props) {
                                         );
                                     })}
                             </div>
-                            <p className="estimate-value">{t('their estimate', {name: selectedTrade ? selectedTrade?.user : otherName})} {otherEstimate}</p>
+                            <p className="estimate-value">{t('their estimate', { name: selectedTrade ? selectedTrade?.user : otherName })} {otherEstimate}</p>
                         </div>
                         <span className="middle-section" style={{ position: 'relative', margin: '30px 0', display: 'block', width: '100%' }}>
                             <hr style={{ border: '1px solid var(--text-primary)' }} />
@@ -299,16 +311,17 @@ export default function TradePopup(props) {
                             <button className="do-offer" onClick={async () => {
                                 if (selectedTrade) {
                                     //if theres selectedTrade(doing counter offer); update the old trade to countered status and send a new offer
-                                    await handleTradeUpdate(selectedTrade.tradeId, 'counter');
+                                    await handleTradeUpdate(selectedTrade ? selectedTrade?.userId?._id : otherUserId, selectedTrade.tradeId, 'counter');
                                     handleOfferClick();
                                 } else {
-                                    handleOfferClick();
+                                    await handleOfferClick();
+                                    sendOfferMessage();
                                 }
                             }}>{t('make offer')}</button>
                             :
                             <span style={{ display: 'flex', gap: '30px', justifyContent: 'center', margin: '0 auto' }}>
-                                <button className="accept-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'accept'); handleClose(); }}>{t('accept trade')}</button>
-                                <button className="decline-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade.tradeId, 'decline'); handleClose(); }}>{t('decline trade')}</button>
+                                <button className="accept-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade ? selectedTrade?.userId?._id : otherUserId, selectedTrade.tradeId, 'accept'); handleClose(); }}>{t('accept trade')}</button>
+                                <button className="decline-trade respond-btn" onClick={() => { handleTradeUpdate(selectedTrade ? selectedTrade?.userId?._id : otherUserId, selectedTrade.tradeId, 'decline'); handleClose(); }}>{t('decline trade')}</button>
                             </span>
                         }
                         {tradeType == 'offer' ?

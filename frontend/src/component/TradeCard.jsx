@@ -39,7 +39,7 @@ export default function TradeCard(props) {
 
     return (
         <>
-            <div className='trade-card-container' style={{ position: 'relative' }}>
+            <div className='trade-card-container' style={{ position: 'relative' }} onClick={() => console.log(userId)}>
                 <div className="trade-card">
                     <section className="left-side">
                         <img src={userImg?.startsWith('http') ? userImg : `http://localhost:3000/${userImg}`} alt="" style={{ objectFit: 'contain', backgroundColor: 'white'}}/>
@@ -78,10 +78,10 @@ export default function TradeCard(props) {
                                     >
                                         {t('respond offer')}
                                     </p>
-                                    <p className="decline" onClick={() => handleTradeUpdate(tradeId, 'decline')}>{t('decline trade')}</p>
+                                    <p className="decline" onClick={() => handleTradeUpdate(userId?._id, tradeId, 'decline')}>{t('decline trade')}</p>
                                 </>
                             ) : (
-                                <p className="cancel" onClick={() => handleTradeUpdate(tradeId, 'cancel')}>{t('cancel trade')}</p>
+                                <p className="cancel" onClick={() => handleTradeUpdate(userId?._id, tradeId, 'cancel')}>{t('cancel trade')}</p>
                             )}
                         </span>
                     }

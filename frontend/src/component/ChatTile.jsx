@@ -1,5 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 export default function ChatTile(props) {
-    const { username, profile, text, date } = props
+    const { username, profile, text, date, status } = props
+    const {t} = useTranslation();
 
     return (
         <div className="chat-tile">
@@ -34,7 +37,10 @@ export default function ChatTile(props) {
                         }
                     })()}</p>
                 </span>
-                <p style={{ fontWeight: '300' }}>{text}</p>
+                <span>
+                    <p style={{ fontWeight: '300' }}>{text?.split(']')[1]?.trim().split(' ')[0]} {t(text?.split(']')[1]?.trim().split(' ').slice(1)?.join(' '))}</p>
+                    <p style={{fontWeight: status == 'new' ? '700' : '200', color: 'var(--secondary)', fontSize: '14px'}}>{status}</p>
+                </span>
             </div>
         </div>
     );

@@ -19,6 +19,9 @@ route.get('/', messageController.get_chat);
 //get all message
 route.get('/:id', messageController.get_message);
 
+//update read status
+route.patch('/:id', messageController.update_read_status);
+
 //send message
 route.post('/send/:id', upload.single('image'), messageController.post_message);
 
