@@ -6,6 +6,7 @@ import { UserContext } from "../context/UserContext";
 //socket
 import { io } from 'socket.io-client';
 import { SocketContext } from "../context/SocketContext";
+import Ads from "../component/Ads";
 
 export default function MainLayout(props) {
     const { language, setLanguage } = props;
@@ -14,6 +15,8 @@ export default function MainLayout(props) {
     const langRef = useRef();
     const viewImgRef = useRef();
     const viewImgBgRef = useRef();
+    const donoRef = useRef();
+    const donoBgRef = useRef();
     const { user, dispatch } = useContext(UserContext);
     const { socket, setSocket } = useContext(SocketContext);
     const [isLoading, setIsLoading] = useState(true);
@@ -43,16 +46,19 @@ export default function MainLayout(props) {
                 return;
             }
             // }
-            if (chatRef && !chatRef.current?.contains(e.target) && chatRef.current.classList?.contains('chat-active')) {
+            if (chatRef && !chatRef.current?.contains(e.target) && chatRef.current?.classList?.contains('chat-active')) {
                 chatRef.current?.classList.remove('chat-active');
             }
-            if (filterRef && !filterRef.current?.contains(e.target) && filterRef.current?.classList.contains('filter-popup-active')) {
+            if (filterRef && !filterRef.current?.contains(e.target) && filterRef.current?.classList?.contains('filter-popup-active')) {
                 filterRef.current?.classList.remove('filter-popup-active');
-                console.log('filter');
             }
-            if (langRef && !langRef.current?.contains(e.target) && langRef.current?.classList.contains('lang-dropdown-active')) {
+            if (langRef && !langRef.current?.contains(e.target) && langRef.current?.classList?.contains('lang-dropdown-active')) {
                 langRef.current?.classList.remove('lang-dropdown-active');
-                console.log('lang');
+            }
+
+            if (donoBgRef && !donoRef.current?.contains(e.target) && donoBgRef.current?.classList?.contains('dono-popup-active')) {
+                donoBgRef.current?.classList.remove('dono-popup-active');
+                document.body.style.overflow = null;
             }
 
         }
@@ -83,7 +89,7 @@ export default function MainLayout(props) {
         <>
             <Header chatRef={chatRef} user={user} chat={chat} setChat={setChat} viewImgRef={viewImgRef} viewImgBgRef={viewImgBgRef} viewImg={viewImg} setViewImg={setViewImg} />
             <Outlet context={{ chatRef, user, dispatch, isLoading, filterRef, handleFilterDropdown, chat, setChat }} />
-            <Footer langRef={langRef} language={language} setLanguage={setLanguage} />
+            <Footer langRef={langRef} language={language} setLanguage={setLanguage} donoRef={donoRef} donoBgRef={donoBgRef} />
         </>
     );
 }

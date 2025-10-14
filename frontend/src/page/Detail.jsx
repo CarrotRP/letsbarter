@@ -164,7 +164,7 @@ export default function Detail() {
                             </span> :
                             <>
                                 <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
-                                    <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', borderRadius: '50%', marginRight: '10px' }} alt="user-image" />
+                                    <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px'}} alt="user-image" />
                                     <span>
                                         <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
                                         <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 
 export default function ChatDetail(props) {
-    const { chat, setChat, user, handleViewImg, socket, setSocket } = props;
+    const { chat, setChat, user, handleViewImg, socket, setSocket, setChatList } = props;
     const { t } = useTranslation();
     const [img, setImg] = useState();
     const [text, setText] = useState();
@@ -53,6 +53,7 @@ export default function ChatDetail(props) {
             credentials: 'include'
         }).then(res => res.json())
             .then(data => {
+                console.log(data)
                 setMessage(data);
             })
     }, []);
@@ -76,6 +77,22 @@ export default function ChatDetail(props) {
                 incomingMessage.receiverId === chat._id
             ) {
                 setMessage(prev => [...prev, incomingMessage]);
+
+                // mark messages from this chat as read immediately
+                if (incomingMessage.senderId === chat._id) {
+                    fetch(`http://localhost:3000/message/${chat._id}`, {
+                        method: 'PATCH',
+                        credentials: 'include'
+                    }).then(() => {
+                        setChatList(prev => prev.map(c => {
+                            const otherUserId = c.receiver._id === user._id ? c.sender._id : c.receiver._id;
+                            if (otherUserId === chat._id) {
+                                return { ...c, isRead: true };
+                            }
+                            return c;
+                        }))
+                    });
+                }
             }
         };
 
@@ -100,7 +117,7 @@ export default function ChatDetail(props) {
         <>
             <div className='chat-title' style={{ display: 'flex', alignItems: 'center', padding: '0 0 10px', borderBottom: '1px solid rgba(163, 68, 7, 0.45)' }}>
                 <img src={back} alt="" style={{ width: '10px', cursor: 'pointer' }} onClick={handleBackClick} />
-                <img src={chat?.profile_img?.startsWith('http') ? chat?.profile_img : `http://localhost:3000/${chat?.profile_img}`} alt="" style={{ width: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
+                <img src={chat?.profile_img?.startsWith('http') ? chat?.profile_img : `http://localhost:3000/${chat?.profile_img}`} alt="" style={{ width: '50px', height: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
                 <span className="chat-user" style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
                     <p style={{ fontWeight: '500' }}>{chat?.username}</p>
                     <p style={{ fontWeight: '300' }}>{chat?.occupation}</p>
@@ -115,17 +132,18 @@ export default function ChatDetail(props) {
                         <div
                             className='chat-bubble'
                             style={{
-                                alignSelf: m.text.startsWith('[system]') ? 'center' : (m.receiverId === user?._id ? 'start' : 'end'),
-                                position: 'relative', backgroundColor: m.text.startsWith('[system]') ? 'transparent' : 'var(--darken-background)'
+                                alignSelf: m.text?.startsWith('[system]') ? 'center' : (m.receiverId === user?._id ? 'start' : 'end'),
+                                position: 'relative', backgroundColor: m.text?.startsWith('[system]') ? 'transparent' : 'var(--darken-background)'
                             }}
                             key={m._id}
                         >
                             {m.image && <img src={`http://localhost:3000/${m.image}`} onClick={(e) => handleViewImg(e, m.image)} />}
-                            {m.text && <p style={{ padding: '5px 10px' }}>{m.text.startsWith('[system]')
+                            {m.text && <p style={{ padding: '5px 10px' }}>{m.text?.startsWith('[system]')
                                 ? (() => {
                                     const content = m.text.split(']')[1]?.trim();
                                     const name = content?.split(' ')[0];
-                                    const message = content?.split(' ').slice(1).join(' ');
+                                    const message = content?.split(' ').slice(-2).join(' ');
+                                    console.log('message', name)
                                     return (
                                         <>
                                             <strong>{name}</strong> {t(message)}
@@ -138,7 +156,7 @@ export default function ChatDetail(props) {
 
                             {/* show status only for last message sent by me */}
                             {isLast && isSentByMe && (
-                                <p style={{ fontSize: '12px', position: 'absolute', bottom: '-20px', right: 0 }}>
+                                <p style={{ fontSize: '12px', position: 'absolute', bottom: '-20px', right: 0, whiteSpace: 'nowrap' }}>
                                     {m.isRead ? t('seen') : t('delivered')}
                                 </p>
                             )}

@@ -137,9 +137,9 @@ export default function Trade() {
                     <p onClick={() => { setCurrentPage("Incoming"); setPage(1) }} style={{ fontWeight: currentPage == 'Incoming' ? 'bold' : 300, userSelect: 'none' }}>{t('incoming')} {currentPage == 'Incoming' ? '>' : ''}</p>
                     <p onClick={() => { setCurrentPage("Sent"); setPage(1) }} style={{ fontWeight: currentPage == 'Sent' ? 'bold' : 300, userSelect: 'none' }}>{t('sent')} {currentPage == 'Sent' ? '>' : ''}</p>
                 </div>
-                <div className="trades">
+                <div className="trades" style={{position: 'relative', display: 'flex', flexDirection: 'column'}}>
                     {currentPage === 'Incoming'
-                        ? receivedTrade?.map(v => (
+                        ? receivedTrade?.length == 0 ? <p style={{margin: '20% auto'}}>{t('no previous trade')}</p> : receivedTrade?.map(v => (
                             <TradeCard
                                 key={v._id}
                                 tradeId={v._id}
@@ -162,7 +162,7 @@ export default function Trade() {
                                 setIsPopup={setIsPopup}
                             />
                         ))
-                        : sentTrade?.map(v => (
+                        : sentTrade?.length == 0 ? <p style={{margin: '20% auto'}}>{t('no previous trade')}</p> : sentTrade?.map(v => (
                             <TradeCard
                                 key={v._id}
                                 tradeId={v._id}

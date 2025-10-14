@@ -75,64 +75,63 @@ export default function Chat(props) {
             {!chat &&
                 <>
                     <span>
-                        <h1 style={{ color: 'var(--text-primary)' }} onClick={() => console.log(chatList)}>{t('chat')}</h1>
+                        <h1 onClick={() => console.log(chatList)} style={{ color: 'var(--text-primary)' }}>{t('chat')}</h1>
                         <img src={close} alt="" onClick={handleCloseClick} style={{ cursor: 'pointer' }} />
                     </span>
                     <input type="text" placeholder={t('search')} id='chat-search' value={query} onChange={(e) => setQuery(e.target.value)} />
                     <div className="chat-list">
-                        {chatList?.map(v => {
-                            return (<div onClick={async (e) => {
-                                e.stopPropagation(); setChat(v.receiver?._id == user?._id ? v.sender : v.receiver);
-                                console.log(v);
-                                await fetch(`http://localhost:3000/message/${v.receiver?._id == user?._id ? v.sender?._id : v.receiver?._id}`, {
-                                    method: 'PATCH',
-                                    credentials: 'include'
-                                });
-                                setChatList(prev =>
-                                    prev.map(chat => {
-                                        // Determine the other user in this chat
-                                        const otherUserId = chat.receiver._id === user._id ? chat.sender._id : chat.receiver._id;
+                        {chatList?.length == 0 ? <p>{t('no chat')}</p> : chatList?.map(v => {
+                            return (
+                                <div onClick={async (e) => {
+                                    e.stopPropagation();
+                                    setChat(v.receiver?._id == user?._id ? v.sender : v.receiver);
+                                    await fetch(`http://localhost:3000/message/${v.receiver?._id == user?._id ? v.sender?._id : v.receiver?._id}`, {
+                                        method: 'PATCH',
+                                        credentials: 'include'
+                                    });
+                                    setChatList(prev =>
+                                        prev.map(chat => {
+                                            const otherUserId = chat.receiver._id === user._id ? chat.sender._id : chat.receiver._id;
+                                            const clickedUserId = v.receiver._id === user._id ? v.sender._id : v.receiver._id;
 
-                                        // Determine the ID we just marked as read
-                                        const clickedUserId = v.receiver?._id === user?._id ? v.sender?._id : v.receiver?._id;
+                                            // Only mark as read if the latest message was sent by the other user
+                                            const lastMsgSentByOther = v.sender._id !== user._id;
 
-                                        // If it matches, mark as read
-                                        if (otherUserId === clickedUserId) {
-                                            return { ...chat, isRead: true };
+                                            if (otherUserId === clickedUserId && lastMsgSentByOther) {
+                                                return { ...chat, isRead: true };
+                                            }
+                                            return chat;
+                                        })
+                                    );
+                                }}
+                                    style={{ cursor: 'pointer' }} key={v._id}>
+                                    <ChatTile
+                                        username={v.receiver?._id == user?._id ? v.sender?.username : v.receiver?.username}
+                                        profile={v.receiver?._id == user?._id ? v.sender?.profile_img : v.receiver?.profile_img}
+                                        text={
+                                            v.receiver?._id == user?._id
+                                                ? v.image
+                                                    ? t('they sent', { user: v.sender?.username })
+                                                    : v.text
+                                                : v.image
+                                                    ? t('you sent')
+                                                    : t('you', { text: v.text })
                                         }
-                                        return chat;
-                                    })
-                                );
-
-                            }}
-                                style={{ cursor: 'pointer' }} key={v._id}>
-                                <ChatTile
-                                    username={v.receiver?._id == user?._id ? v.sender?.username : v.receiver?.username}
-                                    profile={v.receiver?._id == user?._id ? v.sender?.profile_img : v.receiver?.profile_img}
-                                    text={
-                                        v.receiver?._id === user?._id
-                                            ? v.image
-                                                ? t('they sent', { user: v.sender?.username })
-                                                : v.text
-                                            : v.image
-                                                ? t('you sent')
-                                                : t('you', { text: v.text })
-                                    }
-                                    status={
-                                        v.receiver?._id == user?._id
-                                            ? v.isRead
-                                                ? ''
-                                                : t('new')
-                                            : v.isRead
-                                                ? t('seen')
-                                                : t('delivered')}
-                                    date={v.createdAt} />
-                            </div>);
+                                        status={
+                                            v.receiver?._id == user?._id
+                                                ? v.isRead
+                                                    ? ''
+                                                    : t('new')
+                                                : v.isRead
+                                                    ? t('seen')
+                                                    : t('delivered')}
+                                        date={v.createdAt} />
+                                </div>);
                         }
                         )}
                     </div>
                 </>}
-            {chat && <ChatDetail chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} socket={socket} setSocket={setSocket} />}
+            {chat && <ChatDetail chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} socket={socket} setSocket={setSocket} setChatList={setChatList}/>}
         </div>
     );
 }

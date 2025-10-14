@@ -29,7 +29,7 @@ export default function TradeCard(props) {
     const handleRespondClick = (e) => {
         e.stopPropagation();
         setSelectedTrade({
-            tradeId, user, userId, leftItem, rightItem, leftItems, rightItems
+            tradeId, user, userId, leftItem, rightItem, leftItems, rightItems, userImg
         })
         tradePopupRef.current.style.display = 'block'
         tradePopupContentRef.current.style.display = 'block';
@@ -42,7 +42,7 @@ export default function TradeCard(props) {
             <div className='trade-card-container' style={{ position: 'relative' }} onClick={() => console.log(userId)}>
                 <div className="trade-card">
                     <section className="left-side">
-                        <img src={userImg?.startsWith('http') ? userImg : `http://localhost:3000/${userImg}`} alt="" style={{ objectFit: 'contain', backgroundColor: 'white'}}/>
+                        <img src={userImg?.startsWith('http') ? userImg : `http://localhost:3000/${userImg}`} alt="" style={{ backgroundColor: 'white'}}/>
                         <div className="trade-detail">
                             <h2>{type == 'incoming' ? <>{user} <span style={{ fontWeight: 300 }}>{t('offer')}</span></> : <><span style={{ fontWeight: 300 }}>{t('for')}</span> {user}</>}</h2>
                             <HorizontalCard

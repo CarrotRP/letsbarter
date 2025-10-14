@@ -79,7 +79,7 @@ export default function Header(props) {
                                 <img src={closeIcon} alt="" onClick={handleViewClose} />
                             </div>
                             <div className="view-img-content" ref={viewImgRef}>
-                                <img src={`http://localhost:3000/${viewImg}`} alt="" />
+                                <img src={`http://localhost:3000/${viewImg}`} alt=""/>
                             </div>
                         </div>
                     </>

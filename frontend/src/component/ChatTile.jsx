@@ -2,11 +2,11 @@ import { useTranslation } from "react-i18next";
 
 export default function ChatTile(props) {
     const { username, profile, text, date, status } = props
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <div className="chat-tile">
-            <img src={profile?.startsWith('http') ? profile : `http://localhost:3000/${profile}`} alt="user" style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid black', alignSelf: 'center', objectFit: 'contain' }} loading="lazy" />
+            <img src={profile?.startsWith('http') ? profile : `http://localhost:3000/${profile}`} alt="user" style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid black', alignSelf: 'center' }} loading="lazy" />
             <div className="chat-info">
                 <span>
                     <p style={{ fontWeight: '500' }}>{username}</p>
@@ -38,8 +38,16 @@ export default function ChatTile(props) {
                     })()}</p>
                 </span>
                 <span>
-                    <p style={{ fontWeight: '300' }}>{text?.split(']')[1]?.trim().split(' ')[0]} {t(text?.split(']')[1]?.trim().split(' ').slice(1)?.join(' '))}</p>
-                    <p style={{fontWeight: status == 'new' ? '700' : '200', color: 'var(--secondary)', fontSize: '14px'}}>{status}</p>
+                    <p style={{ fontWeight: '300' }}>
+                        {
+                            text?.startsWith('You: [system]')
+                                ? `${t(text.split(' ')[2]?.trim())} ${t(text.split(']')[1]?.trim().split(' ').slice(-2).join(' '))}`
+                                : text?.startsWith('[system]')
+                                    ? `${text.split(']')[1]?.trim().split(' ')[0]} ${t(text.split(']')[1]?.trim().split(' ').slice(-2).join(' '))}`
+                                    : t(text)
+                        }
+                    </p>
+                    <p style={{ fontWeight: status == 'new' ? '700' : '200', color: 'var(--secondary)', fontSize: '14px' }}>{status}</p>
                 </span>
             </div>
         </div>

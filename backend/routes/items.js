@@ -5,10 +5,13 @@ const path = require('path');
 
 const itemController = require('../controllers/itemController');
 
-//multer storage
 const storage = multer.diskStorage({
-    destination: (req, file, done) => done(null, "uploads/"),
-    filename: (req, file, done) => done(null, Date.now() + path.extname(file.originalname)),
+  destination: (req, file, done) => done(null, "uploads/"),
+  filename: (req, file, done) => {
+    const ext = path.extname(file.originalname); // keep original extension
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    done(null, uniqueSuffix + ext);
+  },
 });
 
 const upload = multer({storage});

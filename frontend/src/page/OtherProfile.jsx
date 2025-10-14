@@ -148,7 +148,7 @@ export default function OtherProfile() {
                 transition={Slide}
             />
             <div className='other-detail'>
-                <img src={otherUser?.profile_img.startsWith('http') ? otherUser?.profile_img : `http://localhost:3000/${otherUser?.profile_img}`} style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white' }} alt="user-image" />
+                <img src={otherUser?.profile_img.startsWith('http') ? otherUser?.profile_img : `http://localhost:3000/${otherUser?.profile_img}`} style={{ width: '120px', height: '120px', borderRadius: '50%', backgroundColor: 'white' }} alt="user-image" />
                 <span>
                     <h1>{otherUser?.username}</h1>
                     <p style={{ fontSize: '20px', fontWeight: 300 }}>{otherUser?.occupation}</p>

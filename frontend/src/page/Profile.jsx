@@ -8,9 +8,11 @@ import { useEffect, useState } from 'react';
 import './Profile.css';
 import { useNavigate, Link, useOutletContext } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import Toaster from "../component/Toaster";
 
 export default function Profile() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [currentPage, setCurrentPage] = useState('inventory');
     const { user, dispatch, isLoading } = useOutletContext();
     const [username, setUsername] = useState('');
@@ -80,7 +82,7 @@ export default function Profile() {
         formData.append("username", username);
         formData.append("occupation", occupation);
         formData.append('email', email);
-        if(newPassword){
+        if (newPassword) {
             formData.append('password', newPassword);
         }
 
@@ -100,13 +102,30 @@ export default function Profile() {
         const file = e.target.files[0];
         console.log(file);
         if (file) {
-            setProfilePreview({ file, preview: URL.createObjectURL(file) });
+            if (!['png', 'jpg', 'jpeg'].includes(file.name.toLowerCase().split('.').pop())) {
+                toast(<Toaster text="invalid file type" />, { autoClose: 5000, toastId: 'no-dupe' });
+            } else {
+                setProfilePreview({ file, preview: URL.createObjectURL(file) });
+            }
         }
         console.log(profileImg)
     }
 
     return (
         <main className="profile-page">
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable
+                    pauseOnHover={false}
+                    theme="light"
+                    transition={Slide}
+                />
             <div className="profile-page-content">
                 <section className="profile-display">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '30px' }}>
@@ -157,7 +176,7 @@ export default function Profile() {
                                 <div className="photo">
                                     <img src={profilePreview?.preview} alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%', objectFit: 'contain' }} />
                                     <label htmlFor='choose-profile-img'>{t('change photo')}</label>
-                                    <input type='file' id="choose-profile-img" accept='image/*' onChange={handleProfileImgChange}></input>
+                                    <input type='file' id="choose-profile-img" accept=".png, .jpg, .jpeg" onChange={handleProfileImgChange}></input>
                                 </div>
                                 <div className="profile-form-input">
                                     <FormComponent htmlFor="name" label={t('fullname')} type="text" value={username} setter={setUsername} />

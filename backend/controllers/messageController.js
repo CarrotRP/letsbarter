@@ -81,6 +81,7 @@ const get_chat = (req, res) => {
                 $project: {
                     _id: 1,
                     text: 1,
+                    image: 1,
                     createdAt: 1,
                     sender: {
                         _id: 1,
@@ -145,6 +146,7 @@ const update_read_status = (req, res) => {
     const io = req.app.get('io');
     const userSocketMap = req.app.get('userSocketMap');
 
+    //message will only update when match these 3 conditions
     Message.updateMany(
         {
             senderId: id,
@@ -154,17 +156,19 @@ const update_read_status = (req, res) => {
         {
             $set: { isRead: true }
         }).then(async result => {
-            const updatedMessages = await Message.find({ senderId: id, receiverId: userId, isRead: true }).select('_id');
-
-            const senderSockets = userSocketMap[id] || [];
-            senderSockets.forEach(socketId => {
-                io.to(socketId).emit('readMessage', { messageIds: updatedMessages.map(m => m._id), receiverId: userId });
-            });
-
-            const currentUserSockets = userSocketMap[userId] || [];
-            currentUserSockets.forEach(socketId => {
-                io.to(socketId).emit('readMessage', { messageIds: updatedMessages.map(m => m._id), receiverId: userId });
-            });
+            if(result.modifiedCount > 0){
+                const updatedMessages = await Message.find({ senderId: id, receiverId: userId, isRead: true }).select('_id');
+    
+                const senderSockets = userSocketMap[id] || [];
+                senderSockets.forEach(socketId => {
+                    io.to(socketId).emit('readMessage', { messageIds: updatedMessages.map(m => m._id), receiverId: userId });
+                });
+    
+                const currentUserSockets = userSocketMap[userId] || [];
+                currentUserSockets.forEach(socketId => {
+                    io.to(socketId).emit('readMessage', { messageIds: updatedMessages.map(m => m._id), receiverId: userId });
+                });
+            }
 
             res.json({ success: true, updatedCount: result.modifiedCount })
         });

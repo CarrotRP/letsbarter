@@ -1,23 +1,24 @@
 const Item = require('../models/itemModel');
+const Category = require('../models/categoryModel');
 
 //get every item
 const get_all_items = (req, res) => {
-  const { limit, condition, sortOpt} = req.query;
+  const { limit, condition, sortOpt } = req.query;
 
   let totalCount = 0;
-  
+
   const filter = {}
   let sort = {}
 
-  if(condition) { filter.item_condition = { $gte: 7 }}
-  if(sortOpt) {sort = {createdAt: -1}}
-  
+  if (condition) { filter.item_condition = { $gte: 7 } }
+  if (sortOpt) { sort = { createdAt: -1 } }
+
   Item.countDocuments(filter)
     .then(count => {
       totalCount = count;
       return Item.find(filter).limit(limit).sort(sort);
     })
-    .then(items => res.json({count: totalCount, items}));
+    .then(items => res.json({ count: totalCount, items }));
 }
 //in detail page
 const get_one_item = (req, res) => {
@@ -36,28 +37,28 @@ const get_item_for_owner = (req, res) => {
 
   let totalCount = 0;
 
-  if(filterOpt){
-    filter._id = { $ne: filterOpt}
+  if (filterOpt) {
+    filter._id = { $ne: filterOpt }
   }
 
-  if(query){
-    filter.name = { $regex: query, $options: 'i'}
+  if (query) {
+    filter.name = { $regex: query, $options: 'i' }
   }
 
-  if(page){
+  if (page) {
     skip = (page - 1) * limit;
   }
 
-  Item.countDocuments({owner_id: user_id, ...filter})
+  Item.countDocuments({ owner_id: user_id, ...filter })
     .then(count => {
       //totalCount, if its in home or detail, do the 'see more'(dont use pagination navigator), else(popup) do the pagination navigator
       totalCount = page ? Math.ceil(count / limit) : count;
-      return Item.find({ owner_id: user_id, ...filter}).limit(limit).skip(skip);
-    }).then(items => res.json({count: totalCount, items}));
+      return Item.find({ owner_id: user_id, ...filter }).limit(limit).skip(skip);
+    }).then(items => res.json({ count: totalCount, items }));
 }
 //get item by category
 const get_by_category = (req, res) => {
-  const { category, condition, sortOpt, page, limitOpt, filterOpt} = req.query;
+  const { category, condition, sortOpt, page, limitOpt, filterOpt } = req.query;
 
   const limit = limitOpt ? limitOpt : 2; //for testing
   const skip = (page - 1) * limit;
@@ -65,64 +66,71 @@ const get_by_category = (req, res) => {
 
   const filter = {};
 
-  if(category){
+  if (category) {
     filter.category_id = category;
   }
   //if theres filterOpt req(detail page), add this filter
-  if(filterOpt){
-    filter._id = { $ne: filterOpt}
+  if (filterOpt) {
+    filter._id = { $ne: filterOpt }
   }
 
-  if(condition == 'lt'){
-    filter.item_condition = { $lte: 5};
-  } else if(condition == 'gt'){
-    filter.item_condition = { $gte: 5};
+  if (condition == 'lt') {
+    filter.item_condition = { $lte: 5 };
+  } else if (condition == 'gt') {
+    filter.item_condition = { $gte: 5 };
   }
 
   let sort = {}
-  if(sortOpt == 'asc'){
-    sort = { estimate_value: 1}
-  } else if(sortOpt == 'desc'){
-    sort = {estimate_value: -1};
+  if (sortOpt == 'asc') {
+    sort = { estimate_value: 1 }
+  } else if (sortOpt == 'desc') {
+    sort = { estimate_value: -1 };
   }
   Item.countDocuments(filter)
     .then(count => {
       //if theres limit option req('see more' button), then send back the total item count instead not the page
       totalPage = limitOpt ? count : Math.ceil(count / limit);
       return Item.find(filter).sort(sort).skip(skip).limit(limit);
-    }).then(items => res.json({totalPage, items}));
+    }).then(items => res.json({ totalPage, items }));
 }
 //search item
-const search_item = (req, res) => {
+const search_item = async (req, res) => {
   const { query, condition, sortOpt, page } = req.query;
   const limit = 2; //2 for now, for testing
   const skip = (page - 1) * limit;
 
   const filter = {};
 
-  if(query){
-    filter.name = { $regex: query, $options: "i"};
-  }
 
   //filter item condition
   //less than or equal 5
-  if(condition == 'lt'){
-    filter.item_condition = { $lte: 5};
+  if (condition == 'lt') {
+    filter.item_condition = { $lte: 5 };
   }
   //more than or equal 5
-  if(condition == 'gt'){
-    filter.item_condition = { $gte: 5}
+  if (condition == 'gt') {
+    filter.item_condition = { $gte: 5 }
+  }
+
+  let categoryIds = [];
+  if (query) {
+    const categories = await Category.find({
+      name: { $regex: query, $options: 'i' }
+    }).select('_id');
+
+    categoryIds = categories.map(c => c._id);
+
+    filter.$or = [
+      { name: { $regex: query, $options: "i" } },
+      { category_id: { $in: categoryIds } }
+    ];
   }
 
   const sort = {};
 
   //sort item value estimate
-  if(sortOpt == 'asc'){
-    sort.option = {estimate_value: 1};
-  }
-  if(sortOpt == 'desc'){
-    sort.option = {estimate_value: -1};
-  }
+  if (sortOpt === 'asc') sort.estimate_value = 1;
+  if (sortOpt === 'desc') sort.estimate_value = -1;
 
   let totalPage = 0;
 
@@ -131,7 +139,7 @@ const search_item = (req, res) => {
       totalPage = Math.ceil(count / limit);
       return Item.find(filter).sort(sort).skip(skip).limit(limit);
     })
-    .then(items => res.json({totalPage, items}));
+    .then(items => res.json({ totalPage, items }));
 
 }
 

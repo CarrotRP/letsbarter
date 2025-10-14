@@ -96,6 +96,8 @@
     "description": "Description",
     "looking for": "Looking for (Category or specific)",
     "upload": "Upload",
+    "invalid file type": "Invalid file type",
+    "can only upload": "You can only upload up to 4 images",
 
     "incoming": "Incoming Offer",
     "sent": "Sent Offer",
@@ -123,9 +125,11 @@
     "trade countered": "Counter Offer Made",
     "you got no item": "You got no item in your inventory",
     "they got no item": "{{name}} got no item in their inventory",
+    "no previous trade": "No previous trade",
 
     "chat": "Chat",
     "message": "Message",
+    "no chat": "No Chat History",
     "you": "You: {{text}}",
     "you sent": "You sent a photo",
     "they sent": "{{user}} sent a photo",

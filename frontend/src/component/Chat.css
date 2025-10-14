@@ -34,6 +34,7 @@
 .chat-list {
     height: 325px;
     overflow-y: auto;
+    position: relative;
 }
 
 #chat-search {

@@ -4,12 +4,14 @@ import './Upload.css';
 import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate, useParams } from 'react-router';
 import Dropdown from '../component/Dropdown';
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import Toaster from "../component/Toaster";
 import { useTranslation } from 'react-i18next';
 
 export default function Upload() {
     const { id } = useParams();
     const { user } = useOutletContext();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     //form detail
@@ -47,16 +49,16 @@ export default function Upload() {
                     setDescription(data.description);
                     setCategory(data.category_id);
                     setOgPrice(data.original_price);
-                    setBoughtOn(data.bought_on.split('T')[0]);
+                    setBoughtOn(data.bought_on?.split('T')[0]);
                     setCondition(data.item_condition);
                     setLooking(data.looking_for);
                     setBrand(data.brand);
 
-                    if(data.main_img){
+                    if (data.main_img) {
                         setMainImg({ file: null, preview: `http://localhost:3000/${data.main_img}`, isMain: true });
                     }
 
-                    if(data.imgs){
+                    if (data.imgs) {
                         setImages([{ file: null, preview: `http://localhost:3000/${data.main_img}`, isMain: true }, ...data.imgs.map(path => ({
                             file: null,
                             preview: `http://localhost:3000/${path}`
@@ -77,7 +79,7 @@ export default function Upload() {
         images.filter(img => !img.isMain).forEach(img => {
             formData.append("images", img.file);
         });
-
+        
         images.filter(img => !img.file && !img.isMain).forEach(img => {
             formData.append("existing_images", img.preview.replace("http://localhost:3000/", ""));
         })
@@ -121,18 +123,22 @@ export default function Upload() {
                 navigate('/home');
             })
             .catch(err => console.error(err)
-        );
+            );
     };
 
     //select and preview img (main img)
     const handleMainImgChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setMainImg({ file, preview: URL.createObjectURL(file), isMain: true });
+            if (!['png', 'jpg', 'jpeg'].includes(file.name.toLowerCase().split('.').pop())) {
+                toast(<Toaster text="invalid file type" />, { autoClose: 5000, toastId: 'no-dupe' });
+            } else {
+                setMainImg({ file, preview: URL.createObjectURL(file), isMain: true });
 
-            setImages(prev => prev.filter(img => !img.isMain));
-            setImages(prev => [...prev, { file, preview: URL.createObjectURL(file), isMain: true }]);
-            e.target.value = null;
+                setImages(prev => prev.filter(img => !img.isMain));
+                setImages(prev => [...prev, { file, preview: URL.createObjectURL(file), isMain: true }]);
+                e.target.value = null;
+            }
         }
     }
 
@@ -142,7 +148,7 @@ export default function Upload() {
 
         //limit image selection
         if (images.length + files.length > 4) {
-            alert(`You can only upload up to 4 images`);
+            toast(<Toaster text='can only upload' />, { autoClose: 5000, toastId: 'no-dupe' })
             return;
         }
 
@@ -150,6 +156,7 @@ export default function Upload() {
             file,
             preview: URL.createObjectURL(file),
         }));
+
         setImages((prev) => [...prev, ...newImages]); // append new images
     };
 
@@ -176,11 +183,24 @@ export default function Upload() {
 
     return (
         <main className="upload">
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="light"
+                transition={Slide}
+            />
             <h1>{t('item upload')}</h1>
             <div className="item-inputs">
                 <div className="item-images">
                     <h3>{t('main image')}</h3>
-                    <p style={{color: 'var(--primary)'}}>{t('1 main')}</p>
+                    <p style={{ color: 'var(--primary)' }}>{t('1 main')}</p>
                     {/* main image will display here */}
                     {mainImg &&
                         <div style={{ position: 'relative', width: '150px' }}>
@@ -203,14 +223,14 @@ export default function Upload() {
                                 x
                             </button>
                         </div>}
-                    <label htmlFor="choose-main" className='choose-file' >{t('choose file')}</label>
-                    <input type='file' id="choose-main" accept='image/*' onChange={handleMainImgChange}></input>
+                    <label htmlFor="choose-main" className='choose-file' style={{ cursor: 'pointer' }}>{t('choose file')}</label>
+                    <input type='file' id="choose-main" accept=".png, .jpg, .jpeg" onChange={handleMainImgChange}></input>
                     <h3>{t('images')}</h3>
                     <div className="images">
-                        <p style={{color: 'var(--primary)', position: 'absolute'}}>{t('4 images')}</p>
+                        <p style={{ color: 'var(--primary)', position: 'absolute' }}>{t('4 images')}</p>
                         {/* other images will display here */}
                         {images.map((src, i) =>
-                            <div style={{ position: 'relative', marginTop: '20px'}}>
+                            <div style={{ position: 'relative', marginTop: '20px' }}>
                                 <img key={i} src={src.preview} alt="" />
                                 <button
                                     type="button"
@@ -232,8 +252,8 @@ export default function Upload() {
                             </div>
                         )}
                     </div>
-                    <label htmlFor="choose-images" className='choose-file'>{t('choose file')}</label>
-                    <input type='file' id="choose-images" multiple accept='image/*' onChange={handleImgChange}></input>
+                    <label htmlFor="choose-images" className='choose-file' style={{ cursor: 'pointer', marginTop: '40px' }}>{t('choose file')}</label>
+                    <input type='file' id="choose-images" multiple accept=".png, .jpg, .jpeg" onChange={handleImgChange}></input>
                 </div>
                 <div className="item-infos">
                     <h3>{t('detail')}</h3>
@@ -245,7 +265,10 @@ export default function Upload() {
                     <DetailInput type="date" data='boughtOn' placeholder={t('bought on')} setter={setBoughtOn} getter={boughtOn} />
                     <DetailInput type="number" data='condition' placeholder={t('condition')} setter={setCondition} getter={condition} p="/ 10" />
                     <AreaInput data="looking" label={t('looking for')} setter={setLooking} getter={looking} color1='var(--primary)' color2='var(--secondary)' />
-                    <button id='submit-btn' onClick={handleUploadClick}>{id ? t('update') : t('upload')}</button>
+                    <span style={{display: 'flex', justifyContent: 'center', gap: '30px'}}>
+                        <button id='submit-btn' onClick={handleUploadClick} style={{justifySelf: 'center', width: id ? '200px' : '300px'}}>{id ? t('update') : t('upload')}</button>
+                        {id && <button style={{border: 'none', borderRadius: '10px', padding: '10px', width: '200px', cursor: 'pointer'}} onClick={() => navigate(-1)}>{t('cancel')}</button>}
+                    </span>
                 </div>
             </div>
         </main>

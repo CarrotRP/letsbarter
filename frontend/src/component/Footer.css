@@ -1,6 +1,7 @@
 footer{
     padding: 10px 0;
     background-color: var(--darken-background);
+    margin-top: 120px;
 }
 .top .logo-desc h1{
     text-box: trim-both cap text;
@@ -63,4 +64,32 @@ a{
     opacity: 1;
     pointer-events: all;
     top: 40px;
+}
+.dono h4{
+    text-box: trim-both cap alphabetic;
+    margin: 0;
+    text-transform: none;
+}
+.dono-popup{
+    position: fixed;
+    top: 0;
+    background-color: rgba(0,0,0,0.4);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 500ms;
+}
+.dono-popup-active{
+    opacity: 1;
+    pointer-events: auto;
+}
+.dono-popup img{
+    border-radius: 50px;
+    width: 400px;
 }
