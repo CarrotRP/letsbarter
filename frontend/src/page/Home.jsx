@@ -3,6 +3,7 @@ import CategorySection from "../component/CategorySection";
 import HomeComponent from "../component/HomeComponent";
 import './Home.css';
 import Ads from "../component/Ads";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Home() {
     const [categoryList, setCategoryList] = useState([]);
@@ -18,12 +19,12 @@ export default function Home() {
 
     const fetchItem = () => {
         //fetch categories
-        fetch('http://localhost:3000/category')
+        fetch(`${BASE_URL}/category`)
             .then(res => res.json())
             .then(data => setCategoryList(data));
 
         //fetch items
-        fetch(`http://localhost:3000/item?limit=${limit}&sortOpt=true`)
+        fetch(`${BASE_URL}/item?limit=${limit}&sortOpt=true`)
             .then(res => res.json())
             .then(data => {
                 setItems(data.items);
@@ -31,7 +32,7 @@ export default function Home() {
             });
 
         //fetch items still good in condition
-        fetch(`http://localhost:3000/item?limit=${goodLimit}&condition=good`)
+        fetch(`${BASE_URL}/item?limit=${goodLimit}&condition=good`)
             .then(res => res.json())
             .then(data => {
                 setGoodItems(data.items);

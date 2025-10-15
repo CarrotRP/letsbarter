@@ -4,6 +4,7 @@ import TradePopup from '../component/TradePopup';
 import './Trade.css';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Trade() {
     const { user } = useOutletContext();
@@ -50,7 +51,7 @@ export default function Trade() {
 
         }
 
-        const res = await fetch(`http://localhost:3000/trade/${id}`, {
+        const res = await fetch(`${BASE_URL}/trade/${id}`, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -66,7 +67,7 @@ export default function Trade() {
         }
 
         if (text) {
-            fetch(`http://localhost:3000/message/send/${userId}`, {
+            fetch(`${BASE_URL}/message/send/${userId}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -87,7 +88,7 @@ export default function Trade() {
             if (currentPage == 'Incoming') {
                 window.scrollTo(0, 0);
                 //fetch received trade
-                fetch(`http://localhost:3000/trade/received/${user?._id}?page=${page}`, {
+                fetch(`${BASE_URL}/trade/received/${user?._id}?page=${page}`, {
                     credentials: 'include'
                 }).then(res => res.json())
                     .then(data => {
@@ -97,7 +98,7 @@ export default function Trade() {
             } else {
                 window.scrollTo(0, 0);
                 //fetch sent trade
-                fetch(`http://localhost:3000/trade/sent/${user?._id}?page=${page}`, {
+                fetch(`${BASE_URL}/trade/sent/${user?._id}?page=${page}`, {
                     credentials: 'include'
                 }).then(res => res.json())
                     .then(data => {

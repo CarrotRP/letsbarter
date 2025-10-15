@@ -5,6 +5,7 @@ import "./AuthLayout.css";
 import googleIcon from "../assets/google.png";
 import { useEffect } from "react";
 import { useTranslation, Trans } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function AuthLayout() {
     const location = useLocation();
@@ -19,7 +20,7 @@ export default function AuthLayout() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:3000/user/check-auth', {
+        fetch(`${BASE_URL}/user/check-auth`, {
             credentials: 'include'
         })
         .then(res => res.json())
@@ -34,13 +35,13 @@ export default function AuthLayout() {
         const width = 500, height = 500;
 
         const popup = window.open(
-            'http://localhost:3000/user/oauth', //url
+            `${BASE_URL}/user/oauth`, //url
             'Google Login', //popup window name
             `width=${width},height=${height}`
         );
 
         window.addEventListener('message', (e) => {
-            if (e.origin !== 'http://localhost:3000' && e.origin !== 'http://localhost:5173') return; //security check
+            if (e.origin !== BASE_URL && e.origin !== window.location.origin) return; //security check
             if (e.data.type === 'google-auth-success') {
             }
             navigate(e.data.redirect);

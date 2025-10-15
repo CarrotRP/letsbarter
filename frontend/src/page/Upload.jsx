@@ -7,6 +7,7 @@ import Dropdown from '../component/Dropdown';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import Toaster from "../component/Toaster";
 import { useTranslation } from 'react-i18next';
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Upload() {
     const { id } = useParams();
@@ -33,7 +34,7 @@ export default function Upload() {
 
     useEffect(() => {
         //getting category
-        fetch('http://localhost:3000/category/')
+        fetch(`${BASE_URL}/category/`)
             .then(res => res.json())
             .then(data => {
                 setCategoryList(data);
@@ -42,7 +43,7 @@ export default function Upload() {
 
         //on edit, get current item detail
         if (id) {
-            fetch(`http://localhost:3000/item/${id}`)
+            fetch(`${BASE_URL}/item/${id}`)
                 .then(res => res.json())
                 .then(data => {
                     setName(data?.name);
@@ -55,13 +56,13 @@ export default function Upload() {
                     setBrand(data.brand);
 
                     if (data.main_img) {
-                        setMainImg({ file: null, preview: `http://localhost:3000/${data.main_img}`, isMain: true });
+                        setMainImg({ file: null, preview: `${BASE_URL}/${data.main_img}`, isMain: true });
                     }
 
                     if (data.imgs) {
-                        setImages([{ file: null, preview: `http://localhost:3000/${data.main_img}`, isMain: true }, ...data.imgs.map(path => ({
+                        setImages([{ file: null, preview: `${BASE_URL}/${data.main_img}`, isMain: true }, ...data.imgs.map(path => ({
                             file: null,
-                            preview: `http://localhost:3000/${path}`
+                            preview: `${BASE_URL}/${path}`
                         }))])
                     }
                 });
@@ -81,7 +82,7 @@ export default function Upload() {
         });
         
         images.filter(img => !img.file && !img.isMain).forEach(img => {
-            formData.append("existing_images", img.preview.replace("http://localhost:3000/", ""));
+            formData.append("existing_images", img.preview.replace(`${BASE_URL}/`, ""));
         })
 
         // Append other fields
@@ -100,10 +101,10 @@ export default function Upload() {
         formData.append("estimate_value", estimate_value);
 
         if (id) {
-            url = `http://localhost:3000/item/${id}`;
+            url = `${BASE_URL}/item/${id}`;
             method = 'PATCH'
         } else {
-            url = `http://localhost:3000/item/upload`;
+            url = `${BASE_URL}/item/upload`;
             method = "POST";
         }
         fetch(url, {

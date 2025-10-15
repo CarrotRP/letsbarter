@@ -6,6 +6,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { UserContext } from "../context/UserContext";
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Login() {
     const [isVisible, setIsVisible] = useState(false);
@@ -21,7 +22,7 @@ export default function Login() {
 
     const handleLoginClick = () => {
         if(email && password){
-            fetch('http://localhost:3000/user/login', {
+            fetch(`${BASE_URL}/user/login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

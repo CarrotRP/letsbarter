@@ -6,6 +6,7 @@ import { ToastContainer, toast, Slide } from 'react-toastify';
 import Toaster from "../component/Toaster";
 import './Detail.css';
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Detail() {
     const {t} = useTranslation();
@@ -46,7 +47,7 @@ export default function Detail() {
     }
 
     const handleItemDelete = () => {
-        fetch(`http://localhost:3000/item/${itemDetail?._id}`, {
+        fetch(`${BASE_URL}/item/${itemDetail?._id}`, {
             method: 'DELETE',
             credentials: 'include'
         }).then(res => res.json())
@@ -61,14 +62,14 @@ export default function Detail() {
 
     useEffect(() => {
         //fetch item detail
-        fetch(`http://localhost:3000/item/${id}`).then(res => res.json())
+        fetch(`${BASE_URL}/item/${id}`).then(res => res.json())
             .then(data => {
                 setCurrentImg(0);
                 setItemDetail(data);
                 setImage([data.main_img]);
                 setImage(prev => [...prev, ...data.imgs]);
                 //fetch other user inventory
-                fetch(`http://localhost:3000/item/user-item/${data.owner_id?._id}?limit=${limit}&filterOpt=${id}`)
+                fetch(`${BASE_URL}/item/user-item/${data.owner_id?._id}?limit=${limit}&filterOpt=${id}`)
                     .then(res => res.json())
                     .then(data => {
                         setOtherItem(data.items);
@@ -81,7 +82,7 @@ export default function Detail() {
                 if (data.category_id) { params.append("category", data.category_id) }
                 if (id) { params.append("filterOpt", id) }
 
-                fetch(`http://localhost:3000/item/category?${params.toString()}`)
+                fetch(`${BASE_URL}/item/category?${params.toString()}`)
                     .then(res => res.json())
                     .then(data => {
                         setMightLike(data.items);
@@ -130,10 +131,10 @@ export default function Detail() {
             <section className="product-detail">
                 <aside onClick={handleImgClick}>
                     {image.map((v, i) => {
-                        return <img key={i} id={i} src={`http://localhost:3000/${v}`} alt="" style={{ cursor: 'pointer', border: i == currentImg ? '3.5px solid var(--secondary)' : '' }} />
+                        return <img key={i} id={i} src={`${BASE_URL}/${v}`} alt="" style={{ cursor: 'pointer', border: i == currentImg ? '3.5px solid var(--secondary)' : '' }} />
                     })}
                 </aside>
-                <img id="main-img" src={`http://localhost:3000/${image[currentImg]}`} alt="" />
+                <img id="main-img" src={`${BASE_URL}/${image[currentImg]}`} alt="" />
                 {!isPageLoading &&
                     <section className="product-info">
                         <h1>{itemDetail?.name}</h1>
@@ -164,7 +165,7 @@ export default function Detail() {
                             </span> :
                             <>
                                 <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
-                                    <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `http://localhost:3000/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px'}} alt="user-image" />
+                                    <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `${BASE_URL}/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px'}} alt="user-image" />
                                     <span>
                                         <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
                                         <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>

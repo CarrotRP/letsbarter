@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 import Chat from './Chat';
 import { useTranslation } from 'react-i18next';
+import { BASE_URL } from '../config/apiConfig';
 
 export default function Header(props) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -72,14 +73,14 @@ export default function Header(props) {
                             <button id='chat' onClick={handleChatClick}><img src={chatIcon} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
                             {unreadCount > 0 && <span className="badge"></span>}
                         </span>
-                        <Link to='/profile'><img src={user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}`} alt="" style={{ width: '70px', height: '70px', border: '1px solid black', borderRadius: '50%', backgroundColor: 'white' }} /></Link>
+                        <Link to='/profile'><img src={user?.profile_img?.startsWith('http') ? user?.profile_img : `${BASE_URL}/${user?.profile_img}`} alt="" style={{ width: '70px', height: '70px', border: '1px solid black', borderRadius: '50%', backgroundColor: 'white' }} /></Link>
                         <Chat chatRef={chatRef} chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} chatList={chatList} setChatList={setChatList} />
                         <div className="view-img" ref={viewImgBgRef}>
                             <div className='view-close'>
                                 <img src={closeIcon} alt="" onClick={handleViewClose} />
                             </div>
                             <div className="view-img-content" ref={viewImgRef}>
-                                <img src={`http://localhost:3000/${viewImg}`} alt=""/>
+                                <img src={`${BASE_URL}/${viewImg}`} alt=""/>
                             </div>
                         </div>
                     </>

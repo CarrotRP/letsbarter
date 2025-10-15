@@ -1,6 +1,5 @@
 import message from '../assets/message.png'
 import flag from '../assets/flag.png';
-import location from '../assets/location.png';
 import inventory from '../assets/inventory.png'
 import ProductCard from '../component/ProductCard';
 import './OtherProfile.css';
@@ -12,6 +11,7 @@ import Report from '../component/Report';
 import Toaster from '../component/Toaster';
 import { useTranslation } from 'react-i18next';
 import ReviewPopup from '../component/ReviewPopup';
+import { BASE_URL } from "../config/apiConfig";
 
 export default function OtherProfile() {
     const { id } = useParams();
@@ -80,7 +80,7 @@ export default function OtherProfile() {
     }
 
     const fetchReviews = () => {
-        fetch(`http://localhost:3000/review/${id}?limit=6&page=${reviewPage}`, {
+        fetch(`${BASE_URL}/review/${id}?limit=6&page=${reviewPage}`, {
                 credentials: 'include'
             }).then(res => res.json())
                 .then(data => {
@@ -93,13 +93,13 @@ export default function OtherProfile() {
 
     useEffect(() => {
         //fetch other user data
-        fetch(`http://localhost:3000/user/${id}`)
+        fetch(`${BASE_URL}/user/${id}`)
             .then(res => res.json())
             .then(data => {
                 setOtherUser(data);
             });
 
-        fetch(`http://localhost:3000/item/user-item/${id}?limit=10&page=${page}`)
+        fetch(`${BASE_URL}/item/user-item/${id}?limit=10&page=${page}`)
             .then(res => res.json())
             .then(data => {
                 setItem(data.items);
@@ -148,7 +148,7 @@ export default function OtherProfile() {
                 transition={Slide}
             />
             <div className='other-detail'>
-                <img src={otherUser?.profile_img.startsWith('http') ? otherUser?.profile_img : `http://localhost:3000/${otherUser?.profile_img}`} style={{ width: '120px', height: '120px', borderRadius: '50%', backgroundColor: 'white' }} alt="user-image" />
+                <img src={otherUser?.profile_img.startsWith('http') ? otherUser?.profile_img : `${BASE_URL}/${otherUser?.profile_img}`} style={{ width: '120px', height: '120px', borderRadius: '50%', backgroundColor: 'white' }} alt="user-image" />
                 <span>
                     <h1>{otherUser?.username}</h1>
                     <p style={{ fontSize: '20px', fontWeight: 300 }}>{otherUser?.occupation}</p>

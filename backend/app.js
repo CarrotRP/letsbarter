@@ -16,7 +16,7 @@ const app = express();
 
 const server = http.createServer(app);
 
-const frontendPath = path.resolve('frontend/dist');
+const frontendPath = path.resolve(__dirname, '../frontend/dist');
 
 if(process.env.node_env == 'production'){
     app.use(express.static(frontendPath));

@@ -5,6 +5,7 @@ import close from '../assets/close.png'
 import tradeIcon from '../assets/trade.png';
 import './TradePopup.css'
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function TradePopup(props) {
     const {
@@ -70,7 +71,7 @@ export default function TradePopup(props) {
     }
 
     const sendOfferMessage = () => {
-        fetch(`http://localhost:3000/message/send/${otherUserId}`, {
+        fetch(`${BASE_URL}/message/send/${otherUserId}`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -84,7 +85,7 @@ export default function TradePopup(props) {
     }
     //send offer senderItems, receiverItems, senderId, receiverId
     const handleOfferClick = async () => {
-        const res = await fetch(`http://localhost:3000/trade/offer`, {
+        const res = await fetch(`${BASE_URL}/trade/offer`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -120,12 +121,12 @@ export default function TradePopup(props) {
             setUserEstimate(0);
             //in detail page, initial offering
             if (selectedTrade) {
-                fetch(`http://localhost:3000/trade/${selectedTrade.tradeId}`)
+                fetch(`${BASE_URL}/trade/${selectedTrade.tradeId}`)
                     .then(res => res.json())
                     .then(trade => {
 
                         //get the user inventories
-                        fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
+                        fetch(`${BASE_URL}/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
                             .then(res => res.json())
                             .then(data => {
                                 setUserTotalPage(data.count);
@@ -134,7 +135,7 @@ export default function TradePopup(props) {
                                 setUserTrade(newUserTrade);
                                 setUserEstimate(newUserTrade.reduce((sum, item) => sum + (item.estimate_value || 0), 0));
                             });
-                        fetch(`http://localhost:3000/item/user-item/${trade.senderId}?limit=6&page=${otherPage}&query=${debounceQ}`)
+                        fetch(`${BASE_URL}/item/user-item/${trade.senderId}?limit=6&page=${otherPage}&query=${debounceQ}`)
                             .then(res => res.json())
                             .then(data => {
                                 setOtherTotalPage(data.count);
@@ -148,13 +149,13 @@ export default function TradePopup(props) {
                             })
                     });
             } else {
-                fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
+                fetch(`${BASE_URL}/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
                     .then(res => res.json())
                     .then(data => {
                         setUserTotalPage(data.count);
                         setUserInvent(data.items);
                     });
-                fetch(`http://localhost:3000/item/user-item/${otherUserId}?limit=6&page=${otherPage}&query=${debounceQ}`)
+                fetch(`${BASE_URL}/item/user-item/${otherUserId}?limit=6&page=${otherPage}&query=${debounceQ}`)
                     .then(res => res.json())
                     .then(data => {
                         setOtherTotalPage(data.count);
@@ -274,8 +275,8 @@ export default function TradePopup(props) {
                             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <img src={
                                     selectedTrade ?
-                                    selectedTrade?.userImg.startsWith('http') ? selectedTrade?.userImg : `http://localhost:3000/${selectedTrade?.userImg}` :
-                                    otherImg?.startsWith('http') ? otherImg : `http://localhost:3000/${otherImg}`
+                                    selectedTrade?.userImg.startsWith('http') ? selectedTrade?.userImg : `${BASE_URL}/${selectedTrade?.userImg}` :
+                                    otherImg?.startsWith('http') ? otherImg : `${BASE_URL}/${otherImg}`
                                     } alt="" style={{ width: '50px', height: '50px', border: '1px solid black', borderRadius: '50%' }} />
                                 {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px' }}>{selectedTrade?.user} <span style={{ fontWeight: 300 }}>{t('offer')}</span></h3> :
                                     <h3 style={{ fontSize: '20px' }}><span style={{ fontWeight: 300 }}>{t('for')} </span>{selectedTrade ? selectedTrade?.user : otherName}'s</h3>}

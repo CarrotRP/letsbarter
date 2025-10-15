@@ -3,6 +3,7 @@ import send from '../assets/send.png';
 import back from '../assets/back.png';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
+import { BASE_URL } from '../config/apiConfig';
 
 export default function ChatDetail(props) {
     const { chat, setChat, user, handleViewImg, socket, setSocket, setChatList } = props;
@@ -34,7 +35,7 @@ export default function ChatDetail(props) {
             if (text) formData.append('text', text);
             if (img) formData.append('image', img.file);
 
-            fetch(`http://localhost:3000/message/send/${chat?._id}`, {
+            fetch(`${BASE_URL}/message/send/${chat?._id}`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formData
@@ -49,7 +50,7 @@ export default function ChatDetail(props) {
 
     //get messages
     useEffect(() => {
-        fetch(`http://localhost:3000/message/${chat?._id}`, {
+        fetch(`${BASE_URL}/message/${chat?._id}`, {
             credentials: 'include'
         }).then(res => res.json())
             .then(data => {
@@ -80,7 +81,7 @@ export default function ChatDetail(props) {
 
                 // mark messages from this chat as read immediately
                 if (incomingMessage.senderId === chat._id) {
-                    fetch(`http://localhost:3000/message/${chat._id}`, {
+                    fetch(`${BASE_URL}/message/${chat._id}`, {
                         method: 'PATCH',
                         credentials: 'include'
                     }).then(() => {
@@ -117,7 +118,7 @@ export default function ChatDetail(props) {
         <>
             <div className='chat-title' style={{ display: 'flex', alignItems: 'center', padding: '0 0 10px', borderBottom: '1px solid rgba(163, 68, 7, 0.45)' }}>
                 <img src={back} alt="" style={{ width: '10px', cursor: 'pointer' }} onClick={handleBackClick} />
-                <img src={chat?.profile_img?.startsWith('http') ? chat?.profile_img : `http://localhost:3000/${chat?.profile_img}`} alt="" style={{ width: '50px', height: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
+                <img src={chat?.profile_img?.startsWith('http') ? chat?.profile_img : `${BASE_URL}/${chat?.profile_img}`} alt="" style={{ width: '50px', height: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
                 <span className="chat-user" style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
                     <p style={{ fontWeight: '500' }}>{chat?.username}</p>
                     <p style={{ fontWeight: '300' }}>{chat?.occupation}</p>
@@ -137,7 +138,7 @@ export default function ChatDetail(props) {
                             }}
                             key={m._id}
                         >
-                            {m.image && <img src={`http://localhost:3000/${m.image}`} onClick={(e) => handleViewImg(e, m.image)} />}
+                            {m.image && <img src={`${BASE_URL}/${m.image}`} onClick={(e) => handleViewImg(e, m.image)} />}
                             {m.text && <p style={{ padding: '5px 10px' }}>{m.text?.startsWith('[system]')
                                 ? (() => {
                                     const content = m.text.split(']')[1]?.trim();

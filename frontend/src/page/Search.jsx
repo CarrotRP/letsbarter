@@ -5,6 +5,7 @@ import './Search.css';
 import { useEffect, useState } from 'react';
 import Filter from '../component/Filter';
 import { useTranslation } from 'react-i18next';
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Search() {
     const [searchParams] = useSearchParams();
@@ -32,7 +33,7 @@ export default function Search() {
             //set page
             params.append("page", page);
 
-            const url = `http://localhost:3000/item/search?${params.toString()}`;
+            const url = `${BASE_URL}/item/search?${params.toString()}`;
             fetch(url)
                 .then(res => res.json())
                 .then(data => {

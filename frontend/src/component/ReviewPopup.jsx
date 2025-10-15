@@ -3,6 +3,7 @@ import './ReviewPopup.css';
 import close from '../assets/close.png'
 import star from '../assets/star.png'
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function ReviewPopup(props) {
     const { reviewBgRef, reviewRef, reviewerId, otherUserId, otherUser, rating, setRating, comment, setComment, fetchReviews} = props;
@@ -16,7 +17,7 @@ export default function ReviewPopup(props) {
     }
 
     const handleSubmit = () => {
-        fetch(`http://localhost:3000/review/${otherUserId}`, {
+        fetch(`${BASE_URL}/review/${otherUserId}`, {
             method: 'POST',
             credentials: "include",
             headers: {

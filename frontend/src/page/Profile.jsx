@@ -10,6 +10,7 @@ import { useNavigate, Link, useOutletContext } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import Toaster from "../component/Toaster";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Profile() {
     const { t } = useTranslation();
@@ -44,11 +45,11 @@ export default function Profile() {
             setEmail(user.email || '');
 
             //main img display(sidebar)
-            setProfileImg({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` });
+            setProfileImg({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `${BASE_URL}/${user?.profile_img}` });
             //preview img on edit profile 
-            setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` })
+            setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `${BASE_URL}/${user?.profile_img}` })
             //fetch user items
-            fetch(`http://localhost:3000/item/user-item/${user?._id}?limit=10&page=${page}`)
+            fetch(`${BASE_URL}/item/user-item/${user?._id}?limit=10&page=${page}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
@@ -62,7 +63,7 @@ export default function Profile() {
     }, [user, isLoading, page]);
 
     const handleLogout = () => {
-        fetch('http://localhost:3000/user/logout', {
+        fetch('${BASE_URL}/user/logout', {
             credentials: 'include',
             method: 'POST'
         }).then(res => res.json())
@@ -87,7 +88,7 @@ export default function Profile() {
         }
 
         console.log(user._id);
-        fetch(`http://localhost:3000/user/${user._id}`, {
+        fetch(`${BASE_URL}/user/${user._id}`, {
             method: 'PATCH',
             credentials: 'include',
             body: formData
@@ -135,7 +136,7 @@ export default function Profile() {
                             <p style={{ fontSize: '20px', fontWeight: 300 }}>{user?.occupation}</p>
                         </span>
                     </div>
-                    <span className='nav inventory-nav' onClick={() => { setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` }); }} style={currentPage == 'inventory' ? selectedStyle : null}>
+                    <span className='nav inventory-nav' onClick={() => { setCurrentPage('inventory'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `${BASE_URL}/${user?.profile_img}` }); }} style={currentPage == 'inventory' ? selectedStyle : null}>
                         <img src={inventory} alt="" />
                         <p style={{ fontWeight: currentPage == 'inventory' ? 'bold' : '' }}>{t('inventory')}</p>
                     </span>
@@ -143,7 +144,7 @@ export default function Profile() {
                         <img src={userIcon} alt="" />
                         <p style={{ fontWeight: currentPage == 'personal' ? 'bold' : '' }}>{t('personal info')}</p>
                     </span>
-                    <span className='nav setting-nav' onClick={() => { setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `http://localhost:3000/${user?.profile_img}` }); }} style={currentPage == 'setting' ? selectedStyle : null}>
+                    <span className='nav setting-nav' onClick={() => { setCurrentPage('setting'); setUsername(user?.username); setOccupation(user?.occupation); setEmail(user?.email); setProfilePreview({ file: null, preview: user?.profile_img?.startsWith('http') ? user?.profile_img : `${BASE_URL}/${user?.profile_img}` }); }} style={currentPage == 'setting' ? selectedStyle : null}>
                         <img src={setting} alt="" />
                         <p style={{ fontWeight: currentPage == 'setting' ? 'bold' : '' }}>{t('setting')}</p>
                     </span>

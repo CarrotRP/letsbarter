@@ -7,6 +7,7 @@ import { UserContext } from "../context/UserContext";
 import { io } from 'socket.io-client';
 import { SocketContext } from "../context/SocketContext";
 import Ads from "../component/Ads";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function MainLayout(props) {
     const { language, setLanguage } = props;
@@ -24,13 +25,13 @@ export default function MainLayout(props) {
     const [chat, setChat] = useState();
 
     useEffect(() => {
-        fetch('http://localhost:3000/user/check-auth', {
+        fetch(`${BASE_URL}/user/check-auth`, {
             credentials: 'include'
         }).then(res => res.json())
             .then(data => {
                 if (data.authenticated) {
                     dispatch({ type: "SET_USER", payload: data.user });
-                    setSocket(io.connect('http://localhost:3000', { withCredentials: true }));
+                    setSocket(io.connect(`${BASE_URL}`, { withCredentials: true }));
                 }
             }).finally(() => {
                 setIsLoading(false);

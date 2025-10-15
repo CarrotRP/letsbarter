@@ -4,6 +4,7 @@ import FormComponent from "../component/FormComponent";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function Signup() {
     const handleSignupClick = () => {
         if (fullname && email && occupation && password && conpassword) {
             if (password == conpassword) {
-                fetch('http://localhost:3000/user/signup', {
+                fetch(`${BASE_URL}/user/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

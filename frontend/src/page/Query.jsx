@@ -5,6 +5,7 @@ import ProductCard from "../component/ProductCard";
 import { useState } from "react";
 import Filter from "../component/Filter";
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function Query() {
     const location = useLocation();
@@ -16,7 +17,7 @@ export default function Query() {
     const [filter, setFilter] = useState({ condition: null, sortOpt: null });
 
     useEffect(() => {
-        const url = new URL(`http://localhost:3000/item/category${location.search}`);
+        const url = new URL(`${BASE_URL}/item/category${location.search}`);
 
         for (const key in filter) {
             if (filter[key]) url.searchParams.append(key, filter[key]);

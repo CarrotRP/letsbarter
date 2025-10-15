@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../config/apiConfig";
 
 export default function ChatTile(props) {
     const { username, profile, text, date, status } = props
@@ -6,7 +7,7 @@ export default function ChatTile(props) {
 
     return (
         <div className="chat-tile">
-            <img src={profile?.startsWith('http') ? profile : `http://localhost:3000/${profile}`} alt="user" style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid black', alignSelf: 'center' }} loading="lazy" />
+            <img src={profile?.startsWith('http') ? profile : `${BASE_URL}/${profile}`} alt="user" style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid black', alignSelf: 'center' }} loading="lazy" />
             <div className="chat-info">
                 <span>
                     <p style={{ fontWeight: '500' }}>{username}</p>

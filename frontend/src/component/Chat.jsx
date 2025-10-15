@@ -5,6 +5,7 @@ import './Chat.css'
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SocketContext } from '../context/SocketContext';
+import { BASE_URL } from '../config/apiConfig';
 
 export default function Chat(props) {
     const { chatRef, chat, setChat, user, handleViewImg, chatList, setChatList } = props
@@ -29,7 +30,7 @@ export default function Chat(props) {
         if (!user) return;
 
         const fetchChatList = () => {
-            fetch(`http://localhost:3000/message?search=${debounceQ}`, {
+            fetch(`${BASE_URL}/message?search=${debounceQ}`, {
                 credentials: 'include'
             })
                 .then(res => res.json())
@@ -85,7 +86,7 @@ export default function Chat(props) {
                                 <div onClick={async (e) => {
                                     e.stopPropagation();
                                     setChat(v.receiver?._id == user?._id ? v.sender : v.receiver);
-                                    await fetch(`http://localhost:3000/message/${v.receiver?._id == user?._id ? v.sender?._id : v.receiver?._id}`, {
+                                    await fetch(`${BASE_URL}/message/${v.receiver?._id == user?._id ? v.sender?._id : v.receiver?._id}`, {
                                         method: 'PATCH',
                                         credentials: 'include'
                                     });

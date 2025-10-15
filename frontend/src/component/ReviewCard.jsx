@@ -1,12 +1,13 @@
 import './ReviewCard.css';
 import star from '../assets/star.png';
+import { BASE_URL } from '../config/apiConfig';
 
 export default function ReviewCard(props) {
     const {profile, username, comment, date, rating} = props
 
     return (
         <div className="review-card">
-            <img className='reviewer-img' src={profile?.startsWith('http') ? profile : `http://localhost:3000/${profile}`} alt="" />
+            <img className='reviewer-img' src={profile?.startsWith('http') ? profile : `${BASE_URL}/${profile}`} alt="" />
             <div className="whonwhat">
                 <h1>{username}</h1>
                 <p style={{ fontSize: '16px', fontWeight: 300 }}>{comment}</p>
