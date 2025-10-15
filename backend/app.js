@@ -54,6 +54,10 @@ const sessionMiddleware = session({
     secret: process.env.secret,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        secure: false, //right now its localhost so false, true later if hosted
+        sameSite: 'lax', //change to 'none' later when hosted
+    }
 });
 
 app.use(sessionMiddleware);
