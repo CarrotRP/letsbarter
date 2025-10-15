@@ -18,14 +18,6 @@ const server = http.createServer(app);
 
 const frontendPath = path.resolve(__dirname, '../frontend/dist');
 
-if(process.env.node_env == 'production'){
-    app.use(express.static(frontendPath));
-
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(frontendPath, 'index.html'));
-    })
-}
-
 const io = new Server(server, {
     cors: {
         origin: process.env.client_url,
@@ -169,3 +161,11 @@ app.use('/category', categoryRoutes);
 app.use('/trade', tradeRoutes);
 app.use('/review', reviewRoutes);
 app.use('/message', messageRoutes);
+
+if(process.env.node_env == 'production'){
+    app.use(express.static(frontendPath));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    })
+}
