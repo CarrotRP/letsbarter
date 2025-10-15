@@ -14,11 +14,6 @@ require('dotenv').config();
 
 const app = express();
 
-console.log('hello')
-console.log("client_callback:", process.env.client_callback);
-console.log("client_url:", process.env.client_url);
-console.log("NODE_ENV:", process.env.node_env);
-
 const server = http.createServer(app);
 
 const frontendPath = path.resolve(__dirname, '../frontend/dist');
@@ -55,10 +50,12 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false, //right now its localhost so false, true later if hosted
-        sameSite: 'lax', //change to 'none' later when hosted
+        secure: true, // must be true in production (https)
+        sameSite: 'none', // allows cross-site cookies
+        httpOnly: true, // prevents client JS from reading it
     }
 });
+
 
 app.use(sessionMiddleware);
 
