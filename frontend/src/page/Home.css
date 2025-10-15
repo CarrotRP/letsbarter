@@ -11,7 +11,7 @@
 }
 .categories{
     display: flex;
-    overflow-x: scroll;
+    overflow-x: auto;
     gap: 20px;
     user-select: none;
 }

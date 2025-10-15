@@ -11,12 +11,11 @@
     opacity: 0;
     transition: top 500ms, opacity 500ms;
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
 }
 
 .chat-active {
     top: 110px;
-    right: 220px;
     opacity: 1;
     pointer-events: auto;
 }

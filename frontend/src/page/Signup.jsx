@@ -40,7 +40,7 @@ export default function Signup() {
 
     return (
         <>
-            <section className="form-input">
+            <section className="form-input l-signup-form">
                 <FormComponent htmlFor="fullname" label={t('fullname')} type="text" placeholder={t('enter name')} value={fullname} setter={setFullname} />
                 <FormComponent htmlFor="email" label={t('email')} type="email" placeholder={t('enter email')} value={email} setter={setEmail} />
                 <FormComponent htmlFor="occupation" label={t('occupation')} type="text" placeholder={t('enter occupation')} value={occupation} setter={setOccupation} />

@@ -46,7 +46,7 @@ export default function Report(props) {
                             <label htmlFor="other">{t('other')}</label>
                         </li>
                     </ul>
-                    <button className='report-submit'>{t('submit')}</button>
+                    <button className='report-submit' onClick={handleReportClose}>{t('submit')}</button>
                 </div>
             </div>
         </>

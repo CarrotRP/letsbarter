@@ -16,9 +16,19 @@ const app = express();
 
 const server = http.createServer(app);
 
+const frontendPath = path.resolve('frontend/dist');
+
+if(process.env.node_env == 'production'){
+    app.use(express.static(frontendPath));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    })
+}
+
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:5173',
+        origin: process.env.client_url,
         credentials: true
     }
 });
@@ -32,12 +42,12 @@ const reviewRoutes = require('./routes/reviews');
 const messageRoutes = require('./routes/messages');
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.client_url,
     credentials: true
 }))
 
 mongoose.connect(process.env.DB_URL)
-    .then(res => server.listen(3000))
+    .then(res => server.listen(process.env.port))
     .catch(err => console.log(err));
 
 app.use(express.json());

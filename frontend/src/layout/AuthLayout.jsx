@@ -56,7 +56,7 @@ export default function AuthLayout() {
                     <TextLogo />
                 </Link>
                 <section className="form">
-                    <p style={headTextStyle}>
+                    <p style={headTextStyle} className="auth-greet">
                         {location.pathname == '/login' ? t('welcome') : t('create account')}
                     </p>
                     <Outlet />

@@ -51,7 +51,7 @@ export default function Landing() {
             <section className="how">
                 <img src={path2} alt="" className="bgPath2"/>
                 <div className="step1">
-                    <img src={inventory} alt="" />
+                    <img src={inventory} alt="" className="inv-img"/>
                     <span>
                         <h2>{t('1. upload')}</h2>
                         <p>{t('upload item you')}</p>
@@ -64,10 +64,10 @@ export default function Landing() {
                         <h2>{t('2. browse')}</h2>
                         <p>{t('browser')}</p>
                     </span>
-                    <img src={browneye} alt="" />
+                    <img src={browneye} alt="" className="brown-img"/>
                 </div>
                 <div className="step3">
-                    <img src={trade} alt="" />
+                    <img src={trade} alt="" className="trade-img"/>
                     <span>
                         <h2>{t('3. trade')}</h2>
                         <p>{t('offer your trade')}</p>
@@ -75,7 +75,7 @@ export default function Landing() {
                     <img src={arrow3} alt="" className="arrow3"/>
                 </div>
                 <div className="step4">
-                    <img src={nomoney} alt="" style={{ marginBottom: '25px', filter: 'invert(23%) sepia(99%) saturate(1744%) hue-rotate(16deg) brightness(92%) contrast(94%)' }}/>
+                    <img className="no-money-img" src={nomoney} alt="" style={{ marginBottom: '25px', filter: 'invert(23%) sepia(99%) saturate(1744%) hue-rotate(16deg) brightness(92%) contrast(94%)' }}/>
                     <h2>{t('waste less')}</h2>
                 </div>
             </section>

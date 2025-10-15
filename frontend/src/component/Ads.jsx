@@ -33,7 +33,7 @@ export default function Ads(props) {
     }, []);
 
     return (
-        <div style={{ position: 'absolute', top: atTop ? '' : '-160px' ,display: 'flex', justifyContent: 'center', width: '100%', backgroundColor: 'rgba(0,0,0,0.1)' }}>
+        <div style={{ position: 'absolute', top: atTop ? '' : '-160px' ,display: 'flex', justifyContent: 'center', width: '100%', backgroundColor: 'rgba(0,0,0,0.1)', zIndex: 1, backdropFilter: 'blur(20px)'}}>
             <img src={currentHAds} alt="" style={{ height: '150px', width: '1000px', opacity: isFade ? 0 : 1, transition: 'opacity 500ms' }} />
         </div>
     );

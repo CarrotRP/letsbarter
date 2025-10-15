@@ -31,15 +31,15 @@
 }
 .shapeBg{
     position: absolute;
-    width:700px; /*on laptop*/
+    width:900px;
     top: -10px;
     right: 0;
     z-index: -2;
 }
 .barterIll{
     position: absolute;
-    width: 30%; /*on laptop*/
-    top: 20%; /*on laptop 25%*/
+    width: 35%;
+    top: 20%;
     right: 5%;
     z-index: -1;
 }
@@ -112,19 +112,19 @@
 }
 .arrow1{
     position: absolute;
-    right: 25%; /*old 20%*/
+    right: 25%;
     top: 40%;
     width: 525px;
 }
 .arrow2{
     position: absolute;
-    left: -140%; /*old -130%*/
-    top: 60%; /*old 70%*/
+    left: -140%;
+    top: 60%;
     width: 525px;
 }
 .arrow3{
     position: absolute;
     width: 525px;
     right: 35%;
-    top: 150%; /*old 125%*/
+    top: 150%;
 }

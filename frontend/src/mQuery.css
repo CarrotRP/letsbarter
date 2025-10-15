@@ -1,0 +1,304 @@
+/* laptop */
+@media (max-width: 1024px) {
+
+    /* header */
+    header {
+        padding: 20px 30px !important;
+    }
+    header h1{
+        font-size: 38px !important;
+    }
+
+    .header-search input {
+        width: 280px !important;
+    }
+    .to-add-page,
+    .to-add-page img{
+        height: 20px !important;
+        width: 20px !important;
+    }
+    .right-head span button img{
+        width: 25px !important;
+    }
+    #trade{
+        font-size: 12px !important;
+    }
+    #trade img{
+        width: 15px !important;
+    }
+    .right-head {
+        gap: 10px !important;
+    }
+    /* chat */
+    .chat{
+        right: 100px !important;
+    }
+    .chat-active{
+        top: 100px !important;
+    }
+
+    /* footer */
+    .top{
+        padding: 20px 30px 50px !important;
+        grid-template-columns: 200px 150px repeat(2, 190px) !important;
+        gap: 0 50px !important;
+    }
+    .top h1{
+        font-size: 40px !important;
+    }
+    .logo-desc p{
+        font-size: 14px;
+    }
+    .top h4{
+        font-size: 18px !important;
+    }
+    .find-us{
+        margin-top: 10px !important;
+    }
+    .find-us img, .find-us span svg{
+        width: 25px !important;
+        height: 25px !important;
+    }
+    .dono{
+        bottom: -35px !important;
+    }
+    .dono svg{
+        width: 25px !important;
+    }
+    .dono h4{
+        font-size: 16px !important;
+    }
+    .bot p{
+        padding: 15px 10px !important;
+    }
+    /* auth */
+    .left-panel{
+        width: 45% !important;
+        gap: 10px !important;
+    }
+    .left-panel h1{
+        font-size: 48px !important;
+    }
+    .left-panel p{
+        font-size: 16px !important;
+        width: 330px !important;
+    }
+    .right-panel{
+        width: 55% !important;
+        grid-template-rows: 30px 1fr 20px !important;
+    }
+    .form .auth-greet{
+        font-size: 24px !important;
+    }
+    .form-input{
+        margin-top: 0px !important;
+    }
+    .form-input span label{
+        margin: 10px 0 0 !important;
+        font-size: 14px !important;
+    }
+    .l-signup-form img{ /*specifc name for the laptop, l-laptop*/
+        bottom: 82px !important;
+    }
+    /* login, signup, sign-with-google btns */
+    .submit-btn{
+        font-size: 14px !important;
+    }
+    .sign-with-google{
+        font-size: 14px !important;
+    }
+    .sign-with-google img{
+        width: 20px !important;
+    }
+    /* landing */
+    /* definition section */
+    .definition {
+        padding: 0 30px !important;
+        height: 70vh !important;
+    }
+    .definition h1{
+        font-size: 48px !important;
+    }
+    .definition p{
+        font-size: 14px !important;
+        width: 370px !important;
+    }
+    .shapeBg {
+        width: 500px !important;
+        top: 0px !important;
+    }
+
+    .barterIll {
+        position: absolute;
+        width: 38% !important;
+        top: 13% !important;
+        right: 5%;
+    }
+    /* benefit */
+    .benefit{
+        padding: 0 30px !important;
+    }
+    .benefit h1{
+        font-size: 48px !important;
+    }
+    .ben-info img{
+        width: 80px !important;
+        margin-bottom: 30px !important;
+    }
+    .ben-info h3{
+        font-size: 18px !important;
+    }
+    /* how */
+    .how-head{
+        font-size: 48px !important;
+        padding: 65px !important;
+    }
+    .bgPath2{
+        width: 500px;
+        left: 0 !important;
+
+    }
+    .how{
+        padding: 50px 30px !important;
+    }
+    .how h2{
+        font-size: 20px;
+    }
+    .how p{
+        font-size: 14px;
+    }
+    .step1, .step2, .step3{
+        margin: 80px 0 !important;
+    }
+    .inv-img, .brown-img, .trade-img, .no-money-img{
+        width: 90px !important;
+    }
+    .arrow1, .arrow2, .arrow3{
+        width: 280px !important;
+    }
+    .arrow1{
+        right: 20% !important;
+    }
+    .arrow2{
+        left: -90% !important;
+    }
+    /* home */
+    .homepage{
+        padding: 120px 30px !important;
+    }
+    .homepage h1{
+        font-size: 28px !important;
+    }
+    .category img{
+        width: 120px !important;
+        height: 120px !important;
+    }
+    .products{
+        grid-template-columns: repeat(5, 150px) !important;
+    }
+    .card img{
+        width: 150px !important;
+        height: 150px !important;
+    }
+    .card #product-card-name{
+        font-size: 16px !important;
+    }
+    .card #product-card-condition,
+    .card #product-card-looking{
+        font-size: 12px !important;
+    }
+    /* detail */
+    .detail-page{
+        padding: 120px 30px !important;
+    }
+    .product-detail{
+        grid-template-columns: 80px 1fr 1fr !important;
+        height: 380px !important;
+        margin-bottom: 80px !important;
+    }
+    aside img{
+        width: 80px !important;
+        height: 80px !important;
+    }
+    #main-img{
+        width: 480px !important;
+        height: 400px !important;
+    }
+    .product-info{
+        width: 250px !important;
+        height: 380px !important;
+        margin: 0 20px !important;
+    }
+    .product-info h1{
+        font-size: 28px !important;
+    }
+    .product-info p{
+        font-size: 14px;
+    }
+    .product-info p:nth-child(4){
+        margin: 0 !important;
+    }
+    .product-info button{
+        font-size: 14px !important;
+    }
+    .other-info{
+        gap: 5px 15px !important;
+        grid-template-columns: 100px 100px !important;
+    }
+    /* detail more items */
+    .detail-more h1{
+        font-size: 28px !important;
+    }
+    /* other user profile */
+    .other-profile{
+        padding: 120px 30px !important;
+    }
+    .other-detail{
+        padding: 30px !important;
+    }
+    .other-detail h1{
+        font-size: 24px !important;
+    }
+    .other-detail p{
+        font-size: 16px !important;
+    }
+    .other-detail span img{
+        width: 12px !important;
+    }
+    .buttons{
+        gap: 10px !important;
+    }
+    .buttons button{
+        padding: 5px 15px !important;
+        font-size: 14px !important;
+    }
+    .other-content{
+        margin: 20px 0 !important;
+    }
+    .other-inventory{
+        grid-template-columns: repeat(5, 150px) !important;
+    }
+    /* review card */
+    .reviews{
+        grid-template-columns: repeat(2, 400px) !important;
+    }
+    .review-card{
+        width: 400px !important;
+    }
+    .reviewer-img{
+        width: 70px !important;
+        height: 70px !important;
+    }
+    .whonwhat{
+        gap: 0 !important;
+    }
+    .whonwhat h1{
+        font-size: 18px !important;
+    }
+    .whonwhat p{
+        font-size: 13px !important;
+    }
+    .card-stars img{
+        width: 20px !important;
+    }
+}

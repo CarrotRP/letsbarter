@@ -5,7 +5,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 30px 120px;
-    z-index: 1;
+    z-index: 2;
 }
 
 header .auth {
@@ -102,7 +102,7 @@ header #search-btn {
     opacity: 0;
     pointer-events: none;
     transition: opacity 200ms, pointer-events 200ms;
-    z-index: 1;
+    z-index: 3;
 }
 .view-img-active{
     opacity: 1;

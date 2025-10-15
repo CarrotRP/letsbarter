@@ -35,4 +35,12 @@ To help lower middle class people such as college students, small business owner
 - [x] chatting
 
 ## Screenshots
-not yet
+
+### Landing screen
+![landing-screen](/assets/landing.png)
+
+### Trade Popup
+![trade-popup](/assets/tradepopup.png)
+
+### Upload Screen
+![upload-screen](/assets/upload.png)

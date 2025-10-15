@@ -5,7 +5,6 @@
     display: grid;
     grid-template-columns: 100px 1fr 1fr;
     gap: 0 10px;
-    /* justify-content: space-between; */
     align-items: start;
     height: 470px;
     max-height: 470px;
@@ -24,8 +23,8 @@ aside img{
     object-fit: cover;
 }
 #main-img{
-    width: 800px;
-    height: 470px;
+    width: 1000px;
+    height: 550px;
     object-fit:contain;
     border: 1px solid rgba(163, 68, 7, 0.5);
     border-radius: 10px;
@@ -33,7 +32,7 @@ aside img{
 .product-info{
     width: 310px;
     height: 470px;
-    margin-left: 30px;
+    margin-left: 50px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

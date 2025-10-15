@@ -1,0 +1,21 @@
+{
+  "name": "letsbarter",
+  "version": "1.0.0",
+  "description": "A trading web application for users to trade or barter with each other, using their second hand goods rather than with money.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/src/app.js",
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarrotRP/letsbarter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CarrotRP/letsbarter/issues"
+  },
+  "homepage": "https://github.com/CarrotRP/letsbarter#readme"
+}

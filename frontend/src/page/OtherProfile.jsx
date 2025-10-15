@@ -52,7 +52,7 @@ export default function OtherProfile() {
             chatRef.current.classList.toggle('chat-active');
             setChat(otherUser);
         } else {
-            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' })
+            toast(Toaster, { autoClose: 5000})
         }
     }
     const handleReportClick = (e) => {
@@ -61,7 +61,7 @@ export default function OtherProfile() {
             document.body.style.overflow = 'hidden';
             reportBgRef.current.classList.add('report-active');
         } else {
-            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' });
+            toast(Toaster, { autoClose: 5000});
         }
     }
     const handleReportClose = () => {
@@ -75,7 +75,7 @@ export default function OtherProfile() {
             document.body.style.overflow = 'hidden';
             reviewBgRef.current.classList.add('review-popup-active')
         } else{
-            toast(Toaster, { autoClose: 5000, toastId: 'no-dupe' });
+            toast(Toaster, { autoClose: 5000});
         }
     }
 
@@ -152,10 +152,6 @@ export default function OtherProfile() {
                 <span>
                     <h1>{otherUser?.username}</h1>
                     <p style={{ fontSize: '20px', fontWeight: 300 }}>{otherUser?.occupation}</p>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={location} alt="" style={{ width: '14px' }} />
-                        <p style={{ fontSize: '20px', fontWeight: 300 }}>Phnom Penh</p>
-                    </span>
                 </span>
                 <span className="buttons">
                     <button onClick={handleMessageClick}><img src={message} alt="" />{t('message')}</button>
