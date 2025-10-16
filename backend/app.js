@@ -25,6 +25,8 @@ const io = new Server(server, {
     }
 });
 
+console.log("Node version:", process.version);
+
 // routes
 const userRoutes = require('./routes/users');
 const itemRoutes = require('./routes/items');
