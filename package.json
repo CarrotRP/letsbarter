@@ -2,7 +2,7 @@
   "name": "letsbarter",
   "version": "1.0.0",
   "description": "A trading web application for users to trade or barter with each other, using their second hand goods rather than with money.",
-  "main": "index.js",
+  "main": "backend/app.js",
   "scripts": {
     "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
     "start": "node backend/app.js"
