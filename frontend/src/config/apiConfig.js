@@ -1,1 +1,1 @@
-export const BASE_URL = import.meta.env.MODE === 'development' ? 'http://localhost:3000' : 'https://letsbarter.onrender.com';
+export const BASE_URL = import.meta.env.MODE === 'development' ? 'http://localhost:3000' : import.meta.env.VITE_BASE_URL;

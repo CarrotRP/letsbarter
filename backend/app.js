@@ -25,8 +25,6 @@ const io = new Server(server, {
     }
 });
 
-console.log("Node version:", process.version);
-
 // routes
 const userRoutes = require('./routes/users');
 const itemRoutes = require('./routes/items');
@@ -53,7 +51,7 @@ const sessionMiddleware = session({
     saveUninitialized: false,
     cookie: {
         secure: true, // must be true in production (https)
-        sameSite: 'none', // allows cross-site cookies
+        sameSite: 'lax', // allows cross-site cookies
         httpOnly: true, // prevents client JS from reading it
     }
 });
