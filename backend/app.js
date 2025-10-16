@@ -20,7 +20,7 @@ const frontendPath = path.resolve(__dirname, '../frontend/dist');
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.client_url,
+        origin: process.env.CLIENT_URL,
         credentials: true
     }
 });
@@ -34,19 +34,19 @@ const reviewRoutes = require('./routes/reviews');
 const messageRoutes = require('./routes/messages');
 
 app.use(cors({
-    origin: process.env.client_url,
+    origin: process.env.CLIENT_URL,
     credentials: true
 }))
 
 mongoose.connect(process.env.DB_URL)
-    .then(res => server.listen(process.env.port))
+    .then(res => server.listen(process.env.PORT))
     .catch(err => console.log(err));
 
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const sessionMiddleware = session({
-    secret: process.env.secret,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -73,9 +73,9 @@ passport.use(new LocalStrategy((email, password, done) => {
         })
 }))
 passport.use(new GoogleStrategy({
-    clientID: process.env.client_ID,
-    clientSecret: process.env.client_secret,
-    callbackURL: process.env.client_callback
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.CLIENT_CALLBACK
 }, (accessToken, refreshToken, profile, done) => {
     const email = profile.emails?.[0]?.value;
     const displayName = profile.displayName;
@@ -168,7 +168,7 @@ app.use('/trade', tradeRoutes);
 app.use('/review', reviewRoutes);
 app.use('/message', messageRoutes);
 
-if(process.env.node_env == 'production'){
+if(process.env.NODE_ENV == 'production'){
     app.use(express.static(frontendPath));
 
     app.get('*', (req, res) => {

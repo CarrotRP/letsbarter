@@ -63,7 +63,7 @@ export default function Profile() {
     }, [user, isLoading, page]);
 
     const handleLogout = () => {
-        fetch('${BASE_URL}/user/logout', {
+        fetch(`${BASE_URL}/user/logout`, {
             credentials: 'include',
             method: 'POST'
         }).then(res => res.json())
@@ -130,8 +130,8 @@ export default function Profile() {
             <div className="profile-page-content">
                 <section className="profile-display">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '30px' }}>
-                        <img src={profileImg?.preview} style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'contain', backgroundColor: 'white' }} alt="user-image" />
-                        <span>
+                        <img src={profileImg?.preview} style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: 'white' }} alt="user-image" />
+                        <span className='profile-information'>
                             <h1>{user?.username}</h1>
                             <p style={{ fontSize: '20px', fontWeight: 300 }}>{user?.occupation}</p>
                         </span>
@@ -175,7 +175,7 @@ export default function Profile() {
                         </div> : currentPage == 'personal' ?
                             <div className="personal">
                                 <div className="photo">
-                                    <img src={profilePreview?.preview} alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%', objectFit: 'contain' }} />
+                                    <img src={profilePreview?.preview} alt="" style={{ width: '120px', height: '120px', border: '1px solid black', borderRadius: '50%'}} />
                                     <label htmlFor='choose-profile-img'>{t('change photo')}</label>
                                     <input type='file' id="choose-profile-img" accept=".png, .jpg, .jpeg" onChange={handleProfileImgChange}></input>
                                 </div>

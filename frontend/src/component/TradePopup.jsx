@@ -188,7 +188,7 @@ export default function TradePopup(props) {
                                 <div className="bg-overlay">
                                     <h2>{t('change offer to')}</h2>
                                 </div>}
-                            <span style={{ display: 'flex', alignItems: 'start' }}>
+                            <span style={{ display: 'flex', alignItems: 'start', zIndex: 10 }}>
                                 <input className="search" type="text" placeholder="Search" value={query} onChange={e => setQuery(e.target.value)} />
                                 <button className='search-btn'>{t('search')}</button>
                             </span>
@@ -300,7 +300,7 @@ export default function TradePopup(props) {
                         <div className="your-table" style={{ position: 'relative' }}>
                             <p className="estimate-value" style={{ top: '-20px' }}>{t('your estimate')} {userEstimate}</p>
                             {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px', fontWeight: 300 }}>{t('for your')}</h3> :
-                                <h3 style={{ fontSize: '20px', fontWeight: 300 }}>{t('you offered')}</h3>}
+                                <h3 className="you-offered" style={{ fontSize: '20px', fontWeight: 300 }}>{t('you offered')}</h3>}
                             <div className="your-stuff">
                                 {userTrade == '' ? "No Item Added Yet" :
                                     userTrade?.map(v => {

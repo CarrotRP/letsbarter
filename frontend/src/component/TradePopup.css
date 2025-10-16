@@ -6,7 +6,7 @@
     width: 100vw;
     height: 100vh;
     display: none;
-    z-index: 1;
+    z-index: 3;
 }
 
 .trade-popup {
@@ -22,7 +22,7 @@
     padding: 20px 30px;
     border-radius: 10px;
     display: none;
-    z-index: 1;
+    z-index: 3;
 }
 
 .trade-popup .popup-head {
@@ -206,8 +206,8 @@
 .no-item{
     position: absolute;
     width: 100%;
-    height: 100%;
-    top: 0;
+    height: 92%;
+    top: 50px;
     left: 0;
     margin: 0 auto;
     display: grid;

@@ -25,7 +25,7 @@ export default function Footer(props) {
     return (
         // change a tag to Link later
         <footer>
-            <div className="ads" style={{ position: 'relative' }}>
+            <div className="ads footer-ads" style={{ position: 'relative' }}>
                 <Ads />
             </div>
             <div className="dono-popup" ref={donoBgRef}>

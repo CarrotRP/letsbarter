@@ -5,124 +5,158 @@
     header {
         padding: 20px 30px !important;
     }
-    header h1{
+
+    header h1 {
         font-size: 38px !important;
     }
 
     .header-search input {
         width: 280px !important;
     }
+
     .to-add-page,
-    .to-add-page img{
+    .to-add-page img {
         height: 20px !important;
         width: 20px !important;
     }
-    .right-head span button img{
+
+    .right-head span button img {
         width: 25px !important;
     }
-    #trade{
+
+    #trade {
         font-size: 12px !important;
     }
-    #trade img{
+
+    #trade img {
         width: 15px !important;
     }
+
     .right-head {
         gap: 10px !important;
     }
+
     /* chat */
-    .chat{
+    .chat {
         right: 100px !important;
     }
-    .chat-active{
+
+    .chat-active {
         top: 100px !important;
     }
 
     /* footer */
-    .top{
+    .top {
         padding: 20px 30px 50px !important;
         grid-template-columns: 200px 150px repeat(2, 190px) !important;
         gap: 0 50px !important;
     }
-    .top h1{
+
+    .top h1 {
         font-size: 40px !important;
     }
-    .logo-desc p{
+
+    .logo-desc p {
         font-size: 14px;
     }
-    .top h4{
+
+    .top h4 {
         font-size: 18px !important;
     }
-    .find-us{
+
+    .find-us {
         margin-top: 10px !important;
     }
-    .find-us img, .find-us span svg{
+
+    .find-us img,
+    .find-us span svg {
         width: 25px !important;
         height: 25px !important;
     }
-    .dono{
+
+    .dono {
         bottom: -35px !important;
     }
-    .dono svg{
+
+    .dono svg {
         width: 25px !important;
     }
-    .dono h4{
+
+    .dono h4 {
         font-size: 16px !important;
     }
-    .bot p{
+
+    .bot p {
         padding: 15px 10px !important;
     }
+
     /* auth */
-    .left-panel{
+    .left-panel {
         width: 45% !important;
         gap: 10px !important;
     }
-    .left-panel h1{
+
+    .left-panel h1 {
         font-size: 48px !important;
     }
-    .left-panel p{
+
+    .left-panel p {
         font-size: 16px !important;
         width: 330px !important;
     }
-    .right-panel{
+
+    .right-panel {
         width: 55% !important;
         grid-template-rows: 30px 1fr 20px !important;
     }
-    .form .auth-greet{
+
+    .form .auth-greet {
         font-size: 24px !important;
     }
-    .form-input{
+
+    .form-input {
         margin-top: 0px !important;
     }
-    .form-input span label{
+
+    .form-input span label {
         margin: 10px 0 0 !important;
         font-size: 14px !important;
     }
-    .l-signup-form img{ /*specifc name for the laptop, l-laptop*/
+
+    .l-signup-form img {
+        /*specifc name for the laptop, l-laptop*/
         bottom: 82px !important;
     }
+
     /* login, signup, sign-with-google btns */
-    .submit-btn{
+    .submit-btn {
         font-size: 14px !important;
     }
-    .sign-with-google{
+
+    .sign-with-google {
         font-size: 14px !important;
     }
-    .sign-with-google img{
+
+    .sign-with-google img {
         width: 20px !important;
     }
+
     /* landing */
     /* definition section */
     .definition {
         padding: 0 30px !important;
         height: 70vh !important;
     }
-    .definition h1{
+
+    .definition h1 {
         font-size: 48px !important;
     }
-    .definition p{
+
+    .definition p {
         font-size: 14px !important;
         width: 370px !important;
     }
+
     .shapeBg {
         width: 500px !important;
         top: 0px !important;
@@ -134,171 +168,448 @@
         top: 13% !important;
         right: 5%;
     }
+
     /* benefit */
-    .benefit{
+    .benefit {
         padding: 0 30px !important;
     }
-    .benefit h1{
+
+    .benefit h1 {
         font-size: 48px !important;
     }
-    .ben-info img{
+
+    .ben-info img {
         width: 80px !important;
         margin-bottom: 30px !important;
     }
-    .ben-info h3{
+
+    .ben-info h3 {
         font-size: 18px !important;
     }
+
     /* how */
-    .how-head{
+    .how-head {
         font-size: 48px !important;
         padding: 65px !important;
     }
-    .bgPath2{
+
+    .bgPath2 {
         width: 500px;
         left: 0 !important;
 
     }
-    .how{
+
+    .how {
         padding: 50px 30px !important;
     }
-    .how h2{
+
+    .how h2 {
         font-size: 20px;
     }
-    .how p{
+
+    .how p {
         font-size: 14px;
     }
-    .step1, .step2, .step3{
+
+    .step1,
+    .step2,
+    .step3 {
         margin: 80px 0 !important;
     }
-    .inv-img, .brown-img, .trade-img, .no-money-img{
+
+    .inv-img,
+    .brown-img,
+    .trade-img,
+    .no-money-img {
         width: 90px !important;
     }
-    .arrow1, .arrow2, .arrow3{
+
+    .arrow1,
+    .arrow2,
+    .arrow3 {
         width: 280px !important;
     }
-    .arrow1{
+
+    .arrow1 {
         right: 20% !important;
     }
-    .arrow2{
+
+    .arrow2 {
         left: -90% !important;
     }
+
     /* home */
-    .homepage{
+    .homepage {
         padding: 120px 30px !important;
     }
-    .homepage h1{
+
+    .homepage h1 {
         font-size: 28px !important;
     }
-    .category img{
+
+    .category img {
         width: 120px !important;
         height: 120px !important;
     }
-    .products{
+
+    .products {
         grid-template-columns: repeat(5, 150px) !important;
     }
-    .card img{
+
+    .card img {
         width: 150px !important;
         height: 150px !important;
     }
-    .card #product-card-name{
+
+    .card #product-card-name {
         font-size: 16px !important;
     }
+
     .card #product-card-condition,
-    .card #product-card-looking{
+    .card #product-card-looking {
         font-size: 12px !important;
     }
+
     /* detail */
-    .detail-page{
+    .detail-page {
         padding: 120px 30px !important;
     }
-    .product-detail{
+
+    .product-detail {
         grid-template-columns: 80px 1fr 1fr !important;
         height: 380px !important;
         margin-bottom: 80px !important;
     }
-    aside img{
+
+    aside img {
         width: 80px !important;
         height: 80px !important;
     }
-    #main-img{
+
+    #main-img {
         width: 480px !important;
         height: 400px !important;
     }
-    .product-info{
+
+    .product-info {
         width: 250px !important;
         height: 380px !important;
         margin: 0 20px !important;
     }
-    .product-info h1{
+
+    .product-info h1 {
         font-size: 28px !important;
     }
-    .product-info p{
+
+    .product-info p {
         font-size: 14px;
     }
-    .product-info p:nth-child(4){
+
+    .product-info p:nth-child(4) {
         margin: 0 !important;
     }
-    .product-info button{
+
+    .product-info button {
         font-size: 14px !important;
     }
-    .other-info{
+
+    .other-info {
         gap: 5px 15px !important;
         grid-template-columns: 100px 100px !important;
     }
+
     /* detail more items */
-    .detail-more h1{
+    .detail-more h1 {
         font-size: 28px !important;
     }
+
     /* other user profile */
-    .other-profile{
+    .other-profile {
         padding: 120px 30px !important;
     }
-    .other-detail{
+
+    .other-detail {
         padding: 30px !important;
     }
-    .other-detail h1{
+
+    .other-detail h1 {
         font-size: 24px !important;
     }
-    .other-detail p{
+
+    .other-detail p {
         font-size: 16px !important;
     }
-    .other-detail span img{
+
+    .other-detail span img {
         width: 12px !important;
     }
-    .buttons{
+
+    .buttons {
         gap: 10px !important;
     }
-    .buttons button{
+
+    .buttons button {
         padding: 5px 15px !important;
         font-size: 14px !important;
     }
-    .other-content{
+
+    .other-content {
         margin: 20px 0 !important;
     }
-    .other-inventory{
+
+    .other-inventory {
         grid-template-columns: repeat(5, 150px) !important;
     }
+
     /* review card */
-    .reviews{
+    .reviews {
         grid-template-columns: repeat(2, 400px) !important;
     }
-    .review-card{
+
+    .review-card {
         width: 400px !important;
     }
-    .reviewer-img{
+
+    .reviewer-img {
         width: 70px !important;
         height: 70px !important;
     }
-    .whonwhat{
+
+    .whonwhat {
         gap: 0 !important;
     }
-    .whonwhat h1{
+
+    .whonwhat h1 {
         font-size: 18px !important;
     }
-    .whonwhat p{
+
+    .whonwhat p {
         font-size: 13px !important;
     }
-    .card-stars img{
+
+    .card-stars img {
         width: 20px !important;
+    }
+
+    /* profile */
+    .profile-page {
+        padding: 120px 30px !important;
+    }
+
+    .profile-page-content {
+        grid-template-columns: 250px 1fr !important;
+        gap: 10px !important;
+    }
+
+    .profile-display span h1 {
+        font-size: 18px;
+    }
+
+    .profile-information p {
+        font-size: 14px !important;
+    }
+
+    .inventory {
+        grid-template-columns: repeat(4, 150px) !important;
+        gap: 10px !important;
+    }
+
+    /* upload */
+    .upload {
+        padding: 120px 30px !important;
+    }
+
+    .upload h1 {
+        font-size: 28px;
+    }
+
+    .upload h3 {
+        font-size: 20px !important;
+    }
+
+    .choose-file {
+        font-size: 14px !important;
+        margin: 20px 0 10px !important;
+    }
+
+    .upload img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .item-inputs {
+        grid-template-columns: 1fr 400px !important;
+    }
+
+    .main1,
+    .images4 {
+        font-size: 13px;
+    }
+
+    .main1-img button {
+        right: 45px !important;
+    }
+
+    .item-infos span {
+        margin-bottom: 5px !important;
+    }
+
+    .item-infos textarea {
+        height: 100% !important;
+    }
+
+    .item-infos input,
+    .item-infos textarea {
+        font-size: 13px !important;
+    }
+
+    .footer-ads {
+        margin: 30px 0;
+    }
+
+    /* trade */
+    .trade-page {
+        padding: 120px 30px !important;
+    }
+
+    .trade-page h1 {
+        font-size: 28px !important;
+    }
+
+    .trade-card {
+        width: 100% !important;
+        height: 220px !important;
+        gap: 55px !important;
+    }
+
+    .overlay {
+        width: 100% !important;
+        height: 220px !important;
+        top: 0;
+    }
+
+    .overlay p {
+        font-size: 16px !important;
+    }
+
+    .left-side h2,
+    .right-side h2 {
+        font-size: 18px;
+    }
+
+    .trade-page-content {
+        grid-template-columns: 150px 1fr !important;
+    }
+
+    .horizontal-card .item-img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .horizontal-card h3 {
+        font-size: 14px !important;
+    }
+
+    .horizontal-card p {
+        font-size: 12px;
+    }
+
+    /* trade popup */
+    .trade-popup {
+        width: 800px !important;
+        height: 700px !important;
+        padding: 20px !important;
+    }
+
+    .user-inventory-nav h3 {
+        font-size: 16px !important;
+        padding: 10px !important;
+    }
+
+    .trade-popup-content {
+        grid-template-columns: 350px 1fr !important;
+        height: 600px !important;
+        gap: 20px !important;
+    }
+
+    .user-inventory {
+        height: 540px !important;
+        padding: 10px !important;
+    }
+
+    .item-display .card img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .item-display .card h4 {
+        width: 100px;
+    }
+
+    .item-display {
+        grid-template-columns: repeat(3, 100px) !important;
+        gap: 5px 5px !important;
+    }
+
+    .selected-overlay {
+        width: 100px !important;
+    }
+
+    .other-user-table span h3 {
+        font-size: 16px !important;
+    }
+
+    .their-stuff,
+    .your-stuff {
+        margin: 0 !important;
+        gap: 10px !important;
+        width: 100% !important;
+        height: 195px !important;
+        grid-template-rows: repeat(2, 90px) !important;
+    }
+    .their-stuff .horizontal-card,
+    .your-stuff .horizontal-card{
+        margin: 0 !important;
+    }
+    .their-stuff .horizontal-card img,
+    .your-stuff .horizontal-card img{
+        width: 90px !important;
+        height: 90px !important;
+    }
+
+    .item-trading {
+        width: 390px !important;
+        height: 600px !important
+    }
+
+    .middle-section {
+        z-index: -1;
+    }
+
+    .middle-section img {
+        width: 20px !important;
+    }
+
+    .you-offered {
+        font-size: 16px !important;
+    }
+
+    .do-offer,
+    .respond-btn {
+        padding: 8px 15px !important;
+    }
+    /* search & browse */
+    .search-page{
+        padding: 120px 30px !important;
+
+    }
+    .search-page .title h1{
+        font-size: 28px !important;
+    }
+    .filter h3{
+        font-size: 28px !important;
+    }
+    .search-result{
+        grid-template-columns: repeat(5, 150px) !important;
     }
 }

@@ -201,10 +201,10 @@ export default function Upload() {
             <div className="item-inputs">
                 <div className="item-images">
                     <h3>{t('main image')}</h3>
-                    <p style={{ color: 'var(--primary)' }}>{t('1 main')}</p>
+                    <p className='main1' style={{ color: 'var(--primary)' }}>{t('1 main')}</p>
                     {/* main image will display here */}
                     {mainImg &&
-                        <div style={{ position: 'relative', width: '150px' }}>
+                        <div className='main1-img' style={{ position: 'relative', width: '150px' }}>
                             <img src={mainImg.preview} alt="" />
                             <button
                                 type="button"
@@ -228,7 +228,7 @@ export default function Upload() {
                     <input type='file' id="choose-main" accept=".png, .jpg, .jpeg" onChange={handleMainImgChange}></input>
                     <h3>{t('images')}</h3>
                     <div className="images">
-                        <p style={{ color: 'var(--primary)', position: 'absolute' }}>{t('4 images')}</p>
+                        <p className='images4' style={{ color: 'var(--primary)', position: 'absolute' }}>{t('4 images')}</p>
                         {/* other images will display here */}
                         {images.map((src, i) =>
                             <div style={{ position: 'relative', marginTop: '20px' }}>

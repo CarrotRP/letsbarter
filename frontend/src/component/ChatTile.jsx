@@ -41,7 +41,7 @@ export default function ChatTile(props) {
                 <span>
                     <p style={{ fontWeight: '300' }}>
                         {
-                            text?.startsWith('You: [system]')
+                            text?.startsWith('You: [system]') || text?.startsWith('អ្នក: [system]')
                                 ? `${t(text.split(' ')[2]?.trim())} ${t(text.split(']')[1]?.trim().split(' ').slice(-2).join(' '))}`
                                 : text?.startsWith('[system]')
                                     ? `${text.split(']')[1]?.trim().split(' ')[0]} ${t(text.split(']')[1]?.trim().split(' ').slice(-2).join(' '))}`
