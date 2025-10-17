@@ -43,7 +43,7 @@ export default function TradeCard(props) {
             <div className='trade-card-container' style={{ position: 'relative' }}>
                 <div className="trade-card">
                     <section className="left-side">
-                        <img src={userImg?.startsWith('http') ? userImg : `${BASE_URL}/${userImg}`} alt="" style={{ backgroundColor: 'white'}}/>
+                        <img src={userImg} alt="" style={{ backgroundColor: 'white'}}/>
                         <div className="trade-detail">
                             <h2>{type == 'incoming' ? <>{user} <span style={{ fontWeight: 300 }}>{t('offer')}</span></> : <><span style={{ fontWeight: 300 }}>{t('for')}</span> {user}</>}</h2>
                             <HorizontalCard

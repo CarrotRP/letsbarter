@@ -79,7 +79,7 @@ export default function Header(props) {
                                 <img src={closeIcon} alt="" onClick={handleViewClose} />
                             </div>
                             <div className="view-img-content" ref={viewImgRef}>
-                                <img src={`${BASE_URL}/${viewImg}`} alt=""/>
+                                <img src={viewImg} alt=""/>
                             </div>
                         </div>
                     </>

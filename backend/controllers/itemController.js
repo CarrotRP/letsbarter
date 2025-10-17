@@ -157,8 +157,8 @@ const upload_item = (req, res) => {
     estimate_value
   } = req.body;
 
-  const imgPaths = req.files['images'] ? req.files['images'].map(file => file.path.replace(/\\/g, '/')) : [];
-  const mainImgPath = req.files['main_img'] ? req.files['main_img'][0].path.replace(/\\/g, '/') : null;
+  const imgPaths = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+  const mainImgPath = req.files['main_img'] ? req.files['main_img'][0].path : null;
 
   Item.create({
     name, category_id: category, description, brand, original_price, bought_on, item_condition,
@@ -214,13 +214,13 @@ const update_item = async (req, res) => {
     }
 
     if (req.files && req.files['images']) {
-      imgPaths.push(...req.files['images'].map(f => f.path.replace(/\\/g, '/')));
+      imgPaths.push(...req.files['images'].map(f => f.path));
     }
 
     updateData.imgs = imgPaths;
 
     if (req.files && req.files['main_img']) {
-      updateData.main_img = req.files['main_img'][0].path.replace(/\\/g, '/');
+      updateData.main_img = req.files['main_img'][0].path;
     }
 
     const updatedItem = await Item.findByIdAndUpdate(id, updateData, { new: true });

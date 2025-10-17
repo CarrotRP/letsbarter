@@ -27,6 +27,7 @@ export default function Home() {
         fetch(`${BASE_URL}/item?limit=${limit}&sortOpt=true`)
             .then(res => res.json())
             .then(data => {
+                console.log(data.items);
                 setItems(data.items);
                 setItemCount(data.count);
             });

@@ -1,15 +1,18 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
 const route = express.Router();
 const authenticateJWT = require('../middleware/auth');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { v2: cloudinary } = require('cloudinary');
 
 const messageController = require('../controllers/messageController');
 
-//multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, done) => done(null, "uploads/"),
-    filename: (req, file, done) => done(null, Date.now() + path.extname(file.originalname)),
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'chat_images', // your folder name in Cloudinary
+    allowed_formats: ['jpg', 'png', 'jpeg'],
+  },
 });
 
 const upload = multer({storage});

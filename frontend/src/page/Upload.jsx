@@ -56,13 +56,13 @@ export default function Upload() {
                     setBrand(data.brand);
 
                     if (data.main_img) {
-                        setMainImg({ file: null, preview: `${BASE_URL}/${data.main_img}`, isMain: true });
+                        setMainImg({ file: null, preview: data.main_img, isMain: true });
                     }
 
                     if (data.imgs) {
-                        setImages([{ file: null, preview: `${BASE_URL}/${data.main_img}`, isMain: true }, ...data.imgs.map(path => ({
+                        setImages([{ file: null, preview: data.main_img, isMain: true }, ...data.imgs.map(path => ({
                             file: null,
-                            preview: `${BASE_URL}/${path}`
+                            preview: `${path}`
                         }))])
                     }
                 });
@@ -82,7 +82,7 @@ export default function Upload() {
         });
         
         images.filter(img => !img.file && !img.isMain).forEach(img => {
-            formData.append("existing_images", img.preview.replace(`${BASE_URL}/`, ""));
+            formData.append("existing_images", img.preview);
         })
 
         // Append other fields

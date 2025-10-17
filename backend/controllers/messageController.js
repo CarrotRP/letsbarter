@@ -128,7 +128,7 @@ const post_message = (req, res) => {
     const io = req.app.get('io');
     const userSocketMap = req.app.get('userSocketMap');
 
-    const imagePath = req.file ? req.file.path.replace(/\\/g, '/') : null;
+    const imagePath = req.file ? req.file.path : null;
 
     Message.create({ senderId: userId, receiverId: id, text, image: imagePath })
         .then(result => {

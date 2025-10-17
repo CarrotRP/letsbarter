@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { v2: cloudinary } = require('cloudinary');
 
 const itemController = require('../controllers/itemController');
 
-const storage = multer.diskStorage({
-  destination: (req, file, done) => done(null, "uploads/"),
-  filename: (req, file, done) => {
-    const ext = path.extname(file.originalname); // keep original extension
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    done(null, uniqueSuffix + ext);
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'letsbarter_items', // your folder name in Cloudinary
+    allowed_formats: ['jpg', 'png', 'jpeg'],
   },
 });
 

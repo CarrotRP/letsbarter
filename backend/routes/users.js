@@ -2,15 +2,19 @@ const express = require('express');
 const passport = require('passport');
 const multer = require('multer');
 const path = require('path');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { v2: cloudinary } = require('cloudinary');
 
 const router = express.Router();
 
 const userController = require('../controllers/userController');
 
-//multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, done) => done(null, "uploads/"),
-    filename: (req, file, done) => done(null, Date.now() + path.extname(file.originalname)),
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'user_profiles', // your folder name in Cloudinary
+    allowed_formats: ['jpg', 'png', 'jpeg'],
+  },
 });
 
 const upload = multer({storage});

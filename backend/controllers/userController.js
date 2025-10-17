@@ -76,7 +76,7 @@ const user_update = async (req, res) => {
     const { username, occupation, email, password } = req.body;
 
 
-    const profileImgPath = req.file ? req.file.path.replace(/\\/g, '/') : null;
+    const profileImgPath = req.file ? req.file.path : null;
 
     const updateData = { username, occupation, email }
 

@@ -24,7 +24,7 @@ const userSchema = new Schema({
     },
     profile_img: {
         type: String,
-        default: 'uploads/default.png'
+        default: 'https://res.cloudinary.com/dmnjgjngx/image/upload/v1760710036/Asset_11_ulmhhu.png'
     }
 }, { timestamps: true })
 

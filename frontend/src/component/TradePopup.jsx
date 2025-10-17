@@ -273,10 +273,7 @@ export default function TradePopup(props) {
                         <div className="other-user-table">
                             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <img src={
-                                    selectedTrade ?
-                                    selectedTrade?.userImg.startsWith('http') ? selectedTrade?.userImg : `${BASE_URL}/${selectedTrade?.userImg}` :
-                                    otherImg?.startsWith('http') ? otherImg : `${BASE_URL}/${otherImg}`
-                                    } alt="" style={{ width: '50px', height: '50px', border: '1px solid black', borderRadius: '50%' }} />
+                                    selectedTrade ? selectedTrade?.userImg : otherImg} alt="" style={{ width: '50px', height: '50px', border: '1px solid black', borderRadius: '50%' }} />
                                 {tradeType == 'incoming' ? <h3 style={{ fontSize: '20px' }}>{selectedTrade?.user} <span style={{ fontWeight: 300 }}>{t('offer')}</span></h3> :
                                     <h3 style={{ fontSize: '20px' }}><span style={{ fontWeight: 300 }}>{t('for')} </span>{selectedTrade ? selectedTrade?.user : otherName}'s</h3>}
                             </span>

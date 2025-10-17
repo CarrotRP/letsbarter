@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io')
+const { v2: cloudinary } = require('cloudinary');
 require('dotenv').config();
 
 const app = express();
@@ -25,6 +26,12 @@ const io = new Server(server, {
         origin: process.env.CLIENT_URL,
         credentials: true
     }
+});
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
 });
 
 // routes

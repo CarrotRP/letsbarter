@@ -131,10 +131,10 @@ export default function Detail() {
             <section className="product-detail">
                 <aside onClick={handleImgClick}>
                     {image.map((v, i) => {
-                        return <img key={i} id={i} src={`${BASE_URL}/${v}`} alt="" style={{ cursor: 'pointer', border: i == currentImg ? '3.5px solid var(--secondary)' : '' }} />
+                        return <img key={i} id={i} src={`${v}`} alt="" style={{ cursor: 'pointer', border: i == currentImg ? '3.5px solid var(--secondary)' : '' }} />
                     })}
                 </aside>
-                <img id="main-img" src={`${BASE_URL}/${image[currentImg]}`} alt="" />
+                <img id="main-img" src={`${image[currentImg]}`} alt="" />
                 {!isPageLoading &&
                     <section className="product-info">
                         <h1>{itemDetail?.name}</h1>
@@ -165,7 +165,7 @@ export default function Detail() {
                             </span> :
                             <>
                                 <Link to={`/user/${itemDetail?.owner_id._id}`} className="user" style={{ color: 'var(--text-secondary)' }}>
-                                    <img src={itemDetail?.owner_id.profile_img.startsWith('http') ? itemDetail?.owner_id.profile_img : `${BASE_URL}/${itemDetail?.owner_id.profile_img}`} style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px'}} alt="user-image" />
+                                    <img src={itemDetail?.owner_id.profile_img} style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px'}} alt="user-image" />
                                     <span>
                                         <p style={{ fontWeight: 500 }}>{itemDetail?.owner_id.username}</p>
                                         <p style={{ fontSize: '13px', fontWeight: 300 }}>{itemDetail?.owner_id.occupation}</p>

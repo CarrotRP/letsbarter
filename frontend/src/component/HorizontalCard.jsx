@@ -8,7 +8,7 @@ export default function HorizontalCard(props) {
 
     return (
         <div className="horizontal-card">
-            <img src={`${BASE_URL}/${mainImg}`} loading='lazy' alt="" className='item-img' style={{width: imgSize ? `${imgSize}px` : null, height: imgSize ? `${imgSize}px` : null, border: '1px solid var(--secondary)'}}/>
+            <img src={mainImg} loading='lazy' alt="" className='item-img' style={{width: imgSize ? `${imgSize}px` : null, height: imgSize ? `${imgSize}px` : null, border: '1px solid var(--secondary)'}}/>
             <div className="horizontal-card-detail">
                 <h3 style={{ fontWeight: 600, fontSize: fontSize1 ? `${fontSize1}px` : null }}>{pname}</h3>
                 <p style={{fontSize: fontSize2 ? `${fontSize2}px` : null}}>{t('condition')} {condition} / 10</p>

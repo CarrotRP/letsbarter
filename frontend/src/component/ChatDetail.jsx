@@ -4,6 +4,7 @@ import back from '../assets/back.png';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { BASE_URL } from '../config/apiConfig';
+import { Link } from 'react-router';
 
 export default function ChatDetail(props) {
     const { chat, setChat, user, handleViewImg, socket, setSocket, setChatList } = props;
@@ -117,11 +118,13 @@ export default function ChatDetail(props) {
         <>
             <div className='chat-title' style={{ display: 'flex', alignItems: 'center', padding: '0 0 10px', borderBottom: '1px solid rgba(163, 68, 7, 0.45)' }}>
                 <img src={back} alt="" style={{ width: '10px', cursor: 'pointer' }} onClick={handleBackClick} />
-                <img src={chat?.profile_img?.startsWith('http') ? chat?.profile_img : `${BASE_URL}/${chat?.profile_img}`} alt="" style={{ width: '50px', height: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
-                <span className="chat-user" style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-                    <p style={{ fontWeight: '500' }}>{chat?.username}</p>
-                    <p style={{ fontWeight: '300' }}>{chat?.occupation}</p>
-                </span>
+                <Link to={`/user/${chat?._id}`} style={{color: 'var(--text-secondary)', display: 'flex'}}>
+                <img src={chat?.profile_img} alt="" style={{ width: '50px', height: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
+                    <span className="chat-user" style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+                        <p style={{ fontWeight: '500' }}>{chat?.username}</p>
+                        <p style={{ fontWeight: '300' }}>{chat?.occupation}</p>
+                    </span>
+                </Link>
             </div>
             <div className="chat-msg" ref={scrollRef}>
                 {message?.map((m, idx) => {
@@ -137,7 +140,7 @@ export default function ChatDetail(props) {
                             }}
                             key={m._id}
                         >
-                            {m.image && <img src={`${BASE_URL}/${m.image}`} onClick={(e) => handleViewImg(e, m.image)} />}
+                            {m.image && <img src={m.image} onClick={(e) => handleViewImg(e, m.image)} />}
                             {m.text && <p style={{ padding: '5px 10px' }}>{m.text?.startsWith('[system]')
                                 ? (() => {
                                     const content = m.text.split(']')[1]?.trim();
