@@ -58,7 +58,7 @@ const user_google_login = (req, res) => {
 
         window.opener.postMessage(
         { type: 'google-auth-success', user, redirect: '/home'},
-        'http://localhost:5173'
+        '${process.env.CLIENT_URL}'
         );
 
         window.close();
