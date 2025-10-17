@@ -2,11 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const cookieParser = require('cookie-parser');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const User = require('./models/userModel');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io')
@@ -43,24 +45,10 @@ mongoose.connect(process.env.DB_URL)
     .catch(err => console.log(err));
 
 app.use(express.json());
+app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const sessionMiddleware = session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: true, // must be true in production (https)
-        sameSite: 'lax', // allows cross-site cookies
-        httpOnly: true, // prevents client JS from reading it
-    }
-});
-
-
-app.use(sessionMiddleware);
-
 app.use(passport.initialize());
-app.use(passport.session());
 
 passport.use(new LocalStrategy((email, password, done) => {
     User.findOne({ email })
@@ -119,43 +107,31 @@ passport.use(new GoogleStrategy({
         })
 }));
 
-passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser((id, done) => {
-    User.findById(id)
-        .then(result => done(null, result))
-        .catch(err => console.log(err));
-})
 io.use((socket, next) => {
-    sessionMiddleware(socket.request, {}, next);
+    const token = socket.request.headers.cookie?.split('; ').find(c => c.startsWith('token='))?.split('=')[1];
+    if (!token) return next(new Error('Unauthorized'));
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        socket.userId = decoded.id;
+        next();
+    } catch (err) {
+        next(new Error('Unauthorized'));
+    }
 });
 const userSocketMap = {};
 
 io.on('connection', (socket) => {
-    const session = socket.request.session;
-
-    if (!session || !session.passport || !session.passport.user) {
-        console.log('Unauthenticated socket connection rejected');
-        socket.disconnect();
-        return;
-    }
-
-    const userId = session.passport.user.toString();
-
-    if (!userSocketMap[userId]) {
-        userSocketMap[userId] = [];
-    }
-
+    const userId = socket.userId;
+    if (!userSocketMap[userId]) userSocketMap[userId] = [];
     userSocketMap[userId].push(socket.id);
-    console.log('this is user:', userId)
-    console.log('user connected', socket.id);
+    console.log('User connected', userId, socket.id);
 
     socket.on('disconnect', () => {
         userSocketMap[userId] = userSocketMap[userId].filter(id => id !== socket.id);
-        if (userSocketMap[userId].length === 0) {
-            delete userSocketMap[userId];
-        }
-        console.log('user disconnected', socket.id);
-    })
+        if (userSocketMap[userId].length === 0) delete userSocketMap[userId];
+        console.log('User disconnected', socket.id);
+    });
 })
 
 app.set('userSocketMap', userSocketMap);
@@ -168,7 +144,7 @@ app.use('/trade', tradeRoutes);
 app.use('/review', reviewRoutes);
 app.use('/message', messageRoutes);
 
-if(process.env.NODE_ENV == 'production'){
+if (process.env.NODE_ENV == 'production') {
     app.use(express.static(frontendPath));
 
     app.get('*', (req, res) => {

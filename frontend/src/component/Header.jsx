@@ -34,7 +34,6 @@ export default function Header(props) {
         document.body.style.overflow = 'hidden';
         setViewImg(currentImg);
         viewImgBgRef.current?.classList.toggle('view-img-active');
-        console.log(currentImg)
     }
 
     const handleViewClose = (e) => {
@@ -46,7 +45,7 @@ export default function Header(props) {
 
     const handleChatClick = (e) => {
         e.stopPropagation();
-        chatRef.current.classList.toggle('chat-active');
+        chatRef.current?.classList.toggle('chat-active');
     }
 
     const unreadCount = chatList?.reduce((acc, chat) => {

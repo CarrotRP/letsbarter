@@ -52,7 +52,6 @@ export default function Profile() {
             fetch(`${BASE_URL}/item/user-item/${user?._id}?limit=10&page=${page}`)
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data);
                     setTotalPage(data.count);
                     setItem(data.items);
                 });
@@ -87,21 +86,18 @@ export default function Profile() {
             formData.append('password', newPassword);
         }
 
-        console.log(user._id);
         fetch(`${BASE_URL}/user/${user._id}`, {
             method: 'PATCH',
             credentials: 'include',
             body: formData
         }).then(res => res.json())
             .then(data => {
-                console.log(data)
                 dispatch({ type: 'SET_USER', payload: data })
             });
     }
 
     const handleProfileImgChange = (e) => {
         const file = e.target.files[0];
-        console.log(file);
         if (file) {
             if (!['png', 'jpg', 'jpeg'].includes(file.name.toLowerCase().split('.').pop())) {
                 toast(<Toaster text="invalid file type" />, { autoClose: 5000, toastId: 'no-dupe' });
@@ -109,7 +105,6 @@ export default function Profile() {
                 setProfilePreview({ file, preview: URL.createObjectURL(file) });
             }
         }
-        console.log(profileImg)
     }
 
     return (

@@ -1,8 +1,13 @@
 const Message = require('../models/messageModel');
-const User = require('../models/userModel');
+const mongoose = require('mongoose');
 
 const get_chat = (req, res) => {
-    const userId = req.user._id;
+    let userId;
+    try {
+        userId = new mongoose.Types.ObjectId(req.userId); // <-- use 'new'
+    } catch (err) {
+        return res.status(400).json({ error: 'Invalid userId' });
+    }
     const { search } = req.query;
 
     Message.aggregate(
@@ -106,7 +111,7 @@ const get_chat = (req, res) => {
 
 const get_message = (req, res) => {
     const { id } = req.params; //other user id
-    const userId = req.user._id; //current logged in user
+    const userId = req.userId; //current logged in user
 
     Message.find({
         $or: [
@@ -119,11 +124,9 @@ const get_message = (req, res) => {
 const post_message = (req, res) => {
     const { text } = req.body;
     const { id } = req.params; //receiverid or otheruser
-    const userId = req.user._id; //senderId or current user
+    const userId = req.userId; //senderId or current user
     const io = req.app.get('io');
     const userSocketMap = req.app.get('userSocketMap');
-
-    console.log(text);
 
     const imagePath = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
@@ -142,7 +145,7 @@ const post_message = (req, res) => {
 }
 const update_read_status = (req, res) => {
     const { id } = req.params; //otheruser
-    const userId = req.user._id;
+    const userId = req.userId;
     const io = req.app.get('io');
     const userSocketMap = req.app.get('userSocketMap');
 

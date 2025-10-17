@@ -26,7 +26,6 @@ export default function ReviewPopup(props) {
             body: JSON.stringify({ revieweeId: otherUserId, reviewerId, rating: rating + 1, comment })
         }).then(res => res.json())
             .then(data => {
-                console.log(data);
                 handleReviewClose();
                 fetchReviews();
             })
@@ -41,7 +40,7 @@ export default function ReviewPopup(props) {
                         <img src={close} alt="" style={{ width: '25px', cursor: 'pointer' }} onClick={handleReviewClose} />
                     </span>
                     <div className="stars">
-                        {[...new Array(5)].map((_, i) => <img key={i} src={star} alt="" style={{ filter: rating >= i ? 'invert(59%) sepia(27%) saturate(359%) hue-rotate(43deg) brightness(98%) contrast(93%)' : 'invert(93%) sepia(2%) saturate(24%) hue-rotate(331deg) brightness(84%) contrast(89%)' }} onClick={() => { console.log(i); setRating(i) }} />)}
+                        {[...new Array(5)].map((_, i) => <img key={i} src={star} alt="" style={{ filter: rating >= i ? 'invert(59%) sepia(27%) saturate(359%) hue-rotate(43deg) brightness(98%) contrast(93%)' : 'invert(93%) sepia(2%) saturate(24%) hue-rotate(331deg) brightness(84%) contrast(89%)' }} onClick={() => { setRating(i) }} />)}
                     </div>
                     <div className="cmts">
                         <label htmlFor="comments">{t('comment')}</label>

@@ -76,7 +76,6 @@ export default function Trade() {
                 body: JSON.stringify({ text })
             }).then(res => res.json())
                 .then(data => {
-                    console.log(data);
                 })
         }
 

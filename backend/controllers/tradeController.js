@@ -109,14 +109,8 @@ const get_one_trade = (req, res) => {
 const send_trade = (req, res) => {
     const { senderItems, receiverItems, senderId, receiverId } = req.body;
 
-    console.log("Sending trade...");
-    console.log("Sender ID:", senderId, "Receiver ID:", receiverId);
-    console.log("Sender items:", senderItems);
-    console.log("Receiver items:", receiverItems);
-
     Trade.create({ senderId, receiverId, senderItems, receiverItems })
         .then(result => {
-            console.log("Trade created:", result._id);
             Item.updateMany(
                 { _id: { $in: [...senderItems, ...receiverItems] } },
                 { $set: { status: "in-trade" } }
@@ -129,7 +123,6 @@ const update_trade = (req, res) => {
     const { status, senderItems, receiverItems } = req.body;
     const { id } = req.params;
 
-    console.log("Updating trade:", id, "with status:", status);
     const updateData = {}
 
     if (status) updateData.status = status;
@@ -139,15 +132,12 @@ const update_trade = (req, res) => {
     Trade.findByIdAndUpdate(id, updateData, { new: true })
         .then(result => {
             if (status == 'cancelled' || status == 'declined' || status == 'countered') {
-                console.log("Resetting items to available...");
                 const allItems = [...result.senderItems, ...result.receiverItems];
-                console.log(allItems);
                 return Item.updateMany(
                     { _id: { $in: allItems } },
                     { $set: { status: 'available' } }
                 ).then(() => res.json(result));
             } else if (status == 'accepted') {
-                console.log("Marking items as traded...");
                 const allItems = [...result.senderItems, ...result.receiverItems];
                 return Item.updateMany(
                     { _id: { $in: allItems } },

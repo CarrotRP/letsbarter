@@ -16,10 +16,10 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 router.get('/check-auth', userController.user_check_auth);
-router.get('/oauth', passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' }), userController.user_google_login)
+router.get('/oauth', passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account', session: false}), userController.user_google_login)
 
 router.post('/signup', userController.user_signup);
-router.post('/login', passport.authenticate('local'), userController.user_login);
+router.post('/login', passport.authenticate('local', {session: false}), userController.user_login);
 router.post('/logout', userController.user_logout);
 
 router.get('/:id', userController.get_user);

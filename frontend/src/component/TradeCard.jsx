@@ -40,7 +40,7 @@ export default function TradeCard(props) {
 
     return (
         <>
-            <div className='trade-card-container' style={{ position: 'relative' }} onClick={() => console.log(userId)}>
+            <div className='trade-card-container' style={{ position: 'relative' }}>
                 <div className="trade-card">
                     <section className="left-side">
                         <img src={userImg?.startsWith('http') ? userImg : `${BASE_URL}/${userImg}`} alt="" style={{ backgroundColor: 'white'}}/>

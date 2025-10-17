@@ -64,7 +64,7 @@ export default function MainLayout(props) {
 
         }
         const handleScroll = () => {
-            chatRef.current.classList.remove('chat-active');
+            chatRef.current?.classList.remove('chat-active');
             filterRef.current?.classList.remove('filter-popup-active');
         }
 

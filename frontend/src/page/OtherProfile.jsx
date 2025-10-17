@@ -48,7 +48,6 @@ export default function OtherProfile() {
     const handleMessageClick = (e) => {
         if (user) {
             e.stopPropagation();
-            console.log(otherUser);
             chatRef.current.classList.toggle('chat-active');
             setChat(otherUser);
         } else {
@@ -84,8 +83,6 @@ export default function OtherProfile() {
                 credentials: 'include'
             }).then(res => res.json())
                 .then(data => {
-                    console.log('data');
-                    console.log(data);
                     setReview(data.result);
                     setReviewTotal(data.totalPage)
                 })

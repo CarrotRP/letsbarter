@@ -15,7 +15,7 @@ export default function Chat(props) {
     const { socket, setSocket } = useContext(SocketContext);
 
     const handleCloseClick = () => {
-        chatRef.current.classList.remove('chat-active');
+        chatRef.current?.classList.remove('chat-active');
     }
 
     useEffect(() => {
@@ -34,7 +34,7 @@ export default function Chat(props) {
                 credentials: 'include'
             })
                 .then(res => res.json())
-                .then(data => { console.log(data); setChatList(data) });
+                .then(data => {setChatList(data) });
         };
 
         // fetch immediately when user logs in or search changes
@@ -76,7 +76,7 @@ export default function Chat(props) {
             {!chat &&
                 <>
                     <span>
-                        <h1 onClick={() => console.log(chatList)} style={{ color: 'var(--text-primary)' }}>{t('chat')}</h1>
+                        <h1 style={{ color: 'var(--text-primary)' }}>{t('chat')}</h1>
                         <img src={close} alt="" onClick={handleCloseClick} style={{ cursor: 'pointer' }} />
                     </span>
                     <input type="text" placeholder={t('search')} id='chat-search' value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -132,7 +132,7 @@ export default function Chat(props) {
                         )}
                     </div>
                 </>}
-            {chat && <ChatDetail chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} socket={socket} setSocket={setSocket} setChatList={setChatList}/>}
+            {chat && <ChatDetail chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} socket={socket} setSocket={setSocket} setChatList={setChatList} />}
         </div>
     );
 }

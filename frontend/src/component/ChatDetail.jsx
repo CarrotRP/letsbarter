@@ -54,7 +54,6 @@ export default function ChatDetail(props) {
             credentials: 'include'
         }).then(res => res.json())
             .then(data => {
-                console.log(data)
                 setMessage(data);
             })
     }, []);
@@ -63,7 +62,7 @@ export default function ChatDetail(props) {
     useEffect(() => {
         if (message?.length > 0) {
             scrollRef?.current?.scrollTo({
-                top: scrollRef.current.scrollHeight,
+                top: scrollRef.current?.scrollHeight,
                 behavior: 'auto'
             });
         }
@@ -144,7 +143,6 @@ export default function ChatDetail(props) {
                                     const content = m.text.split(']')[1]?.trim();
                                     const name = content?.split(' ')[0];
                                     const message = content?.split(' ').slice(-2).join(' ');
-                                    console.log('message', name)
                                     return (
                                         <>
                                             <strong>{name}</strong> {t(message)}

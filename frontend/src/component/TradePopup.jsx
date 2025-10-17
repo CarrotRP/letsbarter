@@ -80,7 +80,7 @@ export default function TradePopup(props) {
             body: JSON.stringify({ text: `[system] ${user?.username} system offer` })
         }).then(res => res.json())
             .then(data => {
-                console.log(data);
+                
             })
     }
     //send offer senderItems, receiverItems, senderId, receiverId
@@ -101,7 +101,6 @@ export default function TradePopup(props) {
             })
         });
         const data = await res.json();
-        console.log(data)
         handleClose();
     }
     //for query debounce(delay search until user stop typing)
@@ -172,7 +171,7 @@ export default function TradePopup(props) {
     return (
         <>
             <div className="popup-bg" ref={tradePopupRef}></div>
-            <div className="trade-popup" ref={tradePopupContentRef} onClick={() => console.log(selectedTrade)}>
+            <div className="trade-popup" ref={tradePopupContentRef}>
                 <span className="popup-head">
                     <h1>{tradeType == 'offer' ? t('offer trade') : t('respond trade')}</h1>
                     <img src={close} alt="" onClick={handleClose} />
@@ -305,7 +304,7 @@ export default function TradePopup(props) {
                                 {userTrade == '' ? "No Item Added Yet" :
                                     userTrade?.map(v => {
                                         return (
-                                            <div style={{ cursor: selectedTrade && tradeType == 'incoming' ? 'default' : 'pointer' }} onClick={(e) => { if (!(selectedTrade && tradeType == 'incoming')) { console.log('hello'); handleRemoveClick(e, v._id, 'user', v.estimate_value) } }}>
+                                            <div style={{ cursor: selectedTrade && tradeType == 'incoming' ? 'default' : 'pointer' }} onClick={(e) => { if (!(selectedTrade && tradeType == 'incoming')) { handleRemoveClick(e, v._id, 'user', v.estimate_value) } }}>
                                                 <HorizontalCard pname={v.name} condition={v.item_condition} lookfor={v.looking_for} mainImg={v.main_img} imgSize='90' fontSize1='14' fontSize2='12' fontSize3='13' />
                                             </div>
                                         );
