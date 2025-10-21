@@ -9,7 +9,7 @@ import { BASE_URL } from "../config/apiConfig";
 
 export default function Query() {
     const location = useLocation();
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
     const [item, setItem] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState();
@@ -36,7 +36,7 @@ export default function Query() {
     return (
         <main className="search-page">
             <span className='title'>
-                <h1>{t('category name', {category: location.state[0].toUpperCase() + location.state.slice(1)})}</h1>
+                <h1>{t('category name', {category: i18n.language == 'en' ? location.state[0].toUpperCase() + location.state.slice(1) : t(location.state[0].toLowerCase() + location.state.slice(1))})}</h1>
                 <span className="filter" onClick={handleFilterDropdown}>
                     <img src={filterIcon} alt="" style={{ width: '30px' }} />
                     <h3>{t('filter')}</h3>
