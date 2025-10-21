@@ -23,7 +23,19 @@ router.get('/check-auth', userController.user_check_auth);
 router.get('/oauth', passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account', session: false}), userController.user_google_login)
 
 router.post('/signup', userController.user_signup);
-router.post('/login', passport.authenticate('local', {session: false}), userController.user_login);
+// router.post('/login', passport.authenticate('local', {session: false}), userController.user_login);
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {session: false}, (err, user, info) => {
+    if(err) return next(err);
+
+    if(!user){
+      return res.status(401).json({msg: info?.message || 'login failed'});
+    }
+
+    req.user = user;
+    userController.user_login(req, res);
+  })(req, res, next);
+})
 router.post('/logout', userController.user_logout);
 
 router.get('/:id', userController.get_user);

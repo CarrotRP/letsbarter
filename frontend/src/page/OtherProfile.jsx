@@ -41,6 +41,9 @@ export default function OtherProfile() {
         fontSize: '32px',
         fontWeight: 'bold'
     }
+    const unselectedTxtStyle = {
+        fontSize: '20px'
+    }
     const unselectedImgStyle = {
         width: '24px'
     }
@@ -157,11 +160,11 @@ export default function OtherProfile() {
                 </span>
             </div>
             <section className="other-profile-nav" style={{ display: 'flex', alignItems: 'center', gap: '50px', color: 'var(--text-primary)' }}>
-                <span className='other-inventory-nav' onClick={() => setCurrentPage('inventory')} style={currentPage == 'inventory' ? selectedTxtStyle : null}>
+                <span className='other-inventory-nav' onClick={() => setCurrentPage('inventory')} style={currentPage == 'inventory' ? selectedTxtStyle : unselectedTxtStyle}>
                     <img src={inventory} alt="" style={currentPage == 'inventory' ? null : unselectedImgStyle} />
                     <p>{t('inventory')}</p>
                 </span>
-                <p className='other-review-nav' onClick={() => setCurrentPage('review')} style={currentPage == 'review' ? selectedTxtStyle : null}>・{t('review')}</p>
+                <p className='other-review-nav' onClick={() => setCurrentPage('review')} style={currentPage == 'review' ? selectedTxtStyle : unselectedTxtStyle}>・{t('review')}</p>
             </section>
             <section className="other-content">
                 {currentPage == 'inventory' ?
@@ -169,7 +172,7 @@ export default function OtherProfile() {
                         {item.length == 0 ? <p style={{ position: 'absolute' }}>{t('they got no item', { name: otherUser?.username })}</p> : item.map(v => {
                             return (
                                 <Link to={`/product/${v._id}`} style={{ color: 'var(--text-secondary)' }} key={v._id}>
-                                    <ProductCard pname={v.name} condition={v.condition} lookfor={v.looking_for} mainImg={v.main_img} />
+                                    <ProductCard pname={v.name} condition={v.item_condition} lookfor={v.looking_for} mainImg={v.main_img} />
                                 </Link>
                             );
                         })}

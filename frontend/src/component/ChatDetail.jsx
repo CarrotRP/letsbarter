@@ -13,6 +13,7 @@ export default function ChatDetail(props) {
     const [text, setText] = useState();
     const [message, setMessage] = useState();
     const scrollRef = useRef(); //TODO: scroll to updated scrollHeight
+    const [isSending, setIsSending] = useState(false);
 
     const handleBackClick = (e) => {
         e.stopPropagation();
@@ -29,6 +30,7 @@ export default function ChatDetail(props) {
 
     const handleSendMessage = () => {
         if (text || img) {
+            setIsSending(true);
             const formData = new FormData();
 
             formData.append('senderId', user._id);
@@ -44,6 +46,7 @@ export default function ChatDetail(props) {
                 .then(data => {
                     setText('');
                     setImg(null);
+                    setIsSending(false);
                 })
         }
     }
@@ -196,14 +199,16 @@ export default function ChatDetail(props) {
                         maxLength={500}
                         className="text-input"
                         onKeyDown={e => {
-                            if (e.key == 'Enter' && !e.shiftKey) {
+                            if (!isSending && e.key == 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
-                                handleSendMessage();
+                                if(!isSending){
+                                    handleSendMessage();
+                                }
                             }
                         }}
                     />
                 </div>
-                <img src={send} className='chat-send' alt="" onClick={handleSendMessage} />
+                <img src={send} className='chat-send' alt="" onClick={handleSendMessage} style={{pointerEvents: isSending ? 'none' : 'auto', userSelect: 'none'}}/>
             </div>
 
         </>

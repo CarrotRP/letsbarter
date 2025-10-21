@@ -21,16 +21,22 @@ const user_check_auth = (req, res) => {
     }
 }
 
-const user_signup = async (req, res) => {
+const user_signup = (req, res) => {
     const { username, password, occupation, email, phonenumber } = req.body;
-
-    const saltRounds = 10;
-    const hashedPw = await bcrypt.hash(password, saltRounds);
-
-    User.create({ username, password: hashedPw, occupation, email, phonenumber })
-        .then(result => res.json({ result, redirect: '/login' }))
-        .catch(err => {
-            return res.json({ msg: 'err', error: err })
+    
+    User.findOne({ email })
+    .then(async result => {
+        if (result) {
+            return res.status(400).json({ msg: "email already existed" });
+        } else {
+                const saltRounds = 10;
+                const hashedPw = await bcrypt.hash(password, saltRounds);
+                User.create({ username, password: hashedPw, occupation, email, phonenumber })
+                    .then(result => res.json({ result, redirect: '/login' }))
+                    .catch(err => {
+                        return res.json({ msg: 'err', error: err })
+                    })
+            }
         })
 }
 

@@ -2,6 +2,11 @@
     "search": "Search",
     "signup": "Signup",
     "login": "Login",
+    "incorrect email or password": "Incorrect Email or Password",
+    "password must match": "Password must match",
+    "email already existed": "Email already Existed",
+    "this account": "This account is linked with Google. Please login with Google",
+    "user not found": "No user found",
     "search place": "Books, Category...",
     "my trade": "My Trade",
 
@@ -158,6 +163,7 @@
     "new password": "New Password",
     "update": "Update",
     "updating": "Updating",
+    "unchangeable": "Unchangeable",
 
     "account": "Account",
     "delete account": "Delete Account",

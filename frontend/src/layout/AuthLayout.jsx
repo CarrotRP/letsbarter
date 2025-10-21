@@ -6,6 +6,7 @@ import googleIcon from "../assets/google.png";
 import { useEffect } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import { BASE_URL } from "../config/apiConfig";
+import { ToastContainer, Slide } from "react-toastify";
 
 export default function AuthLayout() {
     const location = useLocation();
@@ -51,6 +52,19 @@ export default function AuthLayout() {
     return (
         <main className="auth-page">
             {/* TODO: add min width to side panel */}
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="light"
+                transition={Slide}
+            />
             <SidePanel />
             <section className="right-panel">
                 <Link to="/">

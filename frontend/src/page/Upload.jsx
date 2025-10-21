@@ -72,7 +72,7 @@ export default function Upload() {
     }, [id]);
 
     const handleUploadClick = () => {
-        if(name && description && ogPrice && boughtOn && condition && looking && condition <= 10 && mainImg){
+        if(name && description && ogPrice && boughtOn && condition && looking && Number(condition) <= 10 && mainImg){
             var url, method;
             const formData = new FormData();
     
@@ -98,7 +98,7 @@ export default function Upload() {
             formData.append("brand", brand)
             formData.append("original_price", ogPrice);
             formData.append("bought_on", boughtOn);
-            formData.append("item_condition", condition);
+            formData.append("item_condition", Number(condition).toFixed(1));
             formData.append("looking_for", looking);
             formData.append("owner_id", user._id);
     
@@ -132,11 +132,11 @@ export default function Upload() {
                 })
                 .catch(err => console.error(err)
                 );
-        } else if(condition > 10){
+        } else if(Number(condition) > 10){
             toast(<Toaster text='item condition should'/>, {autoClose: 5000, toastId: 'no-dupe3'});
         } else if(!mainImg){
             toast(<Toaster text='no img'/>, {autoClose: 5000, toastId: 'no-dupe4'})
-        } else if(!name || !description || !brand || !ogPrice || !boughtOn || !condition || !looking){
+        } else if(!name || !description || !ogPrice || !boughtOn || !condition || !looking){
             toast(<Toaster text='please fill'/>, {autoClose: 5000, toastId: 'no-dupe5'})
         }
     };

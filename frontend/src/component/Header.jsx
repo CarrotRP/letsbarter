@@ -5,10 +5,12 @@ import chatIcon from '../assets/chat.png';
 import closeIcon from '../assets/close.png';
 import './Header.css';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import Chat from './Chat';
 import { useTranslation } from 'react-i18next';
 import { BASE_URL } from '../config/apiConfig';
+import notification from '../assets/notification.mp3'
+import { SocketContext } from '../context/SocketContext';
 
 export default function Header(props) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -19,6 +21,8 @@ export default function Header(props) {
     const { chatRef, user, chat, setChat, viewImgRef, viewImgBgRef, viewImg, setViewImg } = props;
     const { t } = useTranslation();
     const [chatList, setChatList] = useState();
+    const { socket, setSocket } = useContext(SocketContext);
+    const audioRef = useRef();
 
     // todo: make this works properly(navigate to search page if not on search page and search the query)
     const handleSearch = () => {
@@ -49,23 +53,41 @@ export default function Header(props) {
     }
 
     const unreadCount = chatList?.reduce((acc, chat) => {
-        // Only count messages sent to me that I haven't read
         if (chat.receiver._id === user._id && !chat.isRead) {
             return acc + 1;
         }
         return acc;
     }, 0);
 
+    useEffect(() => {
+        if (!socket || !user) return;
+
+        const handleIncomingMessage = (msg) => {
+            if (msg.receiverId === user._id) {
+                // Play sound
+                if (audioRef?.current) {
+                    audioRef.current.volume = 0.4
+                    audioRef.current.currentTime = 0;
+                    audioRef.current.play().catch(err => console.log(err));
+                }
+            }
+        };
+
+        socket.on('sendMessage', handleIncomingMessage);
+        return () => socket.off('sendMessage', handleIncomingMessage);
+    }, [socket, user, audioRef, setChatList]);
+
+
     return (
         <header>
             <Link to="/home"><TextLogo /></Link>
             <span className='header-search'>
                 <input type="text" id='search' placeholder={t('search place')} value={value} onChange={(e) => setValue(e.target.value)}
-                onKeyDown={e => {
-                    if(e.key == 'Enter'){
-                        handleSearch();
-                    }
-                }}/>
+                    onKeyDown={e => {
+                        if (e.key == 'Enter') {
+                            handleSearch();
+                        }
+                    }} />
                 <button id='search-btn' onClick={handleSearch}>{t('search')}</button>
             </span>
             <span className="right-head">
@@ -73,18 +95,19 @@ export default function Header(props) {
                     <>
                         <Link to='/add' style={{ height: '27px' }} className='to-add-page'><img src={create} alt="" style={{ width: '27px' }} /></Link>
                         <Link to='/trade' id='trade'><img src={trade} alt="" style={{ width: '24px', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(353deg) brightness(102%) contrast(105%)' }} />{t('my trade')}</Link>
-                        <span style={{ display: 'flex', position: 'relative'}}>
+                        <span style={{ display: 'flex', position: 'relative' }}>
                             <button id='chat' onClick={handleChatClick}><img src={chatIcon} alt="" style={{ width: '30px', cursor: 'pointer' }} /></button>
                             {unreadCount > 0 && <span className="badge"></span>}
                         </span>
                         <Link to='/profile'><img src={user?.profile_img?.startsWith('http') ? user?.profile_img : `${BASE_URL}/${user?.profile_img}`} alt="" style={{ width: '70px', height: '70px', border: '1px solid black', borderRadius: '50%', backgroundColor: 'white' }} /></Link>
                         <Chat chatRef={chatRef} chat={chat} setChat={setChat} user={user} handleViewImg={handleViewImg} chatList={chatList} setChatList={setChatList} />
+                        <audio ref={audioRef} src={notification} />
                         <div className="view-img" ref={viewImgBgRef}>
                             <div className='view-close'>
                                 <img src={closeIcon} alt="" onClick={handleViewClose} />
                             </div>
                             <div className="view-img-content" ref={viewImgRef}>
-                                <img src={viewImg} alt=""/>
+                                <img src={viewImg} alt="" />
                             </div>
                         </div>
                     </>

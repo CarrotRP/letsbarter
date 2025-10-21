@@ -181,7 +181,7 @@ export default function Profile() {
                                 <div className="profile-form-input">
                                     <FormComponent htmlFor="name" label={t('fullname')} type="text" value={username} setter={setUsername} />
                                     <FormComponent htmlFor="occupation" label={t('occupation')} type="text" value={occupation} setter={setOccupation} />
-                                    <FormComponent htmlFor="email" label={t('email')} type="email" value={email} setter={setEmail} />
+                                    <FormComponent htmlFor="email" label={t('email')} type="email" value={email} setter={setEmail} disable={true} unchange={true}/>
                                     <FormComponent htmlFor="oldPassword" label={t("old password")} type="password" disable={true} />
                                     <FormComponent htmlFor="newPassword" label={t('new password')} type="password" value={newPassword} setter={setNewPassword} />
                                     <FormComponent htmlFor="confirmPassword" label={t('confirm password')} type="password" value={conPassword} setter={setConPassword} />

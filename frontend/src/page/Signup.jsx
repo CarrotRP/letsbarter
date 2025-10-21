@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { BASE_URL } from "../config/apiConfig";
+import { toast } from "react-toastify";
+import Toaster from "../component/Toaster";
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -14,7 +16,7 @@ export default function Signup() {
     const [occupation, setOccupation] = useState('');
     const [password, setPassword] = useState('');
     const [conpassword, setConPassword] = useState('');
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     const handleEyeClick = () => {
         setIsVisible(!isVisible);
@@ -29,12 +31,18 @@ export default function Signup() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ username: fullname, email, occupation, password, profile: 'uploads/default.png' })
-                }).then(res => res.json())
+                }).then(res => {
+                    if (!res.ok) {
+                        toast(<Toaster text='email already existed'/>)
+                        return;
+                    } else {
+                        return res.json()
+                    }})
                     .then(data => {
                         navigate(data.redirect);
                     });
             } else {
-                console.log('password must match');
+                toast(<Toaster text='password must match' />, { autoClose: 5000, toastId: 'no-dupi' });
             }
         }
     }

@@ -60,9 +60,12 @@ app.use(passport.initialize());
 passport.use(new LocalStrategy((email, password, done) => {
     User.findOne({ email })
         .then(async data => {
-            if (!data) return done(null, false);
+            if (!data) return done(null, false, {message: "user not found"});
+            if(!data.password){
+                return done(null, false, {message: "this account"})
+            }
             if (await bcrypt.compare(password, data.password) == false) {
-                return done(null, false);
+                return done(null, false, {message: 'incorrect email or password'});
             }
             return done(null, data);
         })

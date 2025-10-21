@@ -2,6 +2,11 @@
   "search": "ស្វែងរក",
   "signup": "ចុះឈ្មោះ",
   "login": "ចូល",
+  "incorrect email or password": "ខុសអុីមែលឬពាក្យសម្ងាត់",
+  "password must match": "ពាក្យសម្ងាត់ត្រូវដូចគ្នា",
+  "email already existed": "អុីមែលមានរួច",
+  "this account": "គណនីនេះបានភ្ជាប់ជាមួយ Google. សូមចូលជាមួយ Google",
+  "user not found": "រកមិនឃើញអ្នកប្រើប្រាស់",
   "search place": "សៀវភៅ, ប្រភេទ...",
   "my trade": "ដោះដូរខ្ញុំ",
 
@@ -158,6 +163,7 @@
   "new password": "ពាក្យសម្ងាត់ថ្មី",
   "update": "បច្ចុប្បន្នភាព",
   "updating": "កំពុងបច្ចុប្បន្នភាព",
+  "unchangeable": "មិនអាចផ្ដូរ",
 
   "account": "គណនី",
   "delete account": "លុបគណនី",
