@@ -72,7 +72,7 @@ export default function Upload() {
     }, [id]);
 
     const handleUploadClick = () => {
-        if(condition <= 10 && mainImg){
+        if(name && description && ogPrice && boughtOn && condition && looking && condition <= 10 && mainImg){
             var url, method;
             const formData = new FormData();
     
@@ -136,6 +136,8 @@ export default function Upload() {
             toast(<Toaster text='item condition should'/>, {autoClose: 5000, toastId: 'no-dupe3'});
         } else if(!mainImg){
             toast(<Toaster text='no img'/>, {autoClose: 5000, toastId: 'no-dupe4'})
+        } else if(!name || !description || !brand || !ogPrice || !boughtOn || !condition || !looking){
+            toast(<Toaster text='please fill'/>, {autoClose: 5000, toastId: 'no-dupe5'})
         }
     };
 
@@ -278,7 +280,7 @@ export default function Upload() {
                 </div>
                 <div className="item-infos">
                     <h3>{t('detail')}</h3>
-                    <DetailInput type="text" data='name' placeholder={t('main')} setter={setName} getter={name} />
+                    <DetailInput type="text" data='name' placeholder={t('name')} setter={setName} getter={name} />
                     <Dropdown getter={category} setter={setCategory} categoryList={categoryList}></Dropdown>
                     <AreaInput data="description" label={t('description')} setter={setDescription} getter={description} />
                     <DetailInput type="text" data='brand' placeholder={t('brand')} setter={setBrand} getter={brand} />

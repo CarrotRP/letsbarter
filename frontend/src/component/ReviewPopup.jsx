@@ -4,6 +4,8 @@ import close from '../assets/close.png'
 import star from '../assets/star.png'
 import { useTranslation } from "react-i18next";
 import { BASE_URL } from "../config/apiConfig";
+import { toast } from "react-toastify";
+import Toaster from "./Toaster";
 
 export default function ReviewPopup(props) {
     const { reviewBgRef, reviewRef, reviewerId, otherUserId, otherUser, rating, setRating, comment, setComment, fetchReviews} = props;
@@ -17,18 +19,22 @@ export default function ReviewPopup(props) {
     }
 
     const handleSubmit = () => {
-        fetch(`${BASE_URL}/review/${otherUserId}`, {
-            method: 'POST',
-            credentials: "include",
-            headers: {
-                'Content-Type': "application/json"
-            },
-            body: JSON.stringify({ revieweeId: otherUserId, reviewerId, rating: rating + 1, comment })
-        }).then(res => res.json())
-            .then(data => {
-                handleReviewClose();
-                fetchReviews();
-            })
+        if(rating && comment){
+            fetch(`${BASE_URL}/review/${otherUserId}`, {
+                method: 'POST',
+                credentials: "include",
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({ revieweeId: otherUserId, reviewerId, rating: rating + 1, comment })
+            }).then(res => res.json())
+                .then(data => {
+                    handleReviewClose();
+                    fetchReviews();
+                })
+        } else{
+            toast(<Toaster text='please fill'/>, {autoClose: 5000, toastId: 'no-duper', })
+        }
     }
 
     return (
