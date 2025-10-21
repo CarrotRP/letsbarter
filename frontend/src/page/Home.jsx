@@ -27,7 +27,7 @@ export default function Home() {
         fetch(`${BASE_URL}/item?limit=${limit}&sortOpt=true`)
             .then(res => res.json())
             .then(data => {
-                console.log(data.items);
+                console.log(data.count);
                 setItems(data.items);
                 setItemCount(data.count);
             });
@@ -36,6 +36,7 @@ export default function Home() {
         fetch(`${BASE_URL}/item?limit=${goodLimit}&condition=good`)
             .then(res => res.json())
             .then(data => {
+                console.log(data.count);
                 setGoodItems(data.items);
                 setGoodCount(data.count);
             })
@@ -44,7 +45,7 @@ export default function Home() {
     useEffect(() => {
         //fetch item, also load more for 'see more'
         fetchItem();
-    }, [limit]);
+    }, [limit, goodLimit]);
 
     return (
         <main className="homepage">

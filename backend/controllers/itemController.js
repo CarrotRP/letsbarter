@@ -60,7 +60,7 @@ const get_item_for_owner = (req, res) => {
 const get_by_category = (req, res) => {
   const { category, condition, sortOpt, page, limitOpt, filterOpt } = req.query;
 
-  const limit = limitOpt ? limitOpt : 2; //for testing
+  const limit = limitOpt ? limitOpt : 10; //for testing
   const skip = (page - 1) * limit;
   let totalPage = 0;
 
@@ -96,11 +96,10 @@ const get_by_category = (req, res) => {
 //search item
 const search_item = async (req, res) => {
   const { query, condition, sortOpt, page } = req.query;
-  const limit = 2; //2 for now, for testing
+  const limit = 10;
   const skip = (page - 1) * limit;
 
   const filter = {};
-
 
   //filter item condition
   //less than or equal 5

@@ -118,8 +118,8 @@ export default function ChatDetail(props) {
         <>
             <div className='chat-title' style={{ display: 'flex', alignItems: 'center', padding: '0 0 10px', borderBottom: '1px solid rgba(163, 68, 7, 0.45)' }}>
                 <img src={back} alt="" style={{ width: '10px', cursor: 'pointer' }} onClick={handleBackClick} />
-                <Link to={`/user/${chat?._id}`} style={{color: 'var(--text-secondary)', display: 'flex'}}>
-                <img src={chat?.profile_img} alt="" style={{ width: '50px', height: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
+                <Link to={`/user/${chat?._id}`} style={{ color: 'var(--text-secondary)', display: 'flex' }}>
+                    <img src={chat?.profile_img} alt="" style={{ width: '50px', height: '50px', margin: '0 15px', border: '1px solid var(--darken-background)', borderRadius: '50%' }} />
                     <span className="chat-user" style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
                         <p style={{ fontWeight: '500' }}>{chat?.username}</p>
                         <p style={{ fontWeight: '300' }}>{chat?.occupation}</p>
@@ -195,6 +195,12 @@ export default function ChatDetail(props) {
                         }}
                         maxLength={500}
                         className="text-input"
+                        onKeyDown={e => {
+                            if (e.key == 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSendMessage();
+                            }
+                        }}
                     />
                 </div>
                 <img src={send} className='chat-send' alt="" onClick={handleSendMessage} />

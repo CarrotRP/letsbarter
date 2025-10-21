@@ -60,7 +60,12 @@ export default function Header(props) {
         <header>
             <Link to="/home"><TextLogo /></Link>
             <span className='header-search'>
-                <input type="text" id='search' placeholder={t('search place')} value={value} onChange={(e) => setValue(e.target.value)} />
+                <input type="text" id='search' placeholder={t('search place')} value={value} onChange={(e) => setValue(e.target.value)}
+                onKeyDown={e => {
+                    if(e.key == 'Enter'){
+                        handleSearch();
+                    }
+                }}/>
                 <button id='search-btn' onClick={handleSearch}>{t('search')}</button>
             </span>
             <span className="right-head">
