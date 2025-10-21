@@ -15,6 +15,8 @@ export default function Upload() {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
+    //uploading status
+    const [isSending, setIsSending] = useState(false);
     //form detail
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -70,61 +72,71 @@ export default function Upload() {
     }, [id]);
 
     const handleUploadClick = () => {
-        var url, method;
-        const formData = new FormData();
-
-        // Append main image
-        if (mainImg) formData.append("main_img", mainImg.file);
-
-        // Append multiple images
-        images.filter(img => !img.isMain).forEach(img => {
-            formData.append("images", img.file);
-        });
-        
-        images.filter(img => !img.file && !img.isMain).forEach(img => {
-            formData.append("existing_images", img.preview);
-        })
-
-        // Append other fields
-        formData.append("name", name);
-        formData.append("category", category);
-        formData.append("description", description);
-        formData.append("brand", brand)
-        formData.append("original_price", ogPrice);
-        formData.append("bought_on", boughtOn);
-        formData.append("item_condition", condition);
-        formData.append("looking_for", looking);
-        formData.append("owner_id", user._id);
-
-        const estimate_value = ogPrice * condition / 10;
-
-        formData.append("estimate_value", estimate_value);
-
-        if (id) {
-            url = `${BASE_URL}/item/${id}`;
-            method = 'PATCH'
-        } else {
-            url = `${BASE_URL}/item/upload`;
-            method = "POST";
+        if(condition <= 10 && mainImg){
+            var url, method;
+            const formData = new FormData();
+    
+            //display issending so user knows, its sending
+            setIsSending(true);
+    
+            // Append main image
+            if (mainImg) formData.append("main_img", mainImg.file);
+    
+            // Append multiple images
+            images.filter(img => !img.isMain).forEach(img => {
+                formData.append("images", img.file);
+            });
+            
+            images.filter(img => !img.file && !img.isMain).forEach(img => {
+                formData.append("existing_images", img.preview);
+            })
+    
+            // Append other fields
+            formData.append("name", name);
+            formData.append("category", category);
+            formData.append("description", description);
+            formData.append("brand", brand)
+            formData.append("original_price", ogPrice);
+            formData.append("bought_on", boughtOn);
+            formData.append("item_condition", condition);
+            formData.append("looking_for", looking);
+            formData.append("owner_id", user._id);
+    
+            const estimate_value = ogPrice * condition / 10;
+    
+            formData.append("estimate_value", estimate_value);
+    
+            if (id) {
+                url = `${BASE_URL}/item/${id}`;
+                method = 'PATCH'
+            } else {
+                url = `${BASE_URL}/item/upload`;
+                method = "POST";
+            }
+            fetch(url, {
+                method: method,
+                credentials: "include",
+                body: formData, // <--- send FormData directly
+                // DO NOT set Content-Type, browser will handle multipart/form-data
+            })
+                .then(res => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        throw new Error('error happened')
+                    }
+                })
+                .then(data => {
+                    setIsSending(false);
+                    navigate('/home');
+                })
+                .catch(err => console.error(err)
+                );
+        } else if(condition > 10){
+            toast(<Toaster text='item condition should'/>, {autoClose: 5000, toastId: 'no-dupe3'});
+        } else if(!mainImg){
+            toast(<Toaster text='no img'/>, {autoClose: 5000, toastId: 'no-dupe4'})
         }
-        fetch(url, {
-            method: method,
-            credentials: "include",
-            body: formData, // <--- send FormData directly
-            // DO NOT set Content-Type, browser will handle multipart/form-data
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    throw new Error('error happened')
-                }
-            })
-            .then(data => {
-                navigate('/home');
-            })
-            .catch(err => console.error(err)
-            );
     };
 
     //select and preview img (main img)
@@ -153,12 +165,20 @@ export default function Upload() {
             return;
         }
 
+        if(files.find(file => !['png', 'jpg', 'jpeg'].includes(file.name.toLowerCase().split('.').pop()))){
+            toast(<Toaster text='invalid file type'/>, {autoClose: 5000, toastId: 'no-dupe2'});
+            e.target.value = null;
+            return;
+        }
+
         const newImages = files.map((file) => ({
             file,
             preview: URL.createObjectURL(file),
         }));
 
         setImages((prev) => [...prev, ...newImages]); // append new images
+
+        e.target.value = null;
     };
 
     //remove main img
@@ -267,8 +287,13 @@ export default function Upload() {
                     <DetailInput type="number" data='condition' placeholder={t('condition')} setter={setCondition} getter={condition} p="/ 10" />
                     <AreaInput data="looking" label={t('looking for')} setter={setLooking} getter={looking} color1='var(--primary)' color2='var(--secondary)' />
                     <span style={{display: 'flex', justifyContent: 'center', gap: '30px'}}>
-                        <button id='submit-btn' onClick={handleUploadClick} style={{justifySelf: 'center', width: id ? '200px' : '300px'}}>{id ? t('update') : t('upload')}</button>
-                        {id && <button style={{border: 'none', borderRadius: '10px', padding: '10px', width: '200px', cursor: 'pointer'}} onClick={() => navigate(-1)}>{t('cancel')}</button>}
+                        <button id='submit-btn' onClick={handleUploadClick} 
+                        style={{justifySelf: 'center', width: id ? '200px' : '300px', backgroundColor: isSending ? 'rgba(0,0,0,0.2)' : 'var(--secondary)', 
+                        cursor: isSending ? 'disabled' : 'pointer', pointerEvents: isSending ? 'none' : 'auto'}}>
+                            {id ? 
+                                isSending ? t('updating') : t('update') : 
+                                isSending ? t('uploading') : t('upload')}</button>
+                        {id && <button style={{border: 'none', borderRadius: '10px', padding: '10px', width: '200px', cursor: isSending ? 'disabled' : 'pointer', pointerEvents: isSending ? 'none' : 'auto'}} onClick={() => navigate(-1)}>{t('cancel')}</button>}
                     </span>
                 </div>
             </div>

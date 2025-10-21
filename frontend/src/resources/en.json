@@ -98,8 +98,11 @@
     "description": "Description",
     "looking for": "Looking for (Category or specific)",
     "upload": "Upload",
+    "uploading": "Uploading",
     "invalid file type": "Invalid file type",
     "can only upload": "You can only upload up to 4 images",
+    "item condition should": "Item condition should be less than or equal to 10",
+    "no img": "Add a main image!",
 
     "incoming": "Incoming Offer",
     "sent": "Sent Offer",
@@ -153,6 +156,7 @@
     "old password": "Old Password",
     "new password": "New Password",
     "update": "Update",
+    "updating": "Updating",
 
     "account": "Account",
     "delete account": "Delete Account",

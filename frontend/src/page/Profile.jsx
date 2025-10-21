@@ -30,6 +30,8 @@ export default function Profile() {
     const [totalPage, setTotalPage] = useState();
     const navigate = useNavigate();
 
+    const [isSending, setIsSending] = useState(false);
+
     const selectedStyle = {
         backgroundColor: 'var(--primary)',
         borderRadius: '10px',
@@ -74,6 +76,7 @@ export default function Profile() {
 
     const handleUserUpdate = () => {
         const formData = new FormData();
+        setIsSending(true);
 
         if (profilePreview && profilePreview.file) {
             formData.append("profile_img", profilePreview.file);
@@ -93,6 +96,7 @@ export default function Profile() {
         }).then(res => res.json())
             .then(data => {
                 dispatch({ type: 'SET_USER', payload: data })
+                setIsSending(false);
             });
     }
 
@@ -182,7 +186,7 @@ export default function Profile() {
                                     <FormComponent htmlFor="newPassword" label={t('new password')} type="password" value={newPassword} setter={setNewPassword} />
                                     <FormComponent htmlFor="confirmPassword" label={t('confirm password')} type="password" value={conPassword} setter={setConPassword} />
                                 </div>
-                                <button className='update' onClick={handleUserUpdate}>{t('update')}</button>
+                                <button className='update' onClick={handleUserUpdate} style={{backgroundColor: isSending ? 'rgba(0,0,0,0.3)' : 'var(--secondary)', pointerEvents: isSending ? 'none' : 'auto', cursor: isSending ? 'disabled' : 'pointer'}}>{isSending ? t('updating') : t('update')}</button>
                             </div> :
                             <div className="setting">
                                 <section className="setting-sect">
