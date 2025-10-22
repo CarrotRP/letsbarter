@@ -194,5 +194,6 @@
     "more than 5": "More than 5",
     "estimate asc": "Estimate value (Ascending)",
     "estimate desc": "Estimate value (Descending)",
-    "search for": "Search for: {{search}}"
+    "search for": "Search for: {{search}}",
+    "estimate": "Estimate value"
 }

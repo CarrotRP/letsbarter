@@ -194,5 +194,6 @@
   "more than 5": "ច្រើនជាង 5",
   "estimate asc": "តម្លៃវាយតម្លៃ (កើនឡើង)",
   "estimate desc": "តម្លៃវាយតម្លៃ (ធ្លាក់ចុះ)",
-  "search for": "ស្វែងរក៖ {{search}}"
+  "search for": "ស្វែងរក៖ {{search}}",
+  "estimate": "តម្លៃវាយតម្លៃ"
 }

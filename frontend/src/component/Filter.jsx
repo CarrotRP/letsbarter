@@ -31,7 +31,7 @@ export default function Filter(props) {
                 </div>
             </div>
             <div className="filter-option">
-                <p>{t('looking')}</p>
+                <p>{t('estimate')}</p>
                 <div className="checks">
                     <span>
                         <label htmlFor="valueAsc" onClick={() => setFilter(prev => (filter.sortOpt == 'asc' ? {...prev, sortOpt: null} : { ...prev, sortOpt: 'asc' }))} style={{ fontWeight: filter.sortOpt == 'asc' ? 800 : 300 }}>{t('estimate asc')}</label>
