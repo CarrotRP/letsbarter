@@ -19,7 +19,7 @@ export default function ReviewPopup(props) {
     }
 
     const handleSubmit = () => {
-        if(rating && comment){
+        if(rating !== null && comment){
             fetch(`${BASE_URL}/review/${otherUserId}`, {
                 method: 'POST',
                 credentials: "include",
