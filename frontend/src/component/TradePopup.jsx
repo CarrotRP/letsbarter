@@ -45,6 +45,12 @@ export default function TradePopup(props) {
         }
         setCurrentTradePage('your');
         setIsPopup(false);
+        setUserEstimate(0);
+        setUserTrade([])
+        setOtherTrade([])
+        setUserPage(1);
+        setOtherPage(1);
+        setQuery('');
     }
 
     //add item to trade
@@ -80,7 +86,7 @@ export default function TradePopup(props) {
             body: JSON.stringify({ text: `[system] ${user?.username} system offer` })
         }).then(res => res.json())
             .then(data => {
-                
+
             })
     }
     //send offer senderItems, receiverItems, senderId, receiverId
@@ -116,35 +122,57 @@ export default function TradePopup(props) {
         if (!isPopup || isLoading) return;
 
         if (isPopup && user) {
-            setUserTrade([])
-            setUserEstimate(0);
             //in detail page, initial offering
             if (selectedTrade) {
                 fetch(`${BASE_URL}/trade/${selectedTrade.tradeId}`)
                     .then(res => res.json())
                     .then(trade => {
 
+                        console.log(trade);
+                        // fetch(`${BASE_URL}/item/${trade.}`)
                         //get the user inventories
                         fetch(`${BASE_URL}/item/user-item/${user?._id}?limit=6&page=${userPage}&query=${debounceQ}`)
                             .then(res => res.json())
-                            .then(data => {
+                            .then(async data => {
                                 setUserTotalPage(data.count);
                                 setUserInvent(data.items);
-                                const newUserTrade = data.items.filter(d => trade.receiverItems.includes(d._id));
-                                setUserTrade(newUserTrade);
-                                setUserEstimate(newUserTrade.reduce((sum, item) => sum + (item.estimate_value || 0), 0));
+
+                                if (!debounceQ && userTrade.length === 0) {
+                                    let newUserTrade = data.items.filter(d => trade.receiverItems.includes(d._id));
+
+                                    // fetch missing receiver items not on this page
+                                    const missingUserIds = trade.receiverItems.filter(
+                                        id => !newUserTrade.some(i => i._id === id)
+                                    );
+
+                                    for (const id of missingUserIds) {
+                                        const item = await fetch(`${BASE_URL}/item/${id}`).then(res => res.json());
+                                        console.log(item);
+                                        newUserTrade.push(item);
+                                    }
+                                    setUserTrade(newUserTrade);
+                                    setUserEstimate(newUserTrade.reduce((sum, item) => sum + (item.estimate_value || 0), 0));
+                                }
                             });
                         fetch(`${BASE_URL}/item/user-item/${trade.senderId}?limit=6&page=${otherPage}&query=${debounceQ}`)
                             .then(res => res.json())
-                            .then(data => {
+                            .then(async data => {
                                 setOtherTotalPage(data.count);
                                 setOtherInvent(data.items);
+                                if (!debounceQ && otherTrade.length === 0) {
+                                    let newOtherTrade = data.items.filter(d => trade.senderItems.includes(d._id));
 
-                                setOtherTrade([]);
-
-                                const newOtherTrade = data.items.filter(d => trade.senderItems.includes(d._id));
-                                setOtherTrade(newOtherTrade);
-                                setOtherEstimate(newOtherTrade.reduce((sum, item) => sum + (item.estimate_value || 0), 0));
+                                    // fetch missing sender items not on this page
+                                    const missingOtherIds = trade.senderItems.filter(
+                                        id => !newOtherTrade.some(i => i._id === id)
+                                    );
+                                    for (const id of missingOtherIds) {
+                                        const item = await fetch(`${BASE_URL}/item/${id}`).then(res => res.json());
+                                        newOtherTrade.push(item);
+                                    }
+                                    setOtherTrade(newOtherTrade);
+                                    setOtherEstimate(newOtherTrade.reduce((sum, item) => sum + (item.estimate_value || 0), 0));
+                                }
                             })
                     });
             } else {
@@ -159,9 +187,11 @@ export default function TradePopup(props) {
                     .then(data => {
                         setOtherTotalPage(data.count);
                         setOtherInvent(data.items);
-                        const newItem = data.items.find(item => item._id == itemId);
-                        setOtherTrade(newItem ? [newItem] : []);
-                        setOtherEstimate(newItem ? newItem.estimate_value : 0);
+                        if (!debounceQ && otherTrade.length === 0) {
+                            const newItem = data.items.find(item => item._id == itemId);
+                            setOtherTrade(newItem ? [newItem] : []);
+                            setOtherEstimate(newItem ? newItem.estimate_value : 0);
+                        }
                     })
             }
         }
