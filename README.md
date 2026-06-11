@@ -5,6 +5,9 @@ A trading web application for users to trade or barter with each other, using th
 ## Why?
 To help lower middle class people such as college students, small business owners, to help them with their struggle in saving up money for their daily expenses. Using their second hand goods or products that they own, they can potentially trade it for the stuff they need in their current situation.
 
+## Document
+[LetsBarter](https://docs.google.com/document/d/1ZghkEbbRW_x_GRUo7dtJuHFK1c_obwq2GzCVXYtRFBg/edit?usp=sharing)
+
 ## Technologies used
 - MongoDB
 - Express
@@ -37,10 +40,10 @@ To help lower middle class people such as college students, small business owner
 ## Screenshots
 
 ### Landing screen
-![landing-screen](/assets/landing.png)
+![landing-screen](/frontend/src/assets/landing.png)
 
 ### Trade Popup
-![trade-popup](/assets/tradepopup.png)
+![trade-popup](/frontend/src/assets/tradepopup.png)
 
 ### Upload Screen
-![upload-screen](/assets/upload.png)
+![upload-screen](/frontend/src/assets/upload.png)
